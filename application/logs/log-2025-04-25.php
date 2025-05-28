@@ -1,0 +1,32 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+ERROR - 2025-04-25 08:15:43 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:15:49 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:15:50 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:17:22 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:17:32 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:19:05 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:19:07 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:19:08 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:19:48 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:19:57 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:20:06 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:20:29 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:20:34 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:20:37 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:21:01 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:21:04 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:21:20 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:21:47 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:24:26 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:24:32 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:24:34 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:24:37 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:24:41 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 08:25:20 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 09:01:20 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 09:35:11 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 09:43:32 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 09:43:32 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 09:51:44 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2
+ERROR - 2025-04-25 09:53:54 --> Severity: Warning --> Attempt to read property "istirahat" on null C:\zedapps-cbt\htdocs\application\controllers\Dashboard.php 2

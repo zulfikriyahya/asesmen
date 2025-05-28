@@ -1,0 +1,5 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+ERROR - 2024-11-18 07:31:07 --> Severity: Warning --> Undefined array key "e" C:\zedapps-cbt\htdocs\application\views\cbt\banksoal\detail.php 1045
+ERROR - 2024-11-18 07:31:07 --> Severity: Warning --> Undefined array key "f" C:\zedapps-cbt\htdocs\application\views\cbt\banksoal\detail.php 1045
+ERROR - 2024-11-18 12:50:23 --> Query error: Duplicate entry 'MA_PAS_11_KWU' for key 'kode_bank_soal' - Invalid query: INSERT INTO `cbt_bank_soal` (`id_tp`, `id_smt`, `bank_kode`, `bank_jenis_id`, `bank_mapel_id`, `bank_kelas`, `bank_level`, `bank_guru_id`, `jml_soal`, `tampil_pg`, `bobot_pg`, `opsi`, `jml_kompleks`, `tampil_kompleks`, `bobot_kompleks`, `jml_jodohkan`, `tampil_jodohkan`, `bobot_jodohkan`, `jml_isian`, `tampil_isian`, `bobot_isian`, `jml_esai`, `bobot_esai`, `tampil_esai`, `status`, `soal_agama`) VALUES ('7', '1', 'MA_PAS_11_KWU', '', '35', 'a:2:{i:0;a:1:{s:8:\"kelas_id\";s:1:\"8\";}i:1;a:1:{s:8:\"kelas_id\";N;}}', '12', '12', '25', '25', '25', '5', '15', '15', '25', '5', '5', '25', '5', '5', '25', '0', '0', '0', '1', '-')

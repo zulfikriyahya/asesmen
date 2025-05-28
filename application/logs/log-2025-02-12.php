@@ -1,0 +1,34 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
+ERROR - 2025-02-12 09:14:28 --> Severity: Warning --> Undefined array key 44 C:\zedapps-cbt\htdocs\application\controllers\Datasiswa.php 2
