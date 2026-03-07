@@ -1,57 +1,76 @@
-<h1><?php echo lang('create_user_heading'); ?></h1>
-<p><?php echo lang('create_user_subheading'); ?></p>
+{{FILE: create_user.php}}
+<?php /* ============================================================
+   auth/create_user.php
+   ============================================================ */ ?>
 
-<div id="infoMessage"><?php echo $message; ?></div>
+<div class="auth-page-wrapper">
+    <div class="auth-page-card auth-page-card--wide">
+        <div class="auth-page-header">
+            <h4><?= lang('create_user_heading') ?></h4>
+            <p><?= lang('create_user_subheading') ?></p>
+        </div>
+        <div class="auth-page-body">
 
-<?php echo form_open("auth/create_user"); ?>
+            <?php if ($message): ?>
+                <div class="auth-alert"><?= $message ?></div>
+            <?php endif ?>
 
-<p>
-    <?php echo lang('create_user_fname_label', 'first_name'); ?> <br/>
-    <?php echo form_input($first_name); ?>
-</p>
+            <?= form_open("auth/create_user") ?>
 
-<p>
-    <?php echo lang('create_user_lname_label', 'last_name'); ?> <br/>
-    <?php echo form_input($last_name); ?>
-</p>
+            <div class="form-grid">
 
-<?php
-if ($identity_column !== 'email') {
-    echo '<p>';
-    echo lang('create_user_identity_label', 'identity');
-    echo '<br />';
-    echo form_error('identity');
-    echo form_input($identity);
-    echo '</p>';
-}
-?>
+                <div class="form-field">
+                    <?= lang('create_user_fname_label', 'first_name') ?>
+                    <?= form_input($first_name) ?>
+                </div>
 
-<p>
-    <?php echo lang('create_user_company_label', 'company'); ?> <br/>
-    <?php echo form_input($company); ?>
-</p>
+                <div class="form-field">
+                    <?= lang('create_user_lname_label', 'last_name') ?>
+                    <?= form_input($last_name) ?>
+                </div>
 
-<p>
-    <?php echo lang('create_user_email_label', 'email'); ?> <br/>
-    <?php echo form_input($email); ?>
-</p>
+                <?php if ($identity_column !== 'email'): ?>
+                    <div class="form-field">
+                        <?= lang('create_user_identity_label', 'identity') ?>
+                        <?= form_error('identity') ?>
+                        <?= form_input($identity) ?>
+                    </div>
+                <?php endif ?>
 
-<p>
-    <?php echo lang('create_user_phone_label', 'phone'); ?> <br/>
-    <?php echo form_input($phone); ?>
-</p>
+                <div class="form-field">
+                    <?= lang('create_user_company_label', 'company') ?>
+                    <?= form_input($company) ?>
+                </div>
 
-<p>
-    <?php echo lang('create_user_password_label', 'password'); ?> <br/>
-    <?php echo form_input($password); ?>
-</p>
+                <div class="form-field">
+                    <?= lang('create_user_email_label', 'email') ?>
+                    <?= form_input($email) ?>
+                </div>
 
-<p>
-    <?php echo lang('create_user_password_confirm_label', 'password_confirm'); ?> <br/>
-    <?php echo form_input($password_confirm); ?>
-</p>
+                <div class="form-field">
+                    <?= lang('create_user_phone_label', 'phone') ?>
+                    <?= form_input($phone) ?>
+                </div>
 
+                <div class="form-field">
+                    <?= lang('create_user_password_label', 'password') ?>
+                    <?= form_input($password) ?>
+                </div>
 
-<p><?php echo form_submit('submit', lang('create_user_submit_btn')); ?></p>
+                <div class="form-field">
+                    <?= lang('create_user_password_confirm_label', 'password_confirm') ?>
+                    <?= form_input($password_confirm) ?>
+                </div>
 
-<?php echo form_close(); ?>
+            </div>
+
+            <div class="form-actions">
+                <?= form_submit('submit', lang('create_user_submit_btn'), ['class' => 'btn-dark-primary']) ?>
+            </div>
+
+            <?= form_close() ?>
+
+        </div>
+    </div>
+</div>
+

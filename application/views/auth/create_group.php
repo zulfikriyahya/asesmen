@@ -1,20 +1,39 @@
-<h1><?php echo lang('create_group_heading'); ?></h1>
-<p><?php echo lang('create_group_subheading'); ?></p>
+{{FILE: create_group.php}}
+<?php /* ============================================================
+   auth/create_group.php
+   ============================================================ */ ?>
 
-<div id="infoMessage"><?php echo $message; ?></div>
+<div class="auth-page-wrapper">
+    <div class="auth-page-card">
+        <div class="auth-page-header">
+            <h4><?= lang('create_group_heading') ?></h4>
+            <p><?= lang('create_group_subheading') ?></p>
+        </div>
+        <div class="auth-page-body">
 
-<?php echo form_open("auth/create_group"); ?>
+            <?php if ($message): ?>
+                <div class="auth-alert"><?= $message ?></div>
+            <?php endif ?>
 
-<p>
-    <?php echo lang('create_group_name_label', 'group_name'); ?> <br/>
-    <?php echo form_input($group_name); ?>
-</p>
+            <?= form_open("auth/create_group") ?>
 
-<p>
-    <?php echo lang('create_group_desc_label', 'description'); ?> <br/>
-    <?php echo form_input($description); ?>
-</p>
+            <div class="form-field">
+                <?= lang('create_group_name_label', 'group_name') ?>
+                <?= form_input($group_name) ?>
+            </div>
 
-<p><?php echo form_submit('submit', lang('create_group_submit_btn')); ?></p>
+            <div class="form-field">
+                <?= lang('create_group_desc_label', 'description') ?>
+                <?= form_input($description) ?>
+            </div>
 
-<?php echo form_close(); ?>
+            <div class="form-actions">
+                <?= form_submit('submit', lang('create_group_submit_btn'), ['class' => 'btn-dark-primary']) ?>
+            </div>
+
+            <?= form_close() ?>
+
+        </div>
+    </div>
+</div>
+

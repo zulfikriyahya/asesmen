@@ -1,0 +1,316 @@
+/* =============================================================
+   Auth Pages — shared dark theme
+   Include di template header untuk semua halaman auth/
+   ============================================================= */
+
+/* ── Wrapper & Card ── */
+.auth-page-wrapper {
+  padding: 2rem 1rem;
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.auth-page-card {
+  width: 100%;
+  max-width: 480px;
+  background: #1a1d23;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+}
+
+.auth-page-card--wide {
+  max-width: 720px;
+}
+.auth-page-card--full {
+  max-width: 100%;
+}
+
+/* ── Header ── */
+.auth-page-header {
+  background: #111318;
+  padding: 1.5rem 1.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.auth-page-header h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e0e0e0;
+  margin: 0 0 0.25rem;
+}
+
+.auth-page-header p {
+  font-size: 0.82rem;
+  color: #6c757d;
+  margin: 0;
+}
+
+/* ── Body ── */
+.auth-page-body {
+  padding: 1.75rem;
+}
+
+/* ── Alert ── */
+.auth-alert {
+  background: rgba(61, 139, 253, 0.1);
+  border: 1px solid rgba(61, 139, 253, 0.25);
+  border-radius: 8px;
+  color: #7eb8ff;
+  font-size: 0.82rem;
+  padding: 0.65rem 1rem;
+  margin-bottom: 1.25rem;
+}
+
+/* ── Form Fields ── */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1.1rem;
+}
+
+.form-field label,
+.form-field > span {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #9a9fa8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-field input[type="text"],
+.form-field input[type="email"],
+.form-field input[type="password"],
+.form-field input[type="number"] {
+  background: #111318;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: #e0e0e0;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.88rem;
+  width: 100%;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  outline: none;
+}
+
+.form-field input:focus {
+  border-color: #3d8bfd;
+  box-shadow: 0 0 0 3px rgba(61, 139, 253, 0.15);
+}
+
+.form-field input::placeholder {
+  color: #3a3f4a;
+}
+
+/* 2-column grid for wide cards */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 1.25rem;
+}
+
+@media (max-width: 540px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Section Divider ── */
+.form-section-divider {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  margin: 1.5rem 0 1.25rem;
+  padding-top: 1.25rem;
+}
+
+.form-section-divider h5 {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #9a9fa8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 1rem;
+}
+
+/* ── Radio & Checkbox ── */
+.radio-group,
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.radio-option,
+.checkbox-option {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  font-size: 0.88rem;
+  color: #c9cdd4;
+}
+
+.radio-option input,
+.checkbox-option input {
+  accent-color: #3d8bfd;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+/* ── Form Actions ── */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ── Buttons ── */
+.btn-dark-primary,
+.btn-dark-secondary,
+.btn-dark-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.4rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background 0.2s,
+    transform 0.1s;
+}
+
+.btn-dark-primary {
+  background: #3d8bfd;
+  color: #fff;
+}
+.btn-dark-primary:hover {
+  background: #2b7ae0;
+  color: #fff;
+}
+
+.btn-dark-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #c9cdd4;
+}
+.btn-dark-secondary:hover {
+  background: rgba(255, 255, 255, 0.13);
+  color: #fff;
+}
+
+.btn-dark-danger {
+  background: #dc3545;
+  color: #fff;
+}
+.btn-dark-danger:hover {
+  background: #b02a37;
+}
+
+.btn-dark-primary:active,
+.btn-dark-secondary:active,
+.btn-dark-danger:active {
+  transform: scale(0.97);
+}
+
+.btn-sm {
+  padding: 0.45rem 1rem;
+  font-size: 0.8rem;
+}
+.btn-xs {
+  padding: 0.3rem 0.8rem;
+  font-size: 0.78rem;
+}
+
+/* ── Table (index.php) ── */
+.auth-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.auth-table thead tr {
+  background: #111318;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.auth-table th {
+  padding: 0.9rem 1.25rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6c757d;
+  white-space: nowrap;
+}
+
+.auth-table td {
+  padding: 0.85rem 1.25rem;
+  color: #c9cdd4;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  vertical-align: middle;
+}
+
+.auth-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+.auth-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.badge-group {
+  display: inline-block;
+  background: rgba(61, 139, 253, 0.12);
+  color: #7eb8ff;
+  border-radius: 5px;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.75rem;
+  margin: 0.1rem 0.1rem 0.1rem 0;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.badge-group:hover {
+  background: rgba(61, 139, 253, 0.25);
+}
+
+.badge-status {
+  display: inline-block;
+  border-radius: 5px;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.badge-active {
+  background: rgba(25, 200, 100, 0.12);
+  color: #4ade80;
+}
+.badge-inactive {
+  background: rgba(220, 53, 69, 0.12);
+  color: #f87171;
+}
+.badge-active:hover {
+  background: rgba(25, 200, 100, 0.22);
+  color: #4ade80;
+}
+.badge-inactive:hover {
+  background: rgba(220, 53, 69, 0.22);
+  color: #f87171;
+}
+
+/* ── Utility ── */
+.gap-2 {
+  gap: 0.5rem;
+}

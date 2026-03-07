@@ -1,101 +1,264 @@
-<div class="container pt-5">
-    <div class="row justify-content-center">
-        <div class="login-box pt-5 mt-4" style="font-family: Arial, sans-serif;">
-            <div class="card-header rounded-top bg-dark mb-5">
-                <?php
-                $logo_app = $setting->logo_kanan == null ? base_url() . 'assets/img/favicon.png' : base_url() . $setting->logo_kiri;
-                ?>
-                <div class="text-center mb-2"><img src="<?= $logo_app ?>" width="80"></div>
-                <div class="text-center">
-                    <h2 class="text-bold"><?= $setting->nama_aplikasi ?></h2>
-                </div>
-            </div>
-            <div class="card-body rounded-bottom bg-dark">
-                <h2 class="login-box-msg font-weight-normal"><b>L O G I N</b></h2>
-                <div id="infoMessage"><?php echo $message; ?></div>
+<?php
+$logo_app = $setting->logo_kanan == null
+    ? base_url() . 'assets/img/favicon.png'
+    : base_url() . $setting->logo_kiri;
+?>
 
-                <?= form_open("auth/cek_login", array('id' => 'login')); ?>
-                <div class="input-group mb-4 has-feedback">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">
-                            <span class="fas fa-user"></span>
-                        </div>
-                    </div>
-                    <?= form_input($identity, '', 'required'); ?>
-                    <div class="help-block"></div>
-                </div>
-                <div class="input-group mb-4 has-feedback">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">
-                            <span class="fas fa-lock"></span>
-                        </div>
-                    </div>
-                    <?= form_input($password, '', 'required'); ?>
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                            <span id="toggle-password" class="fas fa-eye-slash" style="cursor: pointer"></span>
-                        </div>
-                    </div>
-                    <div class="help-block"></div>
-                </div>
-                <div class="row">
-                    <div class="col-8">
-                        <div class="icheck-cyan">
-                            <input type='checkbox' id="cbt-only" name='cbt-only'
-                                value='1' checked="checked" />
-                            <!-- <label for="cbt-only">Login CBT</label> -->
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <?= form_submit('submit', lang('login_submit_btn'), array('id' => 'submit', 'class' => 'btn btn-primary btn-outline-light btn-block btn-flat rounded')); ?>
-                    </div>
-                </div>
-                <?= form_close(); ?>
-            </div>
+<style>
+    .auth-wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 400px;
+        background: #1a1d23;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+    }
+
+    .auth-header {
+        background: #111318;
+        padding: 2rem 2rem 1.5rem;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .auth-header img {
+        width: 72px;
+        height: 72px;
+        object-fit: contain;
+        margin-bottom: .75rem;
+        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+    }
+
+    .auth-header h2 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #e0e0e0;
+        margin: 0;
+        letter-spacing: .5px;
+    }
+
+    .auth-body {
+        padding: 2rem;
+    }
+
+    .auth-title {
+        text-align: center;
+        font-size: .8rem;
+        font-weight: 700;
+        letter-spacing: 4px;
+        color: #6c757d;
+        text-transform: uppercase;
+        margin-bottom: 1.75rem;
+    }
+
+    .auth-input-group {
+        position: relative;
+        margin-bottom: 1.25rem;
+    }
+
+    .auth-input-group .input-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #555;
+        font-size: .85rem;
+        z-index: 2;
+    }
+
+    .auth-input-group input {
+        width: 100%;
+        background: #111318;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        color: #e0e0e0;
+        padding: .7rem 2.5rem .7rem 2.5rem;
+        font-size: .9rem;
+        transition: border-color .2s, box-shadow .2s;
+        outline: none;
+    }
+
+    .auth-input-group input:focus {
+        border-color: #3d8bfd;
+        box-shadow: 0 0 0 3px rgba(61, 139, 253, 0.15);
+    }
+
+    .auth-input-group input::placeholder {
+        color: #444;
+    }
+
+    .auth-input-group .toggle-pw {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #555;
+        cursor: pointer;
+        font-size: .85rem;
+        z-index: 2;
+        transition: color .2s;
+    }
+
+    .auth-input-group .toggle-pw:hover {
+        color: #aaa;
+    }
+
+    .auth-error {
+        font-size: .75rem;
+        color: #f87171;
+        margin-top: .3rem;
+        display: none;
+    }
+
+    .auth-input-group.has-error input {
+        border-color: #f87171;
+    }
+
+    .auth-input-group.has-error .auth-error {
+        display: block;
+    }
+
+    .auth-footer-row {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin-top: .25rem;
+    }
+
+    .btn-auth {
+        width: 100%;
+        padding: .75rem;
+        background: #3d8bfd;
+        border: none;
+        border-radius: 8px;
+        color: #fff;
+        font-weight: 600;
+        font-size: .9rem;
+        letter-spacing: .5px;
+        cursor: pointer;
+        transition: background .2s, transform .1s;
+        margin-top: 1.25rem;
+    }
+
+    .btn-auth:hover {
+        background: #2b7ae0;
+    }
+
+    .btn-auth:active {
+        transform: scale(.98);
+    }
+
+    .btn-auth:disabled {
+        opacity: .6;
+        cursor: not-allowed;
+    }
+
+    #infoMessage {
+        font-size: .82rem;
+        text-align: center;
+        border-radius: 8px;
+        padding: .5rem .75rem;
+        margin-bottom: 1rem;
+        min-height: 0;
+        transition: all .2s;
+    }
+
+    #infoMessage:empty {
+        display: none;
+    }
+</style>
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+
+        <div class="auth-header">
+            <img src="<?= $logo_app ?>" alt="Logo">
+            <h2><?= $setting->nama_aplikasi ?></h2>
         </div>
+
+        <div class="auth-body">
+            <p class="auth-title">Login</p>
+
+            <div id="infoMessage"><?= $message ?></div>
+
+            <?= form_open("auth/cek_login", ['id' => 'login']) ?>
+
+            <div class="auth-input-group" id="wrap-identity">
+                <span class="input-icon fas fa-user"></span>
+                <?= form_input($identity, '', 'required autocomplete="username"') ?>
+                <div class="auth-error" id="err-identity"></div>
+            </div>
+
+            <div class="auth-input-group" id="wrap-password">
+                <span class="input-icon fas fa-lock"></span>
+                <?= form_input($password, '', 'required autocomplete="current-password"') ?>
+                <span id="toggle-password" class="toggle-pw fas fa-eye-slash"></span>
+                <div class="auth-error" id="err-password"></div>
+            </div>
+
+            <input type="hidden" name="cbt-only" id="cbt-only-hidden" value="1">
+
+            <?= form_submit('submit', lang('login_submit_btn'), [
+                'id'    => 'submit',
+                'class' => 'btn-auth',
+            ]) ?>
+
+            <?= form_close() ?>
+        </div>
+
     </div>
 </div>
 
 <script src="<?= base_url() ?>/assets/app/js/jquery.backstretch.js"></script>
-<script type="text/javascript">
-    let base_url = '<?= base_url(); ?>';
-    var img = ["wall1.jpg", "wall2.png", "wall3.jpg"];
+<script>
+    $(function() {
+        const base_url = '<?= base_url() ?>';
+        const imgs = ['wall1.jpg', 'wall2.png', 'wall3.jpg'];
 
-    $.backstretch([
-        base_url + 'assets/img/' + img[0],
-        base_url + 'assets/img/' + img[1],
-        base_url + 'assets/img/' + img[2]
-    ], {
-        fade: 1000,
-        duration: 10000
-    });
-
-    $(document).ready(function() {
-        $('#myCarousel').carousel({
-            interval: 1000 * 2,
-            pause: 'none'
+        $.backstretch(imgs.map(i => base_url + 'assets/img/' + i), {
+            fade: 1000,
+            duration: 10000
         });
 
-        $('form#login input').on('change', function() {
-            $(this).parent().removeClass('has-error');
-            $(this).next().next().text('');
+        // Toggle password visibility
+        $('#toggle-password').on('click', function() {
+            const input = $('#password');
+            input.attr('type', input.attr('type') === 'password' ? 'text' : 'password');
+            $(this).toggleClass('fa-eye-slash fa-eye');
+        });
+
+        // Clear error on input change
+        $('form#login input').on('input', function() {
+            const wrap = $(this).closest('.auth-input-group');
+            wrap.removeClass('has-error');
+            wrap.find('.auth-error').text('');
         });
 
         $('form#login').on('submit', function(e) {
             e.preventDefault();
             e.stopImmediatePropagation();
 
-            var infobox = $('#infoMessage');
-            infobox.addClass('info-box align-items-center justify-content-center bg-gradient-info').text('Checking...');
+            const infobox = $('#infoMessage');
+            const btnSubmit = $('#submit');
 
-            var btnsubmit = $('#submit');
-            btnsubmit.attr('disabled', 'disabled').val('Wait...');
+            infobox
+                .removeAttr('class')
+                .addClass('bg-gradient-info text-white')
+                .text('Checking...');
+            btnSubmit.attr('disabled', true).val('Wait...');
 
-            const arrForm = $(this).serializeArray()
-            const cbtOnly = arrForm.find(function(obj) {
-                return obj.name === 'cbt-only'
-            })
-            localStorage.setItem('garudaCBT.login', cbtOnly !== undefined ? '1' : '0')
+            // Preserve CBT-only flag in localStorage
+            const cbtOnly = $('[name="cbt-only"]').val();
+            localStorage.setItem('garudaCBT.login', cbtOnly === '1' ? '1' : '0');
 
             $.ajax({
                 url: $(this).attr('action'),
@@ -103,43 +266,31 @@
                 data: $(this).serialize(),
                 success: function(data) {
                     infobox.removeAttr('class').text('');
-                    btnsubmit.removeAttr('disabled').val('Login');
-                    console.log('login', data);
-                    if (data.status) {
-                        infobox.addClass('info-box align-items-center justify-content-center bg-gradient-success').text('Login Sukses');
+                    btnSubmit.removeAttr('disabled').val('<?= lang('login_submit_btn') ?>');
 
-                        const isLogin = localStorage.getItem('garudaCBT.login')
-                        const isCbtMode = isLogin ? isLogin === '1' : false
+                    if (data.status) {
+                        infobox.addClass('bg-gradient-success text-white').text('Login Sukses');
+                        const isCbt = localStorage.getItem('garudaCBT.login') === '1';
                         let go = base_url + data.url;
-                        if (isCbtMode && data.role === 'siswa') {
-                            go = 'siswa/cbt'
-                        }
+                        if (isCbt && data.role === 'siswa') go = 'siswa/cbt';
                         window.location.href = go;
                     } else {
                         if (data.invalid) {
                             $.each(data.invalid, function(key, val) {
-                                $('[name="' + key + '"').parent().addClass('has-error');
-                                $('[name="' + key + '"').next().next().text(val);
-                                if (val == '') {
-                                    $('[name="' + key + '"').parent().removeClass('has-error');
-                                    $('[name="' + key + '"').next().next().text('');
+                                const input = $('[name="' + key + '"]');
+                                const wrap = input.closest('.auth-input-group');
+                                if (val) {
+                                    wrap.addClass('has-error');
+                                    wrap.find('.auth-error').text(val);
                                 }
                             });
                         }
                         if (data.failed) {
-                            infobox.addClass('info-box align-items-center justify-content-center bg-gradient-danger').text(data.failed);
+                            infobox.addClass('bg-gradient-danger text-white').text(data.failed);
                         }
                     }
                 }
             });
-        });
-
-        $('#toggle-password').on('click', function(e) {
-            // toggle the type attribute
-            const type = $('#password').attr('type') === 'password' ? 'text' : 'password';
-            $('#password').attr('type', type);
-            // toggle the eye / eye slash icon
-            $(this).toggleClass('fa-eye-slash fa-eye');
         });
     });
 </script>
