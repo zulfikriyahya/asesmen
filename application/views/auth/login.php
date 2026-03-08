@@ -15,21 +15,21 @@ $logo_app = $setting->logo_kanan == null
 
     .auth-card {
         width: 100%;
-        max-width: 400px;
-        background: rgba(15, 17, 24, 0.75);
+        max-width: 420px;
+        background: rgba(10, 15, 20, 0.78);
         border: 1px solid rgba(255, 255, 255, 0.1);
         backdrop-filter: blur(32px);
         -webkit-backdrop-filter: blur(32px);
         border-radius: 18px;
         overflow: hidden;
-        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04);
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(6, 182, 212, 0.08);
     }
 
     .auth-header {
-        background: rgba(255, 255, 255, 0.04);
+        background: rgba(6, 182, 212, 0.06);
         padding: 2rem 2rem 1.5rem;
         text-align: center;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: 1px solid rgba(6, 182, 212, 0.12);
     }
 
     .auth-header img {
@@ -37,13 +37,13 @@ $logo_app = $setting->logo_kanan == null
         height: 72px;
         object-fit: contain;
         margin-bottom: .75rem;
-        filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.5));
+        filter: drop-shadow(0 4px 16px rgba(6, 182, 212, 0.35));
     }
 
     .auth-header h2 {
         font-size: 1.05rem;
         font-weight: 600;
-        color: rgba(255, 255, 255, 0.85);
+        color: rgba(255, 255, 255, 0.92);
         margin: 0;
         letter-spacing: .3px;
     }
@@ -57,7 +57,7 @@ $logo_app = $setting->logo_kanan == null
         font-size: .72rem;
         font-weight: 600;
         letter-spacing: 4px;
-        color: rgba(255, 255, 255, 0.25);
+        color: rgba(6, 182, 212, 0.55);
         text-transform: uppercase;
         margin-bottom: 1.75rem;
     }
@@ -72,7 +72,7 @@ $logo_app = $setting->logo_kanan == null
         left: 14px;
         top: 50%;
         transform: translateY(-50%);
-        color: rgba(255, 255, 255, 0.25);
+        color: rgba(6, 182, 212, 0.45);
         font-size: .82rem;
         z-index: 2;
         pointer-events: none;
@@ -80,8 +80,8 @@ $logo_app = $setting->logo_kanan == null
 
     .auth-input-group input {
         width: 100%;
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 10px;
         color: rgba(255, 255, 255, 0.9);
         padding: .72rem 2.5rem .72rem 2.5rem;
@@ -92,9 +92,9 @@ $logo_app = $setting->logo_kanan == null
     }
 
     .auth-input-group input:focus {
-        background: rgba(99, 102, 241, 0.12);
-        border-color: rgba(99, 102, 241, 0.55);
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        background: rgba(6, 182, 212, 0.08);
+        border-color: rgba(6, 182, 212, 0.5);
+        box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.12);
     }
 
     .auth-input-group input::placeholder {
@@ -114,7 +114,7 @@ $logo_app = $setting->logo_kanan == null
     }
 
     .auth-input-group .toggle-pw:hover {
-        color: rgba(255, 255, 255, 0.6);
+        color: rgba(6, 182, 212, 0.8);
     }
 
     .auth-error {
@@ -136,8 +136,8 @@ $logo_app = $setting->logo_kanan == null
     .btn-auth {
         width: 100%;
         padding: .75rem;
-        background: rgba(99, 102, 241, 0.85);
-        border: 1px solid rgba(99, 102, 241, 0.4);
+        background: linear-gradient(135deg, rgba(6, 182, 212, 0.9), rgba(14, 165, 233, 0.85));
+        border: 1px solid rgba(6, 182, 212, 0.4);
         border-radius: 10px;
         color: #fff;
         font-family: 'Lexend', sans-serif;
@@ -145,14 +145,13 @@ $logo_app = $setting->logo_kanan == null
         font-size: .88rem;
         letter-spacing: .3px;
         cursor: pointer;
-        transition: background .2s, box-shadow .2s, transform .1s;
+        transition: opacity .2s, box-shadow .2s, transform .1s;
         margin-top: 1.25rem;
-        backdrop-filter: blur(8px);
     }
 
     .btn-auth:hover {
-        background: rgba(99, 102, 241, 1);
-        box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35);
+        opacity: .92;
+        box-shadow: 0 6px 24px rgba(6, 182, 212, 0.35);
     }
 
     .btn-auth:active {
@@ -160,7 +159,7 @@ $logo_app = $setting->logo_kanan == null
     }
 
     .btn-auth:disabled {
-        opacity: .5;
+        opacity: .45;
         cursor: not-allowed;
     }
 
@@ -175,6 +174,31 @@ $logo_app = $setting->logo_kanan == null
 
     #infoMessage:empty {
         display: none;
+    }
+
+    .auth-footer {
+        padding: 1rem 2rem;
+        background: rgba(6, 182, 212, 0.04);
+        border-top: 1px solid rgba(6, 182, 212, 0.1);
+        text-align: center;
+    }
+
+    .auth-footer-appname {
+        font-size: .78rem;
+        font-weight: 600;
+        color: rgba(6, 182, 212, 0.8);
+        letter-spacing: .04em;
+        margin-bottom: .2rem;
+    }
+
+    .auth-footer-meta {
+        font-size: .7rem;
+        color: rgba(255, 255, 255, 0.3);
+        line-height: 1.6;
+    }
+
+    .auth-footer-meta span {
+        color: rgba(255, 255, 255, 0.45);
     }
 </style>
 
@@ -214,6 +238,13 @@ $logo_app = $setting->logo_kanan == null
             ]) ?>
 
             <?= form_close() ?>
+        </div>
+
+        <div class="auth-footer">
+            <div class="auth-footer-appname">Madrasah Universe</div>
+            <div class="auth-footer-meta">
+                <span>Yahya Zulfikri</span> &nbsp;&bull;&nbsp; &copy; 2018 &ndash; <?= date('Y') ?>
+            </div>
         </div>
 
     </div>
