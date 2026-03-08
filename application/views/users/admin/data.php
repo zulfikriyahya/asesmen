@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="<?= base_url() ?>assets/app/css/users.css">
+
 <div class="content-wrapper">
     <section class="content-header">
         <div class="container-fluid">
@@ -24,21 +26,23 @@
                 </div>
 
                 <div class="table-wrap">
-                    <table id="users" class="w-100 table table-hover">
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Username</th>
-                                <th>Email</th>
-                                <th>Level</th>
-                                <th>Created On</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-center">Action</th>
-                            </tr>
-                        </thead>
-                    </table>
+                    <div class="table-responsive">
+                        <table id="users" class="w-100 table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Level</th>
+                                    <th>Created On</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
 
             </div>

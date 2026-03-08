@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="<?= base_url() ?>assets/app/css/users.css">
+
 <div class="content-wrapper">
   <section class="content-header">
     <div class="container-fluid">
@@ -30,19 +32,21 @@
         </div>
 
         <div class="g-card-body">
-          <table id="users" class="w-100 table table-hover">
-            <thead>
-              <tr>
-                <th class="text-center" style="width:40px">No.</th>
-                <th>Nama</th>
-                <th>Username</th>
-                <th>Password</th>
-                <th>Jabatan</th>
-                <th class="text-center">Reset Login</th>
-                <th class="text-center">Aksi</th>
-              </tr>
-            </thead>
-          </table>
+          <div class="table-responsive">
+            <table id="users" class="w-100 table table-hover">
+              <thead>
+                <tr>
+                  <th class="text-center" style="width:40px">No.</th>
+                  <th>Nama</th>
+                  <th>Username</th>
+                  <th>Password</th>
+                  <th>Jabatan</th>
+                  <th class="text-center">Reset Login</th>
+                  <th class="text-center">Aksi</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
         </div>
 
         <div class="overlay-g d-none" id="loading">
