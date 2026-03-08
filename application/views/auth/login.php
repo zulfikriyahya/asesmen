@@ -16,15 +16,17 @@ $logo_app = $setting->logo_kanan == null
     .auth-card {
         width: 100%;
         max-width: 400px;
-        background: #1a1d23;
-        border: 1px solid rgba(255, 255, 255, 0.07);
-        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 18px;
         overflow: hidden;
-        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.03);
     }
 
     .auth-header {
-        background: #111318;
+        background: rgba(255, 255, 255, 0.03);
         padding: 2rem 2rem 1.5rem;
         text-align: center;
         border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -35,15 +37,15 @@ $logo_app = $setting->logo_kanan == null
         height: 72px;
         object-fit: contain;
         margin-bottom: .75rem;
-        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+        filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.5));
     }
 
     .auth-header h2 {
-        font-size: 1.1rem;
+        font-size: 1.05rem;
         font-weight: 600;
-        color: #e0e0e0;
+        color: rgba(255, 255, 255, 0.85);
         margin: 0;
-        letter-spacing: .5px;
+        letter-spacing: .3px;
     }
 
     .auth-body {
@@ -52,17 +54,17 @@ $logo_app = $setting->logo_kanan == null
 
     .auth-title {
         text-align: center;
-        font-size: .8rem;
-        font-weight: 700;
+        font-size: .72rem;
+        font-weight: 600;
         letter-spacing: 4px;
-        color: #6c757d;
+        color: rgba(255, 255, 255, 0.25);
         text-transform: uppercase;
         margin-bottom: 1.75rem;
     }
 
     .auth-input-group {
         position: relative;
-        margin-bottom: 1.25rem;
+        margin-bottom: 1.1rem;
     }
 
     .auth-input-group .input-icon {
@@ -70,30 +72,33 @@ $logo_app = $setting->logo_kanan == null
         left: 14px;
         top: 50%;
         transform: translateY(-50%);
-        color: #555;
-        font-size: .85rem;
+        color: rgba(255, 255, 255, 0.25);
+        font-size: .82rem;
         z-index: 2;
+        pointer-events: none;
     }
 
     .auth-input-group input {
         width: 100%;
-        background: #111318;
+        background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 8px;
-        color: #e0e0e0;
-        padding: .7rem 2.5rem .7rem 2.5rem;
-        font-size: .9rem;
-        transition: border-color .2s, box-shadow .2s;
+        border-radius: 10px;
+        color: rgba(255, 255, 255, 0.85);
+        padding: .72rem 2.5rem .72rem 2.5rem;
+        font-size: .88rem;
+        font-family: 'Lexend', sans-serif;
+        transition: border-color .2s, box-shadow .2s, background .2s;
         outline: none;
     }
 
     .auth-input-group input:focus {
-        border-color: #3d8bfd;
-        box-shadow: 0 0 0 3px rgba(61, 139, 253, 0.15);
+        background: rgba(99, 102, 241, 0.07);
+        border-color: rgba(99, 102, 241, 0.5);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
     }
 
     .auth-input-group input::placeholder {
-        color: #444;
+        color: rgba(255, 255, 255, 0.2);
     }
 
     .auth-input-group .toggle-pw {
@@ -101,56 +106,53 @@ $logo_app = $setting->logo_kanan == null
         right: 14px;
         top: 50%;
         transform: translateY(-50%);
-        color: #555;
+        color: rgba(255, 255, 255, 0.25);
         cursor: pointer;
-        font-size: .85rem;
+        font-size: .82rem;
         z-index: 2;
         transition: color .2s;
     }
 
     .auth-input-group .toggle-pw:hover {
-        color: #aaa;
+        color: rgba(255, 255, 255, 0.6);
     }
 
     .auth-error {
-        font-size: .75rem;
+        font-size: .73rem;
         color: #f87171;
         margin-top: .3rem;
         display: none;
     }
 
     .auth-input-group.has-error input {
-        border-color: #f87171;
+        border-color: rgba(248, 113, 113, 0.6);
+        box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.1);
     }
 
     .auth-input-group.has-error .auth-error {
         display: block;
     }
 
-    .auth-footer-row {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        margin-top: .25rem;
-    }
-
     .btn-auth {
         width: 100%;
         padding: .75rem;
-        background: #3d8bfd;
-        border: none;
-        border-radius: 8px;
+        background: rgba(99, 102, 241, 0.85);
+        border: 1px solid rgba(99, 102, 241, 0.4);
+        border-radius: 10px;
         color: #fff;
+        font-family: 'Lexend', sans-serif;
         font-weight: 600;
-        font-size: .9rem;
-        letter-spacing: .5px;
+        font-size: .88rem;
+        letter-spacing: .3px;
         cursor: pointer;
-        transition: background .2s, transform .1s;
+        transition: background .2s, box-shadow .2s, transform .1s;
         margin-top: 1.25rem;
+        backdrop-filter: blur(8px);
     }
 
     .btn-auth:hover {
-        background: #2b7ae0;
+        background: rgba(99, 102, 241, 1);
+        box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35);
     }
 
     .btn-auth:active {
@@ -158,17 +160,16 @@ $logo_app = $setting->logo_kanan == null
     }
 
     .btn-auth:disabled {
-        opacity: .6;
+        opacity: .5;
         cursor: not-allowed;
     }
 
     #infoMessage {
-        font-size: .82rem;
+        font-size: .8rem;
         text-align: center;
         border-radius: 8px;
         padding: .5rem .75rem;
         margin-bottom: 1rem;
-        min-height: 0;
         transition: all .2s;
     }
 
@@ -229,14 +230,12 @@ $logo_app = $setting->logo_kanan == null
             duration: 10000
         });
 
-        // Toggle password visibility
         $('#toggle-password').on('click', function() {
             const input = $('#password');
             input.attr('type', input.attr('type') === 'password' ? 'text' : 'password');
             $(this).toggleClass('fa-eye-slash fa-eye');
         });
 
-        // Clear error on input change
         $('form#login input').on('input', function() {
             const wrap = $(this).closest('.auth-input-group');
             wrap.removeClass('has-error');
@@ -250,13 +249,9 @@ $logo_app = $setting->logo_kanan == null
             const infobox = $('#infoMessage');
             const btnSubmit = $('#submit');
 
-            infobox
-                .removeAttr('class')
-                .addClass('bg-gradient-info text-white')
-                .text('Checking...');
+            infobox.removeAttr('class').addClass('bg-gradient-info text-white').text('Checking...');
             btnSubmit.attr('disabled', true).val('Wait...');
 
-            // Preserve CBT-only flag in localStorage
             const cbtOnly = $('[name="cbt-only"]').val();
             localStorage.setItem('garudaCBT.login', cbtOnly === '1' ? '1' : '0');
 
