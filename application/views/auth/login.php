@@ -223,7 +223,7 @@ $logo_app = $setting->logo_kanan == null
 <script>
     $(function() {
         const base_url = '<?= base_url() ?>';
-        const imgs = 'wallpaper.png';
+        const imgs = ['wallpaper.png'];
 
         $.backstretch(imgs.map(i => base_url + 'assets/img/' + i), {
             fade: 1000,
