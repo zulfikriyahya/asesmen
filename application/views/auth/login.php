@@ -241,7 +241,7 @@ $logo_app = $setting->logo_kanan == null
         </div>
 
         <div class="auth-footer">
-            <div class="auth-footer-appname">Madrasah Universe</div>
+            <div class="auth-footer-appname">MADRASAH UNIVERSE</div>
             <div class="auth-footer-meta">
                 <span>Yahya Zulfikri</span> &nbsp;&bull;&nbsp; &copy; 2018 &ndash; <?= date('Y') ?>
             </div>

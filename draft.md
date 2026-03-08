@@ -52347,7 +52347,7 @@ $satuan = [
 
 <!-- Main Footer -->
 <footer class="main-footer bg-dark">
-    <strong>ZEDAPPS SCHOOL</strong> Version <?= APP_VERSION ?>
+    <strong>MADRASAH UNIVERSE</strong> Version <?= APP_VERSION ?>
     <div class="float-right d-none d-sm-inline-block">
         <strong>Copyright &copy; 2018 - <?= date('Y'); ?></strong>
     </div>
@@ -59418,7 +59418,7 @@ $display_logout = $this->uri->segment(2) == "penilaian" ? 'd-none' : '';
     </ul>
 
     <div class="mx-auto text-white text-center" style="line-height: 1">
-        <span class="text-lg p-0">ZEDAPPS SCHOOL</span>
+        <span class="text-lg p-0">MADRASAH UNIVERSE</span>
         <br>
         <small>Belajar kapanpun dimanapun</small>
     </div>

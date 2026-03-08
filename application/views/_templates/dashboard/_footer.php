@@ -10,7 +10,7 @@
     font-size: .78rem;
     font-weight: 400;
 ">
-    <strong style="color:rgba(255,255,255,0.65);">ZEDAPPS SCHOOL</strong>
+    <strong style="color:rgba(255,255,255,0.65);">MADRASAH UNIVERSE</strong>
     &mdash; Version <?= APP_VERSION ?>
     <div class="float-right d-none d-sm-inline-block">
         &copy; 2018 &ndash; <?= date('Y') ?>

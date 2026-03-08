@@ -43,7 +43,7 @@ $logo_app = $setting->logo_kiri == null
     const pageact = '<?= $this->uri->segment(2) ?>';
 
     const menus = [{
-            header: "<marquee><center>Selamat datang di <strong>ZEDAPPS SCHOOL.</strong></center></marquee>",
+            header: "<marquee><center>Selamat datang di <strong>MADRASAH UNIVERSE.</strong></center></marquee>",
             menu: []
         },
         {

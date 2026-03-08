@@ -16,7 +16,7 @@
             <?= strftime('%A, %d %B %Y') ?>,
             <span class="live-clock" style="color:rgba(99,102,241,0.9); font-weight:500;"><?= date('H:i:s') ?></span>
         </span>
-        <strong style="color:rgba(255,255,255,0.5);">ZEDAPPS SCHOOL</strong>
+        <strong style="color:rgba(255,255,255,0.5);">MADRASAH UNIVERSE</strong>
     </div>
 </footer>
 
