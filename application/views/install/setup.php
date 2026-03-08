@@ -5,7 +5,7 @@
         <div class="install-brand">
             <img src="<?= base_url() ?>/assets/img/garuda_white.svg" alt="Logo">
             <h1><b>G</b>abungan <b>A</b>plikasi <b>R</b>apor,<br><b>U</b>jian dan e-learning</h1>
-            <p>Selamat datang di installer ASESMEN MADRASAH CBT.<br>Isi konfigurasi database untuk memulai.</p>
+            <p>Selamat datang di installer ASESMEN MADRASAH.<br>Isi konfigurasi database untuk memulai.</p>
         </div>
 
         <!-- Card -->
