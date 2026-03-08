@@ -437,27 +437,30 @@
         var html = '';
         if (data.lists.length > 0) {
             $.each(data.lists, function(idx, siswa) {
-                var kls = siswa.nama_kelas ? '<span class="badge-cyan ml-1">' + siswa.nama_kelas + '</span>' : '';
+                var kls = siswa.nama_kelas ? '<span class="badge-cyan" style="margin-left:4px">' + siswa.nama_kelas + '</span>' : '';
                 var status = siswa.aktif == "0" ?
-                    '<span class="badge-danger-glass ml-1">Nonaktif</span>' :
-                    '<span class="badge-success-glass ml-1">Aktif</span>';
-                var jk = '<span class="badge-light-glass ml-1">' + siswa.jenis_kelamin + '</span>';
+                    '<span class="badge-danger-glass" style="margin-left:4px">Nonaktif</span>' :
+                    '<span class="badge-success-glass" style="margin-left:4px">Aktif</span>';
+                var jk = '<span class="badge-light-glass" style="margin-left:4px">' + siswa.jenis_kelamin + '</span>';
                 html += '<tr>' +
-                    '<td class="text-center"><input name="checked[]" class="check" value="' + siswa.id_siswa + '" type="checkbox"></td>' +
-                    '<td class="text-center">' + Number((perPage * (currentPage - 1)) + (idx + 1)) + '</td>' +
+                    '<td class="text-center" style="width:40px"><input name="checked[]" class="check" value="' + siswa.id_siswa + '" type="checkbox"></td>' +
+                    '<td class="text-center" style="width:50px">' + Number((perPage * (currentPage - 1)) + (idx + 1)) + '</td>' +
                     '<td>' +
-                    '   <div class="d-flex align-items-center" style="gap:0.6rem">' +
-                    '       <img class="avatar-circle avatar" src="' + base_url + siswa.foto + '" alt="foto">' +
-                    '       <div class="siswa-name">' + siswa.nama + '<br>' + kls + jk + status + '</div>' +
+                    '   <div class="d-flex align-items-center" style="gap:0.75rem">' +
+                    '       <img class="avatar-circle avatar" src="' + base_url + siswa.foto + '" alt="foto" style="flex-shrink:0">' +
+                    '       <div>' +
+                    '           <div class="siswa-name">' + siswa.nama + '</div>' +
+                    '           <div style="margin-top:4px">' + kls + jk + status + '</div>' +
+                    '       </div>' +
                     '   </div>' +
                     '</td>' +
-                    '<td>' +
-                    '   <span class="badge-light-glass d-block mb-1">' + siswa.nis + '</span>' +
-                    '   <span class="badge-light-glass d-block">' + siswa.nisn + '</span>' +
+                    '<td style="width:180px">' +
+                    '   <div style="font-family:\'Lexend\',sans-serif;font-size:0.8rem;color:#94a3b8;margin-bottom:4px"><span style="color:#64748b;font-size:0.72rem">NIS</span><br>' + siswa.nis + '</div>' +
+                    '   <div style="font-family:\'Lexend\',sans-serif;font-size:0.8rem;color:#94a3b8"><span style="color:#64748b;font-size:0.72rem">NISN</span><br>' + siswa.nisn + '</div>' +
                     '</td>' +
-                    '<td class="text-center">' +
+                    '<td class="text-center" style="width:80px">' +
                     '   <a class="btn btn-warning-glass btn-sm" href="' + base_url + 'datasiswa/edit/' + siswa.id_siswa + '">' +
-                    '       <i class="fa fa-pencil-alt"></i> Edit' +
+                    '       <i class="fa fa-pencil-alt mr-1"></i>Edit' +
                     '   </a>' +
                     '</td>' +
                     '</tr>';
