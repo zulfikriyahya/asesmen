@@ -13,12 +13,10 @@ class Dashboard_model extends CI_Model
     }
     public function total($table, $where = null)
     {
-        if (!($where != null)) {
-            return $this->db->get($table)->num_rows();
-        } else {
+        if ($where != null) {
             $this->db->where($where);
-            return $this->db->get($table)->num_rows();
         }
+        return $this->db->get($table)->num_rows();
     }
     public function hapus($table, $data, $pk)
     {
@@ -51,13 +49,11 @@ class Dashboard_model extends CI_Model
     }
     public function totalPengawas()
     {
-        $this->db->select('*');
         $this->db->where('id_jadwal !=', 'a:0:{}');
         return $this->db->get('cbt_pengawas')->num_rows();
     }
     public function totalJadwal()
     {
-        $this->db->select('*');
         return $this->db->get('cbt_jadwal')->num_rows();
     }
     public function getDataTahun()
@@ -171,24 +167,17 @@ class Dashboard_model extends CI_Model
         $this->db->select('*');
         $this->db->from($table);
         $this->db->where($pk, $id);
-        if (!($join !== null)) {
-            if (!($order !== null)) {
+        if ($join !== null) {
+            foreach ($join as $jtable => $field) {
+                $this->db->join($jtable, $field);
             }
-            foreach ($order as $field => $sort) {
-                $this->db->order_by($field, $sort);
-            }
-            return $this->db->get();
-        } else {
-            foreach ($join as $table => $field) {
-                $this->db->join($table, $field);
-            }
-            if (!($order !== null)) {
-            }
-            foreach ($order as $field => $sort) {
-                $this->db->order_by($field, $sort);
-            }
-            return $this->db->get();
         }
+        if ($order !== null) {
+            foreach ($order as $field => $sort) {
+                $this->db->order_by($field, $sort);
+            }
+        }
+        return $this->db->get();
     }
     public function create($table, $data)
     {
@@ -197,11 +186,9 @@ class Dashboard_model extends CI_Model
     public function update($table, $data, $pk, $id = null, $batch = false)
     {
         if ($batch === false) {
-            $insert = $this->db->update($table, $data, array($pk => $id));
-            return $insert;
+            return $this->db->update($table, $data, array($pk => $id));
         } else {
-            $insert = $this->db->update_batch($table, $data, $pk);
-            return $insert;
+            return $this->db->update_batch($table, $data, $pk);
         }
     }
     public function getDataSiswa($username, $id_tp, $id_smt)
@@ -230,18 +217,13 @@ class Dashboard_model extends CI_Model
         $this->db->join('master_mapel b', 'b.id_mapel=a.id_mapel', 'left');
         $this->db->where('a.id_tp', $id_tp);
         $this->db->where('a.id_smt', $id_smt);
-        if (!($id_kelas != null)) {
-            if (!($id_hari != null)) {
-            }
-            $this->db->where('a.id_hari', $id_hari);
-            return $this->db->get()->result();
-        } else {
+        if ($id_kelas != null) {
             $this->db->where('a.id_kelas', $id_kelas);
-            if (!($id_hari != null)) {
-            }
-            $this->db->where('a.id_hari', $id_hari);
-            return $this->db->get()->result();
         }
+        if ($id_hari != null) {
+            $this->db->where('a.id_hari', $id_hari);
+        }
+        return $this->db->get()->result();
     }
     public function getJadwalKbm($id_tp, $id_smt, $id_kelas = null)
     {
@@ -251,11 +233,8 @@ class Dashboard_model extends CI_Model
         $this->db->where('id_smt', $id_smt);
         if ($id_kelas != null) {
             $this->db->where('id_kelas', $id_kelas);
-            $query = $this->db->get()->row();
-            return $query;
-        } else {
-            $query = $this->db->get()->result();
-            return $query;
+            return $this->db->get()->row();
         }
+        return $this->db->get()->result();
     }
 }
