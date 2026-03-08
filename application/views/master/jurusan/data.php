@@ -212,6 +212,7 @@
 </div>
 <?= form_close() ?>
 
+
 <script>
     var mapels = JSON.parse('<?= json_encode($mapel_peminatan) ?>');
 </script>
