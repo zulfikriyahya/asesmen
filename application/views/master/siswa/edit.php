@@ -11,7 +11,7 @@ if (!file_exists(FCPATH . $siswa->foto)) {
         <div class="container-fluid">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h1><?= $judul ?></h1>
-                <button onclick="window.history.back();" type="button" class="btn btn-danger-glass btn-sm">
+                <button onclick="window.history.back();" type="button" class="btn btn-danger-glass btn-sm" style="position:fixed;top:1rem;right:1.5rem;z-index:999">
                     <i class="fas fa-arrow-circle-left mr-1"></i>Kembali
                 </button>
             </div>

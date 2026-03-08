@@ -3,9 +3,9 @@
 <div class="content-wrapper pt-4">
     <section class="content-header">
         <div class="container-fluid">
-            <div class="d-sm-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex justify-content-between align-items-start mb-3">
                 <h1><?= $subjudul ?></h1>
-                <a href="<?= base_url('datasiswa') ?>" class="btn btn-danger-glass btn-sm">
+                <a href="<?= base_url('datasiswa') ?>" class="btn btn-danger-glass btn-sm ml-auto" style="position:fixed;top:1rem;right:1.5rem;z-index:999">
                     <i class="fas fa-arrow-circle-left mr-1"></i>Kembali
                 </a>
             </div>

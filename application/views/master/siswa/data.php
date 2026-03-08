@@ -3,18 +3,14 @@
 <div class="content-wrapper pt-4">
     <section class="content-header">
         <div class="container-fluid">
-            <div class="row mb-3">
-                <div class="col-sm-6">
-                    <h1><?= $judul ?></h1>
-                </div>
-            </div>
+            <h1><?= $judul ?></h1>
         </div>
     </section>
 
     <section class="content">
         <div class="container-fluid">
             <div class="glass-card mb-0" style="position:relative">
-                <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem">
+                <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem">
                     <h6 class="card-title mb-0"><?= $subjudul ?></h6>
                     <div style="display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap">
                         <button type="button" data-toggle="modal" data-target="#createSiswaModal" class="btn btn-cyan btn-sm">
