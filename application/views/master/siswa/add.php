@@ -21,39 +21,37 @@
             <div class="row">
                 <div class="col-xl-4 col-lg-5 mb-4">
                     <div class="glass-card h-100">
-                        <div class="card-header">
-                            <h6 class="card-title">File Excel</h6>
+                        <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem">
+                            <h6 class="card-title mb-0">File Excel</h6>
                             <?php $url = 'uploads/import/format/format_siswa.xlsx'; ?>
-                            <a href="<?= base_url() . $url ?>" class="btn btn-success-glass btn-sm">
+                            <a href="<?= base_url() . $url ?>" class="btn btn-success-glass btn-sm" style="white-space:nowrap;flex-shrink:0">
                                 <i class="fas fa-download mr-1"></i>Download Template
                             </a>
                         </div>
-                        <div class="card-body excel">
+                        <div class="card-body" style="padding:1.5rem">
                             <?= form_open_multipart('', array('id' => 'formPreviewExcel')); ?>
-                            <div class="form-group mb-0">
-                                <label style="font-family:'Lexend',sans-serif;font-size:0.82rem;color:#94a3b8">Pilih file Excel</label>
-                                <input type="file" id="input-file-events-excel" name="upload_file" class="dropify" />
-                            </div>
+                            <label style="font-family:'Lexend',sans-serif;font-size:0.82rem;color:#94a3b8;margin-bottom:0.6rem;display:block">Pilih file Excel</label>
+                            <input type="file" id="input-file-events-excel" name="upload_file" class="dropify" />
                             <?= form_close(); ?>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-xl-8 col-lg-7 mb-4">
-                    <div class="glass-card h-100">
+                    <div class="glass-card h-100" style="display:flex;flex-direction:column">
                         <?= form_open('', array('id' => 'formUpload')); ?>
-                        <div class="card-header">
-                            <h6 class="card-title">Preview</h6>
-                            <button id="submit-excel" name="preview" type="submit" class="btn btn-cyan btn-sm" disabled="disabled">
+                        <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem">
+                            <h6 class="card-title mb-0">Preview</h6>
+                            <button id="submit-excel" name="preview" type="submit" class="btn btn-cyan btn-sm" disabled="disabled" style="flex-shrink:0">
                                 <i class="fas fa-cloud-upload-alt mr-1"></i>Upload
                             </button>
                         </div>
                         <?= form_close(); ?>
-                        <div class="card-body table-responsive" id="file-preview">
+                        <div class="card-body table-responsive flex-grow-1" id="file-preview" style="padding:1.5rem;min-height:200px">
                             <table id="tableprev" class="mb-4 w-100"></table>
-                            <span style="font-family:'Lexend',sans-serif;font-size:0.82rem;color:#64748b">
+                            <p style="font-family:'Lexend',sans-serif;font-size:0.82rem;color:#64748b;margin:0">
                                 Pastikan anda telah mengisi format yang telah disediakan.
-                            </span>
+                            </p>
                         </div>
                     </div>
                 </div>
