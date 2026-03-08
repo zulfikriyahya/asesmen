@@ -209,8 +209,8 @@ $base_url  = str_replace('installer/', '', $base_url);
         <!-- Brand -->
         <div class="inst-brand">
             <img src="<?= $base_url ?>assets/img/favicon.png" alt="Logo">
-            <h1><b>ASESMEN MADRASAH</b> CBT</h1>
-            <p>Selamat datang di installer ASESMEN MADRASAH CBT.<br>Isi konfigurasi database untuk memulai instalasi.</p>
+            <h1><b>ASESMEN</b> MADRASAH</h1>
+            <p>Selamat datang di installer ASESMEN MADRASAH.<br>Isi konfigurasi database untuk memulai instalasi.</p>
         </div>
 
         <!-- Card -->
@@ -225,26 +225,26 @@ $base_url  = str_replace('installer/', '', $base_url);
                         <div class="inst-field full">
                             <label>Hostname</label>
                             <input type="text" name="hostname" id="input-nama-host"
-                                placeholder="localhost" required>
+                                placeholder="" required>
                         </div>
 
                         <div class="inst-field">
                             <label>Host Username</label>
                             <input type="text" name="username" id="input-user-host"
-                                placeholder="root">
+                                placeholder="">
                         </div>
 
                         <div class="inst-field">
                             <label>Host Password</label>
                             <input type="text" name="password" id="input-pass-host"
-                                placeholder="Kosongkan jika tidak ada">
+                                placeholder="">
                             <small>Kosongkan jika tidak menggunakan password.</small>
                         </div>
 
                         <div class="inst-field full">
                             <label>Nama Database</label>
                             <input type="text" name="database" id="input-nama-db"
-                                placeholder="nama_database" required>
+                                placeholder="" required>
                             <small>Jangan gunakan spasi.</small>
                         </div>
 
