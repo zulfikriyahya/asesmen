@@ -1,6 +1,5 @@
 /* ================================================================
    auth-pages.css
-   Shared styles untuk semua view di application/views/auth/
    ================================================================ */
 
 /* ── Wrapper ── */
@@ -16,13 +15,13 @@
 .auth-page-card {
   width: 100%;
   max-width: 480px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
 }
 
 .auth-page-card--wide {
@@ -35,21 +34,21 @@
 
 /* ── Header ── */
 .auth-page-header {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.05);
   padding: 1.5rem 1.75rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .auth-page-header h4 {
   font-size: 1rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.92);
   margin: 0 0 0.2rem;
 }
 
 .auth-page-header p {
   font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.5);
   margin: 0;
 }
 
@@ -60,12 +59,12 @@
 
 /* ── Alert ── */
 .auth-alert {
-  background: rgba(99, 102, 241, 0.1);
-  border: 1px solid rgba(99, 102, 241, 0.25);
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.35);
   border-radius: 8px;
   padding: 0.6rem 1rem;
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.85);
   margin-bottom: 1.25rem;
 }
 
@@ -88,17 +87,17 @@
 .form-field > *:first-child:not(input):not(select):not(textarea) {
   font-size: 0.78rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.6);
   letter-spacing: 0.02em;
 }
 
 .form-field input,
 .form-field select,
 .form-field textarea {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 9px;
-  color: rgba(255, 255, 255, 0.82);
+  color: rgba(255, 255, 255, 0.9);
   padding: 0.6rem 0.9rem;
   font-size: 0.85rem;
   font-family: "Lexend", sans-serif;
@@ -113,18 +112,18 @@
 .form-field input:focus,
 .form-field select:focus,
 .form-field textarea:focus {
-  background: rgba(99, 102, 241, 0.07);
-  border-color: rgba(99, 102, 241, 0.5);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  background: rgba(99, 102, 241, 0.12);
+  border-color: rgba(99, 102, 241, 0.6);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
 .form-field input::placeholder {
-  color: rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.25);
 }
 
 /* ── Section divider ── */
 .form-section-divider {
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding-top: 1.25rem;
   margin-top: 0.5rem;
 }
@@ -132,7 +131,7 @@
 .form-section-divider h5 {
   font-size: 0.78rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.55);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0 0 0.85rem;
@@ -150,11 +149,11 @@
   align-items: center;
   gap: 0.4rem;
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.75);
   cursor: pointer;
   padding: 0.35rem 0.75rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 7px;
   transition:
     background 0.2s,
@@ -162,12 +161,12 @@
 }
 
 .checkbox-option:hover {
-  background: rgba(99, 102, 241, 0.1);
-  border-color: rgba(99, 102, 241, 0.3);
+  background: rgba(99, 102, 241, 0.18);
+  border-color: rgba(99, 102, 241, 0.4);
 }
 
 .checkbox-option input[type="checkbox"] {
-  accent-color: #0d6efd;
+  accent-color: #6366f1;
 }
 
 /* ── Radio group ── */
@@ -182,11 +181,11 @@
   align-items: center;
   gap: 0.4rem;
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.75);
   cursor: pointer;
   padding: 0.35rem 0.75rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 7px;
   transition:
     background 0.2s,
@@ -194,12 +193,12 @@
 }
 
 .radio-option:hover {
-  background: rgba(99, 102, 241, 0.1);
-  border-color: rgba(99, 102, 241, 0.3);
+  background: rgba(99, 102, 241, 0.18);
+  border-color: rgba(99, 102, 241, 0.4);
 }
 
 .radio-option input[type="radio"] {
-  accent-color: #0d6efd;
+  accent-color: #6366f1;
 }
 
 /* ── Form actions ── */
@@ -209,7 +208,7 @@
   gap: 0.6rem;
   margin-top: 1.5rem;
   padding-top: 1.25rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* ── Buttons ── */
@@ -234,40 +233,40 @@
 }
 
 .btn-dark-primary {
-  background: rgba(99, 102, 241, 0.85);
-  border-color: rgba(99, 102, 241, 0.4);
+  background: rgba(99, 102, 241, 0.9);
+  border-color: rgba(99, 102, 241, 0.5);
   color: #fff;
 }
 
 .btn-dark-primary:hover {
-  background: #0d6efd;
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+  background: #6366f1;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
   color: #fff;
   text-decoration: none;
 }
 
 .btn-dark-secondary {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .btn-dark-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.95);
   text-decoration: none;
 }
 
 .btn-dark-danger {
-  background: rgba(239, 68, 68, 0.15);
-  border-color: rgba(239, 68, 68, 0.3);
-  color: rgba(239, 68, 68, 0.9);
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #f87171;
 }
 
 .btn-dark-danger:hover {
-  background: rgba(239, 68, 68, 0.25);
-  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.15);
-  color: #f87171;
+  background: rgba(239, 68, 68, 0.32);
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
   text-decoration: none;
 }
 
@@ -289,15 +288,15 @@
 }
 
 .auth-table thead tr {
-  background: rgba(255, 255, 255, 0.03);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
 }
 
 .auth-table th {
   padding: 0.75rem 1rem;
   font-size: 0.72rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.55);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   text-align: left;
@@ -306,13 +305,13 @@
 
 .auth-table td {
   padding: 0.7rem 1rem;
-  color: rgba(255, 255, 255, 0.65);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.78);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   vertical-align: middle;
 }
 
 .auth-table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.04);
 }
 .auth-table tbody tr:last-child td {
   border-bottom: none;
@@ -322,19 +321,19 @@
 .badge-group {
   display: inline-block;
   padding: 0.2rem 0.55rem;
-  background: rgba(99, 102, 241, 0.12);
-  border: 1px solid rgba(99, 102, 241, 0.25);
+  background: rgba(99, 102, 241, 0.18);
+  border: 1px solid rgba(99, 102, 241, 0.35);
   border-radius: 5px;
   font-size: 0.72rem;
-  color: #818cf8;
+  color: #a5b4fc;
   text-decoration: none;
   margin: 0.1rem 0.1rem;
   transition: background 0.2s;
 }
 
 .badge-group:hover {
-  background: rgba(99, 102, 241, 0.22);
-  color: #a5b4fc;
+  background: rgba(99, 102, 241, 0.3);
+  color: #c7d2fe;
   text-decoration: none;
 }
 
@@ -348,26 +347,26 @@
 }
 
 .badge-active {
-  background: rgba(34, 197, 94, 0.12);
-  border: 1px solid rgba(34, 197, 94, 0.25);
+  background: rgba(34, 197, 94, 0.18);
+  border: 1px solid rgba(34, 197, 94, 0.35);
   color: #4ade80;
 }
 
 .badge-active:hover {
-  background: rgba(34, 197, 94, 0.2);
-  color: #4ade80;
+  background: rgba(34, 197, 94, 0.28);
+  color: #86efac;
   text-decoration: none;
 }
 
 .badge-inactive {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.22);
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
   color: #f87171;
 }
 
 .badge-inactive:hover {
-  background: rgba(239, 68, 68, 0.18);
-  color: #f87171;
+  background: rgba(239, 68, 68, 0.25);
+  color: #fca5a5;
   text-decoration: none;
 }
 
@@ -385,6 +384,7 @@
   .form-actions {
     flex-direction: column;
   }
+
   .btn-dark-primary,
   .btn-dark-secondary,
   .btn-dark-danger {
