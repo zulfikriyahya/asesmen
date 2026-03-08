@@ -68,3 +68,4 @@ echo "✔ Selesai. $count file ditulis ke '$OUTPUT'."
 # - konsistenkan tema dan penulisan kode
 # - berikan saya full kode refactor perfile.
 # - berikan lokasi file yang diubah
+# - tolong perhatikan jarak dan gunakan tema warna cyan, biru atau hijau.

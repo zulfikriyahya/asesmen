@@ -2,67 +2,93 @@
     @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap');
 
     :root {
-        --glass-bg: rgba(255, 255, 255, 0.05);
-        --glass-border: rgba(255, 255, 255, 0.1);
-        --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        --accent: #f97316;
-        --text-primary: #f1f5f9;
-        --text-muted: #94a3b8;
+        --bg-base: #080e1a;
+        --bg-mid: #0d1526;
+        --bg-top: #0a1929;
+        --glass-bg: rgba(255, 255, 255, 0.04);
+        --glass-hover: rgba(255, 255, 255, 0.08);
+        --glass-border: rgba(99, 179, 237, 0.15);
+        --accent: #22d3ee;
+        --accent2: #3b82f6;
+        --text-1: #e2f0ff;
+        --text-2: #7eb8d4;
         --radius: 14px;
         --radius-sm: 8px;
+        --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
     }
 
-    * {
+    *,
+    *::before,
+    *::after {
         font-family: 'Lexend', sans-serif !important;
+        box-sizing: border-box;
     }
 
-    .glass-card {
+    .page-wrap {
+        background: linear-gradient(140deg, var(--bg-base) 0%, var(--bg-mid) 55%, var(--bg-top) 100%);
+        min-height: 100vh;
+        padding: 2rem 0 3rem;
+    }
+
+    .page-title {
+        font-size: 1.45rem;
+        font-weight: 700;
+        color: var(--text-1);
+        letter-spacing: -.01em;
+        margin: 0 0 1.75rem;
+    }
+
+    .g-card {
         background: var(--glass-bg);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
         border: 1px solid var(--glass-border);
         border-radius: var(--radius);
-        box-shadow: var(--glass-shadow);
+        box-shadow: var(--shadow);
         overflow: hidden;
         position: relative;
     }
 
-    .glass-header {
-        background: linear-gradient(135deg, rgba(249, 115, 22, 0.3), rgba(249, 115, 22, 0.08));
+    .g-card-header {
+        background: linear-gradient(135deg, rgba(34, 211, 238, 0.12), rgba(59, 130, 246, 0.08));
         border-bottom: 1px solid var(--glass-border);
-        padding: .85rem 1.25rem;
+        padding: .9rem 1.5rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: .75rem;
         flex-wrap: wrap;
-        gap: .5rem;
     }
 
-    .glass-header h3 {
+    .g-card-header h3 {
         margin: 0;
-        font-size: .95rem;
+        font-size: .9rem;
         font-weight: 600;
-        color: var(--text-primary);
+        color: var(--text-1);
+    }
+
+    .g-card-body {
+        padding: 1.5rem;
     }
 
     .btn-g {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .4rem .9rem;
         border-radius: var(--radius-sm);
-        padding: .35rem .75rem;
         font-size: .8rem;
         font-weight: 500;
         cursor: pointer;
         border: 1px solid var(--glass-border);
         background: var(--glass-bg);
-        color: var(--text-primary);
-        transition: all .2s;
-        display: inline-flex;
-        align-items: center;
-        gap: .35rem;
-        font-family: 'Lexend', sans-serif;
+        color: var(--text-1);
+        transition: background .2s, filter .2s;
+        white-space: nowrap;
     }
 
     .btn-g:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: var(--glass-hover);
         color: #fff;
     }
 
@@ -89,66 +115,114 @@
     .btn-g:disabled {
         opacity: .4;
         cursor: not-allowed;
+        filter: none;
     }
 
-    .select-g {
-        background: rgba(255, 255, 255, 0.07);
+    .toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: .75rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .toolbar-left {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .82rem;
+        color: var(--text-2);
+    }
+
+    .toolbar-right {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+
+    .f-select-sm {
+        background: rgba(255, 255, 255, 0.06);
         border: 1px solid var(--glass-border);
         border-radius: var(--radius-sm);
-        color: var(--text-primary);
-        padding: .3rem .6rem;
-        font-size: .82rem;
-        font-family: 'Lexend', sans-serif;
+        color: var(--text-1);
+        padding: .35rem .65rem;
+        font-size: .8rem;
     }
 
-    .input-search-g {
-        background: rgba(255, 255, 255, 0.07);
+    .f-search {
+        background: rgba(255, 255, 255, 0.06);
         border: 1px solid var(--glass-border);
         border-radius: var(--radius-sm);
-        color: var(--text-primary);
-        padding: .4rem .75rem;
-        font-size: .82rem;
-        font-family: 'Lexend', sans-serif;
-        transition: border-color .2s;
+        color: var(--text-1);
+        padding: .38rem .75rem;
+        font-size: .8rem;
+        transition: border-color .2s, background .2s;
+        width: 180px;
     }
 
-    .input-search-g:focus {
+    .f-search:focus {
         outline: none;
         border-color: var(--accent);
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(34, 211, 238, 0.06);
     }
 
-    .input-search-g::placeholder {
-        color: var(--text-muted);
+    .f-search::placeholder {
+        color: var(--text-2);
+        opacity: .55;
     }
 
     table#users {
-        color: var(--text-primary) !important;
+        color: var(--text-1) !important;
     }
 
     table#users thead th {
-        background: rgba(249, 115, 22, 0.2) !important;
-        color: var(--text-primary) !important;
+        background: rgba(34, 211, 238, 0.12) !important;
+        color: var(--accent) !important;
         border-color: var(--glass-border) !important;
-        font-weight: 500;
-        font-size: .82rem;
+        font-size: .78rem;
+        font-weight: 600;
+        letter-spacing: .03em;
+        padding: .65rem 1rem !important;
     }
 
-    table#users td,
-    table#users th {
+    table#users td {
         border-color: var(--glass-border) !important;
-        font-size: .83rem;
+        font-size: .82rem;
+        padding: .55rem 1rem !important;
         vertical-align: middle;
     }
 
     table#users tbody tr:hover {
-        background: rgba(255, 255, 255, 0.04) !important;
+        background: rgba(34, 211, 238, 0.05) !important;
+    }
+
+    .badge-on {
+        background: rgba(34, 197, 94, 0.18);
+        color: #4ade80;
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        border-radius: 20px;
+        padding: .15rem .65rem;
+        font-size: .72rem;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    .badge-off {
+        background: rgba(239, 68, 68, 0.18);
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: 20px;
+        padding: .15rem .65rem;
+        font-size: .72rem;
+        font-weight: 500;
+        white-space: nowrap;
     }
 
     .overlay-g {
         position: absolute;
         inset: 0;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.55);
         backdrop-filter: blur(4px);
         display: flex;
         align-items: center;
@@ -156,43 +230,20 @@
         border-radius: var(--radius);
         z-index: 10;
     }
-
-    .label-g-success {
-        background: rgba(34, 197, 94, 0.2);
-        color: #4ade80;
-        border: 1px solid rgba(34, 197, 94, 0.3);
-        border-radius: 20px;
-        padding: .15rem .6rem;
-        font-size: .75rem;
-        font-weight: 500;
-    }
-
-    .label-g-danger {
-        background: rgba(239, 68, 68, 0.2);
-        color: #f87171;
-        border: 1px solid rgba(239, 68, 68, 0.3);
-        border-radius: 20px;
-        padding: .15rem .6rem;
-        font-size: .75rem;
-        font-weight: 500;
-    }
 </style>
 
-<div class="content-wrapper pt-4" style="background: linear-gradient(135deg, #0f0f19 0%, #1a1a2e 50%, #16213e 100%); min-height: 100vh;">
+<div class="page-wrap content-wrapper">
     <section class="content-header">
         <div class="container-fluid">
-            <div class="row mb-3">
-                <div class="col-sm-6">
-                    <h1 style="font-weight:700;color:#f1f5f9;font-size:1.5rem;"><?= $judul ?></h1>
-                </div>
-            </div>
+            <h1 class="page-title"><?= $judul ?></h1>
         </div>
     </section>
 
     <section class="content">
         <div class="container-fluid">
-            <div class="glass-card">
-                <div class="glass-header">
+            <div class="g-card">
+
+                <div class="g-card-header">
                     <h3><?= $subjudul ?></h3>
                     <div class="d-flex gap-2 flex-wrap">
                         <button type="button" class="btn-g success btn-action"
@@ -208,33 +259,29 @@
                     </div>
                 </div>
 
-                <div class="px-4 pt-3 pb-2">
-                    <div class="row align-items-center mb-3">
-                        <div class="col-sm-12 col-md-6 mb-2 mb-md-0">
-                            <label style="color:var(--text-muted);font-size:.82rem;display:inline-flex;align-items:center;gap:.5rem;">
-                                Show
-                                <select id="users_length" class="select-g">
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                                entries
-                            </label>
+                <div class="g-card-body">
+                    <div class="toolbar">
+                        <div class="toolbar-left">
+                            Show
+                            <select id="users_length" class="f-select-sm">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                            entries
                         </div>
-                        <div class="col-sm-12 col-md-6">
-                            <div class="d-flex justify-content-md-end align-items-center gap-2">
-                                <button id="btn-clear" type="button" class="btn-g" disabled
-                                    data-toggle="tooltip" title="Hapus pencarian">
-                                    <i class="fa fa-times"></i>
-                                </button>
-                                <input id="input-search" type="search" class="input-search-g"
-                                    placeholder="Cari…" aria-controls="users">
-                                <button id="btn-search" type="button" class="btn-g" disabled
-                                    onclick="applySearch()" data-toggle="tooltip" title="Cari">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </div>
+                        <div class="toolbar-right">
+                            <button id="btn-clear" type="button" class="btn-g" disabled
+                                data-toggle="tooltip" title="Hapus pencarian">
+                                <i class="fa fa-times"></i>
+                            </button>
+                            <input id="input-search" type="search" class="f-search"
+                                placeholder="Cari…" aria-controls="users">
+                            <button id="btn-search" type="button" class="btn-g" disabled
+                                onclick="applySearch()" data-toggle="tooltip" title="Cari">
+                                <i class="fa fa-search"></i>
+                            </button>
                         </div>
                     </div>
 
@@ -258,7 +305,7 @@
                         <?= form_close() ?>
                     </div>
 
-                    <div class="d-flex justify-content-end pb-2">
+                    <div class="d-flex justify-content-end">
                         <nav aria-label="Page navigation">
                             <ul class="pagination" id="pagination"></ul>
                         </nav>
@@ -266,8 +313,9 @@
                 </div>
 
                 <div class="overlay-g d-none" id="loading">
-                    <div class="spinner-grow text-warning"></div>
+                    <div class="spinner-grow text-info"></div>
                 </div>
+
             </div>
         </div>
     </section>
@@ -348,11 +396,9 @@
         $('#users').on('click', '.btn-aktif', function() {
             ajaxAction(base_url + 'usersiswa/activate/' + $(this).data('id'), loadSiswa);
         });
-
         $('#users').on('click', '.btn-nonaktif', function() {
             ajaxAction(base_url + 'usersiswa/deactivate/' + $(this).data('username') + '/' + $(this).data('nama').replace("'", ''), loadSiswa);
         });
-
         $('#users').on('click', '.btn-reset', function() {
             ajaxAction(base_url + 'usersiswa/reset_login/' + $(this).data('username') + '/' + encodeURIComponent($(this).data('nama')), loadSiswa);
         });
@@ -361,42 +407,43 @@
             var action = $(this).data('action'),
                 isAktif = action === 'aktifkan';
             swal.fire({
-                title: isAktif ? 'Aktifkan semua siswa' : 'Nonaktifkan semua siswa',
-                icon: 'info',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Lanjutkan'
-            }).then(function(r) {
-                if (!r.value) return;
-                $('#loading').removeClass('d-none');
-                swal.fire({
-                    title: isAktif ? 'Mengaktifkan…' : 'Menonaktifkan…',
-                    text: 'Silahkan tunggu…',
-                    allowEscapeKey: false,
-                    allowOutsideClick: false,
-                    onOpen: () => swal.showLoading()
+                    title: isAktif ? 'Aktifkan semua siswa' : 'Nonaktifkan semua siswa',
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Lanjutkan'
+                })
+                .then(function(r) {
+                    if (!r.value) return;
+                    $('#loading').removeClass('d-none');
+                    swal.fire({
+                        title: isAktif ? 'Mengaktifkan…' : 'Menonaktifkan…',
+                        text: 'Silahkan tunggu…',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        onOpen: () => swal.showLoading()
+                    });
+                    $.ajax({
+                        url: base_url + (isAktif ? 'usersiswa/aktifkansemua' : 'usersiswa/nonaktifkansemua'),
+                        type: 'GET',
+                        success: function(res) {
+                            $('#loading').addClass('d-none');
+                            swal.fire({
+                                title: res.status ? 'Sukses' : 'Gagal',
+                                text: res.msg,
+                                icon: res.status ? 'success' : 'error'
+                            }).then(loadSiswa);
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                title: 'Gagal',
+                                html: xhr.responseText,
+                                icon: 'error'
+                            });
+                        }
+                    });
                 });
-                $.ajax({
-                    url: base_url + (isAktif ? 'usersiswa/aktifkansemua' : 'usersiswa/nonaktifkansemua'),
-                    type: 'GET',
-                    success: function(res) {
-                        $('#loading').addClass('d-none');
-                        swal.fire({
-                            title: res.status ? 'Sukses' : 'Gagal',
-                            text: res.msg,
-                            icon: res.status ? 'success' : 'error'
-                        }).then(loadSiswa);
-                    },
-                    error: function(xhr) {
-                        Swal.fire({
-                            title: 'Gagal',
-                            html: xhr.responseText,
-                            icon: 'error'
-                        });
-                    }
-                });
-            });
         });
 
         loadSiswa();
@@ -445,7 +492,7 @@
                     <td>${s.nis}</td>
                     <td>
                         <div class="d-flex align-items-center gap-2">
-                            <img class="avatar img-circle" src="${base_url + s.foto}" width="30" height="30" style="object-fit:cover;" alt="">
+                            <img class="avatar img-circle" src="${base_url + s.foto}" width="28" height="28" style="object-fit:cover;" alt="">
                             <span>${s.nama}</span>
                         </div>
                     </td>
@@ -456,26 +503,26 @@
                         <button type="button" class="btn-g btn-reset" ${s.reset == '0' ? 'disabled' : ''}
                                 data-username="${s.username}" data-nama="${s.nama}"
                                 data-toggle="tooltip" title="Reset Login">
-                            <i class="fa fa-sync" style="font-size:.75rem;"></i>
+                            <i class="fa fa-sync" style="font-size:.72rem;"></i>
                         </button>
                     </td>
                     <td class="text-center">
                         ${s.aktif == '0'
-                            ? `<span class="label-g-danger d-block mb-1">Nonaktif</span>
-                               <button type="button" class="btn-g success btn-aktif" data-id="${s.id_siswa}" title="Aktifkan">
-                                 <i class="fa fa-user-plus" style="font-size:.75rem;"></i>
+                            ? `<span class="badge-off">Nonaktif</span><br>
+                               <button type="button" class="btn-g success btn-aktif mt-1" data-id="${s.id_siswa}" title="Aktifkan">
+                                 <i class="fa fa-user-plus" style="font-size:.72rem;"></i>
                                </button>`
-                            : `<span class="label-g-success d-block mb-1">Aktif</span>
-                               <button type="button" class="btn-g danger btn-nonaktif"
+                            : `<span class="badge-on">Aktif</span><br>
+                               <button type="button" class="btn-g danger btn-nonaktif mt-1"
                                        data-username="${s.username}" data-nama="${s.nama}" title="Nonaktifkan">
-                                 <i class="fa fa-ban" style="font-size:.75rem;"></i>
+                                 <i class="fa fa-ban" style="font-size:.72rem;"></i>
                                </button>`
                         }
                     </td>
                 </tr>`;
             });
         } else {
-            html = '<tr><td colspan="8" class="text-center" style="color:var(--text-muted);padding:2rem;">Tidak ada data siswa</td></tr>';
+            html = '<tr><td colspan="8" class="text-center" style="padding:2rem;color:#7eb8d4;">Tidak ada data siswa</td></tr>';
         }
         $('#table-body').html(html);
         $('.avatar').on('error', function() {

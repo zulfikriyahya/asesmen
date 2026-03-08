@@ -2,99 +2,132 @@
     @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap');
 
     :root {
-        --glass-bg: rgba(255, 255, 255, 0.05);
-        --glass-border: rgba(255, 255, 255, 0.1);
-        --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        --accent: #f97316;
-        --text-primary: #f1f5f9;
-        --text-muted: #94a3b8;
+        --bg-base: #080e1a;
+        --bg-mid: #0d1526;
+        --bg-top: #0a1929;
+        --glass-bg: rgba(255, 255, 255, 0.04);
+        --glass-hover: rgba(255, 255, 255, 0.08);
+        --glass-border: rgba(99, 179, 237, 0.15);
+        --accent: #22d3ee;
+        --accent2: #3b82f6;
+        --text-1: #e2f0ff;
+        --text-2: #7eb8d4;
         --radius: 14px;
         --radius-sm: 8px;
+        --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
     }
 
-    * {
+    *,
+    *::before,
+    *::after {
         font-family: 'Lexend', sans-serif !important;
+        box-sizing: border-box;
     }
 
-    .glass-card {
+    .page-wrap {
+        background: linear-gradient(140deg, var(--bg-base) 0%, var(--bg-mid) 55%, var(--bg-top) 100%);
+        min-height: 100vh;
+        padding: 2rem 0 3rem;
+    }
+
+    .page-title {
+        font-size: 1.45rem;
+        font-weight: 700;
+        color: var(--text-1);
+        letter-spacing: -.01em;
+        margin: 0;
+    }
+
+    .g-card {
         background: var(--glass-bg);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
         border: 1px solid var(--glass-border);
         border-radius: var(--radius);
-        box-shadow: var(--glass-shadow);
+        box-shadow: var(--shadow);
         overflow: hidden;
+        margin-bottom: 1.25rem;
     }
 
-    .glass-card-header {
-        background: linear-gradient(135deg, rgba(249, 115, 22, 0.25), rgba(249, 115, 22, 0.06));
+    .g-card-header {
+        background: linear-gradient(135deg, rgba(34, 211, 238, 0.12), rgba(59, 130, 246, 0.08));
         border-bottom: 1px solid var(--glass-border);
-        padding: .85rem 1.25rem;
+        padding: .9rem 1.5rem;
     }
 
-    .glass-card-header h3 {
+    .g-card-header h3 {
         margin: 0;
-        font-size: .95rem;
+        font-size: .9rem;
         font-weight: 600;
-        color: var(--text-primary);
+        color: var(--text-1);
     }
 
-    .glass-card-body {
-        padding: 1.25rem;
+    .g-card-body {
+        padding: 1.5rem;
     }
 
-    .glass-card-footer {
+    .g-card-footer {
         border-top: 1px solid var(--glass-border);
-        padding: .85rem 1.25rem;
-        background: rgba(0, 0, 0, 0.1);
+        padding: .9rem 1.5rem;
+        background: rgba(0, 0, 0, 0.15);
+        display: flex;
+        justify-content: flex-end;
+        gap: .5rem;
     }
 
-    .form-group-g {
-        margin-bottom: 1rem;
+    .f-group {
+        margin-bottom: 1.1rem;
     }
 
-    .form-group-g label {
-        font-size: .78rem;
-        font-weight: 500;
-        color: var(--text-muted);
-        margin-bottom: .3rem;
+    .f-group.last {
+        margin-bottom: 0;
+    }
+
+    .f-group label {
         display: block;
+        font-size: .76rem;
+        font-weight: 500;
+        color: var(--text-2);
+        margin-bottom: .35rem;
     }
 
-    .input-g {
-        background: rgba(255, 255, 255, 0.07);
+    .f-input {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.06);
         border: 1px solid var(--glass-border);
         border-radius: var(--radius-sm);
-        color: var(--text-primary);
-        padding: .5rem .8rem;
-        width: 100%;
+        color: var(--text-1);
+        padding: .5rem .85rem;
         font-size: .84rem;
         transition: border-color .2s, background .2s;
     }
 
-    .input-g:focus {
+    .f-input:focus {
         outline: none;
         border-color: var(--accent);
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(34, 211, 238, 0.06);
     }
 
-    .input-g::placeholder {
-        color: var(--text-muted);
+    .f-input::placeholder {
+        color: var(--text-2);
+        opacity: .6;
     }
 
-    .select-g {
-        background: rgba(255, 255, 255, 0.07);
+    .f-select {
+        width: 100% !important;
+        background: rgba(255, 255, 255, 0.06);
         border: 1px solid var(--glass-border);
         border-radius: var(--radius-sm);
-        color: var(--text-primary);
-        padding: .5rem .8rem;
-        width: 100%;
+        color: var(--text-1);
+        padding: .5rem .85rem;
         font-size: .84rem;
     }
 
     .help-block {
-        font-size: .75rem;
-        color: #ef4444;
+        font-size: .72rem;
+        color: #f87171;
+        margin-top: .2rem;
+        display: block;
     }
 
     .radio-label {
@@ -102,9 +135,9 @@
         align-items: center;
         gap: .35rem;
         font-size: .84rem;
-        color: var(--text-primary);
+        color: var(--text-1);
         cursor: pointer;
-        margin-right: 1rem;
+        margin-right: 1.25rem;
     }
 
     .radio-label input[type="radio"] {
@@ -112,20 +145,29 @@
     }
 
     .btn-g {
-        border-radius: var(--radius-sm);
-        padding: .45rem 1rem;
-        font-size: .82rem;
-        font-weight: 500;
-        cursor: pointer;
-        border: none;
-        transition: all .2s;
         display: inline-flex;
         align-items: center;
-        gap: .35rem;
+        gap: .4rem;
+        padding: .42rem .95rem;
+        border-radius: var(--radius-sm);
+        font-size: .8rem;
+        font-weight: 500;
+        cursor: pointer;
+        border: 1px solid var(--glass-border);
+        background: var(--glass-bg);
+        color: var(--text-1);
+        transition: background .2s, filter .2s;
+        white-space: nowrap;
+    }
+
+    .btn-g:hover {
+        background: var(--glass-hover);
+        color: #fff;
     }
 
     .btn-g.primary {
-        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        border-color: transparent;
         color: #fff;
     }
 
@@ -135,6 +177,7 @@
 
     .btn-g.success {
         background: linear-gradient(135deg, #22c55e, #16a34a);
+        border-color: transparent;
         color: #fff;
     }
 
@@ -142,23 +185,19 @@
         filter: brightness(1.1);
     }
 
-    .btn-g.ghost {
-        background: var(--glass-bg);
-        border: 1px solid var(--glass-border);
-        color: var(--text-primary);
-    }
-
-    .btn-g.ghost:hover {
-        background: rgba(255, 255, 255, 0.1);
-    }
-
     .btn-g.danger {
         background: linear-gradient(135deg, #ef4444, #dc2626);
+        border-color: transparent;
         color: #fff;
+    }
+
+    .btn-g.danger:hover {
+        filter: brightness(1.1);
     }
 
     .btn-g.warning {
         background: linear-gradient(135deg, #f59e0b, #d97706);
+        border-color: transparent;
         color: #fff;
     }
 
@@ -167,16 +206,16 @@
     }
 </style>
 
-<div class="content-wrapper pt-4" style="background: linear-gradient(135deg, #0f0f19 0%, #1a1a2e 50%, #16213e 100%); min-height: 100vh;">
+<div class="page-wrap content-wrapper">
     <section class="content-header">
         <div class="container-fluid">
-            <div class="row mb-3 align-items-center">
+            <div class="row align-items-center mb-4">
                 <div class="col-sm-6">
-                    <h1 style="font-weight:700;color:#f1f5f9;font-size:1.5rem;">Edit User</h1>
+                    <h1 class="page-title">Edit User</h1>
                 </div>
                 <?php if ($this->ion_auth->is_admin()): ?>
                     <div class="col-sm-6 text-right">
-                        <a href="<?= base_url('users') ?>" class="btn-g ghost">
+                        <a href="<?= base_url('users') ?>" class="btn-g">
                             <i class="fa fa-arrow-left"></i> Batal
                         </a>
                     </div>
@@ -192,39 +231,39 @@
                 <?php if ($this->ion_auth->is_admin()): ?>
                     <div class="col-sm-4 mb-4">
                         <?= form_open('users/edit_info', ['id' => 'user_info'], ['id' => $users->id]) ?>
-                        <div class="glass-card">
-                            <div class="glass-card-header">
+                        <div class="g-card">
+                            <div class="g-card-header">
                                 <h3>Data User</h3>
                             </div>
-                            <div class="glass-card-body">
-                                <div class="form-group-g">
+                            <div class="g-card-body">
+                                <div class="f-group">
                                     <label>Username</label>
-                                    <input type="text" name="username" class="input-g" value="<?= $users->username ?>">
+                                    <input type="text" name="username" class="f-input" value="<?= $users->username ?>">
                                     <small class="help-block"></small>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-6">
-                                        <div class="form-group-g">
+                                        <div class="f-group">
                                             <label>First Name</label>
-                                            <input type="text" name="first_name" class="input-g" value="<?= $users->first_name ?>">
+                                            <input type="text" name="first_name" class="f-input" value="<?= $users->first_name ?>">
                                             <small class="help-block"></small>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
-                                        <div class="form-group-g">
+                                        <div class="f-group">
                                             <label>Last Name</label>
-                                            <input type="text" name="last_name" class="input-g" value="<?= $users->last_name ?>">
+                                            <input type="text" name="last_name" class="f-input" value="<?= $users->last_name ?>">
                                             <small class="help-block"></small>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group-g mb-0">
+                                <div class="f-group last">
                                     <label>Email</label>
-                                    <input type="email" name="email" class="input-g" value="<?= $users->email ?>">
+                                    <input type="email" name="email" class="f-input" value="<?= $users->email ?>">
                                     <small class="help-block"></small>
                                 </div>
                             </div>
-                            <div class="glass-card-footer d-flex justify-content-end">
+                            <div class="g-card-footer">
                                 <button type="submit" id="btn-info" class="btn-g primary">Simpan</button>
                             </div>
                         </div>
@@ -235,14 +274,14 @@
                 <?php if ($user->id !== $users->id): ?>
                     <div class="col-sm-4 mb-4">
                         <?= form_open('users/edit_level', ['id' => 'user_level'], ['id' => $users->id]) ?>
-                        <div class="glass-card mb-4">
-                            <div class="glass-card-header">
+                        <div class="g-card">
+                            <div class="g-card-header">
                                 <h3>Level</h3>
                             </div>
-                            <div class="glass-card-body">
-                                <div class="form-group-g mb-0">
+                            <div class="g-card-body">
+                                <div class="f-group last">
                                     <label>Level User</label>
-                                    <select id="level" name="level" class="select-g select2" style="width:100%!important">
+                                    <select id="level" name="level" class="f-select select2">
                                         <option value="">Pilih Level</option>
                                         <?php foreach ($groups as $row): ?>
                                             <option value="<?= $row->id ?>" <?= $level->id === $row->id ? 'selected' : '' ?>>
@@ -253,29 +292,29 @@
                                     <small class="help-block"></small>
                                 </div>
                             </div>
-                            <div class="glass-card-footer d-flex justify-content-end">
+                            <div class="g-card-footer">
                                 <button type="submit" id="btn-level" class="btn-g primary">Simpan</button>
                             </div>
                         </div>
                         <?= form_close() ?>
 
                         <?= form_open('users/edit_status', ['id' => 'user_status'], ['id' => $users->id]) ?>
-                        <div class="glass-card">
-                            <div class="glass-card-header">
+                        <div class="g-card">
+                            <div class="g-card-header">
                                 <h3>Status</h3>
                             </div>
-                            <div class="glass-card-body">
-                                <div class="form-group-g mb-0">
+                            <div class="g-card-body">
+                                <div class="f-group last">
                                     <label class="radio-label">
                                         <input type="radio" name="status" value="1" <?= $users->active === '1' ? 'checked' : '' ?>> Aktif
                                     </label>
                                     <label class="radio-label">
                                         <input type="radio" name="status" value="0" <?= $users->active === '0' ? 'checked' : '' ?>> Tidak Aktif
                                     </label>
-                                    <small class="help-block d-block"></small>
+                                    <small class="help-block d-block mt-1"></small>
                                 </div>
                             </div>
-                            <div class="glass-card-footer d-flex justify-content-end">
+                            <div class="g-card-footer">
                                 <button type="submit" id="btn-status" class="btn-g success">Simpan</button>
                             </div>
                         </div>
@@ -286,28 +325,27 @@
                 <?php if ($user->id === $users->id): ?>
                     <div class="col-sm-4 mb-4">
                         <?= form_open('users/change_password', ['id' => 'change_password'], ['id' => $users->id]) ?>
-                        <div class="glass-card">
-                            <div class="glass-card-header">
+                        <div class="g-card">
+                            <div class="g-card-header">
                                 <h3>Ubah Password</h3>
                             </div>
-                            <div class="glass-card-body">
+                            <div class="g-card-body">
                                 <?php foreach (
                                     [
                                         ['label' => 'Password Lama',       'name' => 'old'],
                                         ['label' => 'Password Baru',       'name' => 'new'],
                                         ['label' => 'Konfirmasi Password', 'name' => 'new_confirm'],
-                                    ] as $f
+                                    ] as $i => $f
                                 ): ?>
-                                    <div class="form-group-g <?= $f['name'] === 'new_confirm' ? 'mb-0' : '' ?>">
+                                    <div class="f-group <?= $i === 2 ? 'last' : '' ?>">
                                         <label><?= $f['label'] ?></label>
-                                        <input type="password" name="<?= $f['name'] ?>" class="input-g"
-                                            placeholder="<?= $f['label'] ?>">
+                                        <input type="password" name="<?= $f['name'] ?>" class="f-input" placeholder="<?= $f['label'] ?>">
                                         <small class="help-block"></small>
                                     </div>
                                 <?php endforeach ?>
                             </div>
-                            <div class="glass-card-footer d-flex justify-content-end gap-2">
-                                <button type="reset" class="btn-g ghost">
+                            <div class="g-card-footer">
+                                <button type="reset" class="btn-g">
                                     <i class="fa fa-rotate-left"></i> Reset
                                 </button>
                                 <button type="submit" id="btn-pass" class="btn-g warning">Ganti Password</button>
