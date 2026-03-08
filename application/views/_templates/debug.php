@@ -1,9 +1,11 @@
-{{FILE: _templates/debug.php}}
 <!DOCTYPE html>
 <html lang="id">
 
 <head>
     <title>DEBUG</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap">
     <style>
         *,
         *::before,
@@ -12,33 +14,43 @@
         }
 
         body {
-            background: #0d0f13;
-            color: #c9cdd4;
-            font-family: monospace;
-            padding: 1.5rem;
+            background: #0a0c10;
+            background-image:
+                radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.07) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+            color: rgba(255, 255, 255, 0.65);
+            font-family: 'Lexend', monospace;
+            padding: 1.75rem;
             margin: 0;
+            min-height: 100vh;
         }
 
         .dbg-pre {
-            background: #111318;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            padding: 1rem;
-            font-size: .82rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 10px;
+            padding: 1.25rem;
+            font-size: .8rem;
+            font-family: monospace;
             overflow: auto;
             margin-bottom: 1.5rem;
+            color: rgba(255, 255, 255, 0.6);
         }
 
         .dbg-card {
-            background: #1a1d23;
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-radius: 12px;
             overflow: hidden;
             margin-bottom: 1.5rem;
         }
 
         .dbg-card-header {
-            background: #111318;
+            background: rgba(255, 255, 255, 0.04);
             padding: .75rem 1.25rem;
             display: flex;
             align-items: center;
@@ -48,10 +60,10 @@
 
         .dbg-card-header h5 {
             margin: 0;
-            font-size: .82rem;
-            font-weight: 700;
+            font-size: .78rem;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: .5px;
+            letter-spacing: .6px;
         }
 
         .dbg-card-header h5.warn {
@@ -59,7 +71,7 @@
         }
 
         .dbg-card-header h5.info {
-            color: #7eb8ff;
+            color: #818cf8;
         }
 
         .dbg-card-header h5.danger {
@@ -74,17 +86,21 @@
             display: inline-flex;
             align-items: center;
             gap: .35rem;
-            padding: .4rem .9rem;
-            border: none;
+            padding: .35rem .85rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 6px;
-            background: rgba(255, 255, 255, 0.08);
-            color: #c9cdd4;
-            font-size: .78rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.55);
+            font-family: 'Lexend', sans-serif;
+            font-size: .75rem;
             cursor: pointer;
+            transition: background .2s, color .2s;
         }
 
         .dbg-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(99, 102, 241, 0.2);
+            color: rgba(255, 255, 255, 0.85);
+            border-color: rgba(99, 102, 241, 0.4);
         }
 
         .dbg-grid {
@@ -105,15 +121,16 @@
             width: 64px;
             height: 64px;
             object-fit: contain;
-            border-radius: 8px;
-            background: #111318;
-            padding: .25rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            padding: .35rem;
         }
 
         .dbg-item span {
             font-size: .72rem;
             text-align: center;
-            color: #9a9fa8;
+            color: rgba(255, 255, 255, 0.35);
         }
     </style>
 </head>
@@ -161,4 +178,3 @@
 </body>
 
 </html>
-

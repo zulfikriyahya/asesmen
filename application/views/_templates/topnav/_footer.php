@@ -2,10 +2,21 @@
 </div><!-- /.container -->
 </div><!-- /.content-wrapper -->
 
-<footer class="main-footer">
-    <div class="container">
-        <?= strftime('%A, %d %B %Y') ?>, <span class="live-clock"><?= date('H:i:s') ?></span>
-        <div class="pull-right hidden-xs"><b>ZEDAPPS SCHOOL</b></div>
+<footer class="main-footer" style="
+    background: rgba(12,14,20,0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.4);
+    font-family: 'Lexend', sans-serif;
+    font-size: .78rem;
+">
+    <div class="container" style="display:flex; justify-content:space-between; align-items:center;">
+        <span>
+            <?= strftime('%A, %d %B %Y') ?>,
+            <span class="live-clock" style="color:rgba(99,102,241,0.9); font-weight:500;"><?= date('H:i:s') ?></span>
+        </span>
+        <strong style="color:rgba(255,255,255,0.5);">ZEDAPPS SCHOOL</strong>
     </div>
 </footer>
 
@@ -20,7 +31,6 @@
         return ('0' + i).slice(-2);
     }
 
-    /* ── Sisa waktu ujian ── */
     function sisawaktu(t) {
         var end = new Date(t);
         var start = new Date();
@@ -37,7 +47,6 @@
         }, end - start);
     }
 
-    /* ── Countdown mundur ── */
     function countdown(t) {
         var end = new Date(t);
         setInterval(function() {
@@ -53,7 +62,6 @@
         }, 1000);
     }
 
-    /* ── CSRF helper ── */
     function ajaxcsrf() {
         var csrf = {};
         csrf['<?= $this->security->get_csrf_token_name() ?>'] = '<?= $this->security->get_csrf_hash() ?>';
@@ -62,7 +70,6 @@
         });
     }
 
-    /* ── Live clock ── */
     $(function() {
         setInterval(function() {
             var d = new Date();

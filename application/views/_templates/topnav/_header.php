@@ -1,4 +1,3 @@
-{{FILE: _templates/topnav/_header.php}}
 <!DOCTYPE html>
 <html lang="id">
 
@@ -8,12 +7,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title><?= $judul ?></title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap">
+
     <link rel="stylesheet" href="<?= base_url() ?>assets/bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/bower_components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/dist/css/AdminLTE.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/dist/css/skins/skin-blue.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/dist/css/mystyle.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/bower_components/pace/pace-theme-flash.css">
+
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        body,
+        * {
+            font-family: 'Lexend', sans-serif !important;
+        }
+
+        body {
+            background: #0a0c10 !important;
+            background-image:
+                radial-gradient(ellipse at 15% 40%, rgba(99, 102, 241, 0.06) 0%, transparent 55%),
+                radial-gradient(ellipse at 85% 70%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .content-wrapper {
+            background: transparent !important;
+        }
+
+        .content-header h1 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .content-header h1 small {
+            font-size: .8rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .breadcrumb {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+        }
+
+        .breadcrumb a {
+            color: #818cf8;
+        }
+
+        .breadcrumb>.active {
+            color: rgba(255, 255, 255, 0.4);
+        }
+    </style>
 
     <script src="<?= base_url() ?>assets/bower_components/jquery/jquery-3.3.1.min.js"></script>
     <script src="<?= base_url() ?>assets/bower_components/sweetalert2/sweetalert2.all.min.js"></script>
@@ -40,83 +94,3 @@
                     </ol>
                 </section>
                 <section class="content">
-
-
-                    {{FILE: _templates/topnav/_footer.php}}
-                </section><!-- /.content -->
-            </div><!-- /.container -->
-        </div><!-- /.content-wrapper -->
-
-        <footer class="main-footer">
-            <div class="container">
-                <?= strftime('%A, %d %B %Y') ?>, <span class="live-clock"><?= date('H:i:s') ?></span>
-                <div class="pull-right hidden-xs"><b>ZEDAPPS SCHOOL</b></div>
-            </div>
-        </footer>
-
-    </div><!-- /.wrapper -->
-
-    <script src="<?= base_url() ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="<?= base_url() ?>assets/dist/js/adminlte.min.js"></script>
-    <script src="<?= base_url() ?>assets/bower_components/pace/pace.min.js"></script>
-
-    <script>
-        /* ── Countdown helpers ── */
-        function sisawaktu(t) {
-            var end = new Date(t),
-                start = new Date();
-            var tid = setInterval(function() {
-                var dis = end - Date.now(),
-                    h, m, s;
-                h = Math.floor((dis % (1000 * 60 * 60 * 60)) / (1000 * 60 * 60));
-                m = Math.floor((dis % (1000 * 60 * 60)) / (1000 * 60));
-                s = Math.floor((dis % (1000 * 60)) / 1000);
-                $('.sisawaktu').html(pad(h) + ':' + pad(m) + ':' + pad(s));
-            }, 100);
-            setTimeout(function() {
-                clearInterval(tid);
-                waktuHabis();
-            }, end - start);
-        }
-
-        function countdown(t) {
-            var end = new Date(t);
-            setInterval(function() {
-                var dis = end - Date.now(),
-                    d, h, m, s;
-                d = Math.floor(dis / (1000 * 60 * 60 * 24));
-                h = Math.floor((dis % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                m = Math.floor((dis % (1000 * 60 * 60)) / (1000 * 60));
-                s = Math.floor((dis % (1000 * 60)) / 1000);
-                $('.countdown').html(pad(d) + ' Hari, ' + pad(h) + ' Jam, ' + pad(m) + ' Menit, ' + pad(s) + ' Detik');
-                setTimeout(function() {
-                    location.reload();
-                }, dis);
-            }, 1000);
-        }
-
-        function pad(i) {
-            return ('0' + i).slice(-2);
-        }
-
-        /* ── CSRF helper ── */
-        function ajaxcsrf() {
-            var csrf = {};
-            csrf['<?= $this->security->get_csrf_token_name() ?>'] = '<?= $this->security->get_csrf_hash() ?>';
-            $.ajaxSetup({
-                data: csrf
-            });
-        }
-
-        /* ── Live clock ── */
-        $(function() {
-            setInterval(function() {
-                var d = new Date();
-                $('.live-clock').html(pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()));
-            }, 1000);
-        });
-    </script>
-</body>
-
-</html>
-
