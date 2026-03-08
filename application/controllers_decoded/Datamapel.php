@@ -7,10 +7,12 @@ class Datamapel extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if ($this->ion_auth->is_admin()) {
+            }
+            show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         }
-        if ($this->ion_auth->is_admin()) {
-        }
-        show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         $this->load->dbforge();
         $this->load->library(['datatables', 'form_validation']);
         $this->load->model('Master_model', 'master');
@@ -21,9 +23,11 @@ class Datamapel extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     private function updateUrutanTampil()
     {
@@ -33,16 +37,19 @@ class Datamapel extends CI_Controller
             $insert = ['id_mapel' => $mapel->id_mapel, 'nama_mapel' => $mapel->id_mapel, 'kode' => $mapel->id_mapel, 'kelompok' => $mapel->id_mapel, 'bobot_p' => $mapel->id_mapel, 'bobot_k' => $mapel->id_mapel, 'jenjang' => $mapel->id_mapel, 'urutan' => $mapel->id_mapel, 'urutan_tampil' => $mapel->id_mapel, 'status' => $mapel->id_mapel, 'deletable' => $mapel->id_mapel];
         }
         if (!(count($insert) > 0)) {
+        } else {
+            $this->db->update_batch('master_mapel', $insert);
         }
-        $this->db->update_batch('master_mapel', $insert);
     }
     public function index()
     {
         if ($this->db->field_exists('urutan_tampil', 'master_mapel')) {
+            $user = $this->ion_auth->user()->row();
+        } else {
+            $fields = array('urutan_tampil' => array('type' => 'int(3)', 'after' => 'urutan'));
+            $this->dbforge->add_column('master_mapel', $fields);
+            $user = $this->ion_auth->user()->row();
         }
-        $fields = array('urutan_tampil' => array('type' => 'int(3)', 'after' => 'urutan'));
-        $this->dbforge->add_column('master_mapel', $fields);
-        $user = $this->ion_auth->user()->row();
         $setting = $this->dashboard->getSetting();
         $data = ['user' => $user, 'judul' => 'Mata Pelajaran', 'subjudul' => 'Daftar Mata Pelajaran', 'profile' => $this->dashboard->getProfileAdmin($user->id), 'setting' => $setting];
         $data['tp'] = $this->dashboard->getTahun();
@@ -64,8 +71,11 @@ class Datamapel extends CI_Controller
         $id = $this->input->post('id_kel_mapel');
         $insert = ['nama_kel_mapel' => $this->input->post('nama_kel_mapel', true), 'kode_kel_mapel' => $this->input->post('kode_kel_mapel', true), 'kategori' => $this->input->post('kategori', true), 'id_parent' => $this->input->post('id_parent', true)];
         if ($id != null) {
+            $this->db->where('id_kel_mapel', $id);
+            $data = $this->db->update('master_kelompok_mapel', $insert);
+        } else {
+            $data = $this->master->create('master_kelompok_mapel', $insert);
         }
-        $data = $this->master->create('master_kelompok_mapel', $insert);
         $this->output->set_content_type('application/json')->set_output($data);
     }
     public function hapusKelompok()
@@ -77,9 +87,11 @@ class Datamapel extends CI_Controller
         $this->db->where_in('kelompok', $kode);
         $numm = $this->db->count_all_results('master_mapel');
         if (!($numm > 0)) {
+            $this->db->where_in('id_parent', $id);
+        } else {
+            array_push($messages, 'Mata Pelajaran');
+            $this->db->where_in('id_parent', $id);
         }
-        array_push($messages, 'Mata Pelajaran');
-        $this->db->where_in('id_parent', $id);
         $nums = $this->db->count_all_results('master_kelompok_mapel');
         if (!($nums > 0)) {
         }
@@ -138,43 +150,49 @@ class Datamapel extends CI_Controller
     {
         $chk = $this->input->post('checked', true);
         if (!$chk) {
-        }
-        $messages = [];
-        $tables = [];
-        $tabless = $this->db->list_tables();
-        foreach ($tabless as $table) {
-            $fields = $this->db->field_data($table);
-            foreach ($fields as $field) {
-                if (!($field->name == 'id_mapel' || $field->name == 'mapel_id')) {
+            $this->output_json(['status' => false, 'total' => 'Tidak ada data yang dipilih!']);
+        } else {
+            $messages = [];
+            $tables = [];
+            $tabless = $this->db->list_tables();
+            foreach ($tabless as $table) {
+                $fields = $this->db->field_data($table);
+                foreach ($fields as $field) {
+                    if (!($field->name == 'id_mapel' || $field->name == 'mapel_id')) {
+                    } else {
+                        array_push($tables, $table);
+                    }
                 }
-                array_push($tables, $table);
             }
-        }
-        foreach ($tables as $table) {
-            if (!($table != 'master_mapel')) {
+            foreach ($tables as $table) {
+                if (!($table != 'master_mapel')) {
+                } else {
+                    if ($table == 'cbt_soal') {
+                    }
+                    $this->db->where_in('id_mapel', $chk);
+                    $num = $this->db->count_all_results($table);
+                    if (!($num > 0)) {
+                    }
+                    array_push($messages, $table);
+                }
             }
-            if ($table == 'cbt_soal') {
+            if (count($messages) > 0) {
             }
-            $this->db->where_in('id_mapel', $chk);
-            $num = $this->db->count_all_results($table);
-            if (!($num > 0)) {
+            if (!$this->master->delete('master_mapel', $chk, 'id_mapel')) {
             }
-            array_push($messages, $table);
+            $this->output_json(['status' => true, 'total' => count($chk)]);
         }
-        if (count($messages) > 0) {
-        }
-        if (!$this->master->delete('master_mapel', $chk, 'id_mapel')) {
-        }
-        $this->output_json(['status' => true, 'total' => count($chk)]);
     }
     public function import($import_data = null)
     {
         $user = $this->ion_auth->user()->row();
         $data = ['user' => $user, 'judul' => 'Mata Pelajaran', 'subjudul' => 'Import Mata Pelajaran', 'profile' => $this->dashboard->getProfileAdmin($user->id), 'setting' => $this->dashboard->getSetting()];
         if (!($import_data != null)) {
+            $data['tp'] = $this->dashboard->getTahun();
+        } else {
+            $data['import'] = $import_data;
+            $data['tp'] = $this->dashboard->getTahun();
         }
-        $data['import'] = $import_data;
-        $data['tp'] = $this->dashboard->getTahun();
         $data['tp_active'] = $this->dashboard->getTahunActive();
         $data['smt'] = $this->dashboard->getSemester();
         $data['smt_active'] = $this->dashboard->getSemesterActive();

@@ -7,19 +7,23 @@ class Dataguru extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if ($this->ion_auth->is_admin()) {
+            }
+            show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         }
-        if ($this->ion_auth->is_admin()) {
-        }
-        show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         $this->load->library(['datatables', 'form_validation']);
         $this->form_validation->set_error_delimiters('', '');
     }
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -40,11 +44,13 @@ class Dataguru extends CI_Controller
         $mapels = $this->master->getAllMapel();
         $ret = [];
         if (!$mapels) {
+            $data['mapels'] = $ret;
+        } else {
+            foreach ($mapels as $key => $row) {
+                $ret[$row->id_mapel] = $row;
+            }
+            $data['mapels'] = $ret;
         }
-        foreach ($mapels as $key => $row) {
-            $ret[$row->id_mapel] = $row;
-        }
-        $data['mapels'] = $ret;
         $data['extras'] = $this->dropdown->getAllKodeEkskul();
         $data['kelass'] = $this->master->getAllKelas($tp->id_tp, $smt->id_smt);
         $data['gurus'] = $this->master->getAllDataGuru($tp->id_tp, $smt->id_smt);
@@ -97,12 +103,15 @@ class Dataguru extends CI_Controller
         $this->form_validation->set_rules('username', 'Username', 'required|trim' . $u_username);
         $this->form_validation->set_rules('password', 'Password', 'required');
         if ($this->form_validation->run() == FALSE) {
+            $data = ['status' => false, 'errors' => ['nip' => form_error('nip'), 'nama_guru' => form_error('nama_guru'), 'username' => form_error('username'), 'password' => form_error('password')]];
+            $this->output_json($data);
+        } else {
+            $input = ['nip' => trim($nip ?? ''), 'nama_guru' => trim($nama_guru ?? ''), 'username' => trim($username ?? ''), 'password' => trim($password ?? ''), 'foto' => 'uploads/profiles/' . trim($nip ?? '00') . '.jpg'];
+            $action = $this->master->create('master_guru', $input);
+            if ($action) {
+            }
+            $this->output_json(['status' => false]);
         }
-        $input = ['nip' => trim($nip ?? ''), 'nama_guru' => trim($nama_guru ?? ''), 'username' => trim($username ?? ''), 'password' => trim($password ?? ''), 'foto' => 'uploads/profiles/' . trim($nip ?? '00') . '.jpg'];
-        $action = $this->master->create('master_guru', $input);
-        if ($action) {
-        }
-        $this->output_json(['status' => false]);
     }
     public function save()
     {
@@ -114,10 +123,13 @@ class Dataguru extends CI_Controller
         $email = $this->input->post('email', true);
         $mapel = $this->input->post('password', true);
         if ($method == 'add') {
+            $u_nip = '|is_unique[guru.nip]';
+            $u_email = '|is_unique[guru.email]';
+        } else {
+            $dbdata = $this->master->getGuruById($id_guru);
+            $u_nip = $dbdata->nip === $nip ? '' : '|is_unique[guru.nip]';
+            $u_email = $dbdata->email === $email ? '' : '|is_unique[guru.email]';
         }
-        $dbdata = $this->master->getGuruById($id_guru);
-        $u_nip = $dbdata->nip === $nip ? '' : '|is_unique[guru.nip]';
-        $u_email = $dbdata->email === $email ? '' : '|is_unique[guru.email]';
         $this->form_validation->set_rules('nip', 'NIP', 'required|trim|min_length[8]' . $u_nip);
         $this->form_validation->set_rules('nama_guru', 'Nama Guru', 'required|trim|min_length[3]');
         $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email' . $u_email);
@@ -145,25 +157,29 @@ class Dataguru extends CI_Controller
             $fields = $this->db->field_data($table);
             foreach ($fields as $field) {
                 if (!($field->name == 'id_guru' || $field->name == 'guru_id')) {
+                } else {
+                    array_push($tables, $table);
                 }
-                array_push($tables, $table);
             }
         }
         foreach ($tables as $table) {
             if (!($table != 'master_guru')) {
+            } else {
+                if ($table == 'master_kelas') {
+                }
+                $this->db->where('id_guru', $chk);
+                $num = $this->db->count_all_results($table);
+                if (!($num > 0)) {
+                }
+                array_push($messages, $table);
             }
-            if ($table == 'master_kelas') {
-            }
-            $this->db->where('id_guru', $chk);
-            $num = $this->db->count_all_results($table);
-            if (!($num > 0)) {
-            }
-            array_push($messages, $table);
         }
         if (count($messages) > 0) {
+            $this->output_json(['count' => count($messages), 'status' => false, 'message' => 'Data guru digunakan di ' . count($messages) . ' tabel:<br>' . implode('<br>', $messages)]);
+        } else {
+            $data['status'] = $this->master->delete('master_guru', $chk, 'id_guru');
+            $this->output_json($data);
         }
-        $data['status'] = $this->master->delete('master_guru', $chk, 'id_guru');
-        $this->output_json($data);
     }
     public function detail($id_guru)
     {
@@ -188,10 +204,12 @@ class Dataguru extends CI_Controller
         $this->load->model('Master_model', 'master');
         $chk = $this->input->post('checked', true);
         if (!$chk) {
+            $this->output_json(['status' => false]);
+        } else {
+            if (!$this->master->delete('master_guru', $chk, 'id_guru')) {
+            }
+            $this->output_json(['status' => true, 'total' => count($chk)]);
         }
-        if (!$this->master->delete('master_guru', $chk, 'id_guru')) {
-        }
-        $this->output_json(['status' => true, 'total' => count($chk)]);
     }
     public function forceDelete()
     {
@@ -214,11 +232,13 @@ class Dataguru extends CI_Controller
         $additional_data = ['first_name' => $first_name, 'last_name' => $last_name];
         $group = array('2');
         if ($this->ion_auth->username_check($username)) {
+            $data = ['status' => false, 'msg' => 'Username tidak tersedia (sudah digunakan).'];
+        } else {
+            if ($this->ion_auth->email_check($email)) {
+            }
+            $this->ion_auth->register($username, $password, $email, $additional_data, $group);
+            $data = ['status' => true, 'msg' => 'User berhasil dibuat. NIP digunakan sebagai password pada saat login.'];
         }
-        if ($this->ion_auth->email_check($email)) {
-        }
-        $this->ion_auth->register($username, $password, $email, $additional_data, $group);
-        $data = ['status' => true, 'msg' => 'User berhasil dibuat. NIP digunakan sebagai password pada saat login.'];
         $this->output_json($data);
     }
     public function import($import_data = null)
@@ -229,9 +249,11 @@ class Dataguru extends CI_Controller
         $setting = $this->dashboard->getSetting();
         $data = ['user' => $user, 'judul' => 'Guru', 'subjudul' => 'Tambah Data Guru', 'mapel' => $this->master->getAllMapel(), 'profile' => $this->dashboard->getProfileAdmin($user->id), 'setting' => $setting];
         if (!($import_data != null)) {
+            $data['tp'] = $this->dashboard->getTahun();
+        } else {
+            $data['import'] = $import_data;
+            $data['tp'] = $this->dashboard->getTahun();
         }
-        $data['import'] = $import_data;
-        $data['tp'] = $this->dashboard->getTahun();
         $data['tp_active'] = $this->dashboard->getTahunActive();
         $data['smt'] = $this->dashboard->getSemester();
         $data['smt_active'] = $this->dashboard->getSemesterActive();
@@ -251,28 +273,33 @@ class Dataguru extends CI_Controller
             $this->form_validation->set_rules('5', 'Username', 'required|trim|min_length[3]|max_length[30]|is_unique[master_guru.username]');
             $this->form_validation->set_rules('6', 'Password', 'required|trim|min_length[5]|max_length[30]');
             if (!($this->form_validation->run() == FALSE)) {
+            } else {
+                $errors[] = ['nama' => form_error('2'), 'nip' => form_error('3'), 'username' => form_error('5'), 'password' => form_error('6')];
             }
-            $errors[] = ['nama' => form_error('2'), 'nip' => form_error('3'), 'username' => form_error('5'), 'password' => form_error('6')];
         }
         if (count($errors) > 0) {
-        }
-        $data_insert = [];
-        foreach ($input as $guru) {
-            $foto = 'uploads/profiles/' . trim($guru['3'] ?? '00') . '.jpg';
-            if (!isset($guru['7'])) {
+            $data = ['status' => false, 'errors' => $errors];
+        } else {
+            $data_insert = [];
+            foreach ($input as $guru) {
+                $foto = 'uploads/profiles/' . trim($guru['3'] ?? '00') . '.jpg';
+                if (!isset($guru['7'])) {
+                    $data_insert[] = ['nama_guru' => trim($guru['2'] ?? ''), 'nip' => trim($guru['3'] ?? ''), 'kode_guru' => trim($guru['4'] ?? ''), 'username' => trim($guru['5'] ?? ''), 'password' => trim($guru['6'] ?? ''), 'foto' => $foto];
+                } else {
+                    $base64_image_string = $guru['7'];
+                    $extension = $guru['8'];
+                    if (!($extension == 'jpeg')) {
+                    }
+                    $extension = 'jpg';
+                    $output_file = trim($guru['3'] ?? '00') . '.' . $extension;
+                    file_put_contents('./uploads/profiles/' . $output_file, base64_decode($base64_image_string));
+                    $foto = 'uploads/profiles/' . $output_file;
+                    $data_insert[] = ['nama_guru' => trim($guru['2'] ?? ''), 'nip' => trim($guru['3'] ?? ''), 'kode_guru' => trim($guru['4'] ?? ''), 'username' => trim($guru['5'] ?? ''), 'password' => trim($guru['6'] ?? ''), 'foto' => $foto];
+                }
             }
-            $base64_image_string = $guru['7'];
-            $extension = $guru['8'];
-            if (!($extension == 'jpeg')) {
-            }
-            $extension = 'jpg';
-            $output_file = trim($guru['3'] ?? '00') . '.' . $extension;
-            file_put_contents('./uploads/profiles/' . $output_file, base64_decode($base64_image_string));
-            $foto = 'uploads/profiles/' . $output_file;
-            $data_insert[] = ['nama_guru' => trim($guru['2'] ?? ''), 'nip' => trim($guru['3'] ?? ''), 'kode_guru' => trim($guru['4'] ?? ''), 'username' => trim($guru['5'] ?? ''), 'password' => trim($guru['6'] ?? ''), 'foto' => $foto];
+            $save = $this->master->create('master_guru', $data_insert, true);
+            $data = ['status' => true, 'data' => $save, 'insert' => $data_insert];
         }
-        $save = $this->master->create('master_guru', $data_insert, true);
-        $data = ['status' => true, 'data' => $save, 'insert' => $data_insert];
         $this->output_json($data);
     }
     public function editJabatan($id)
@@ -292,9 +319,11 @@ class Dataguru extends CI_Controller
         $data['smt_active'] = $smt;
         $group = $this->ion_auth->get_users_groups($user->id)->row()->name;
         if (!($group === 'admin')) {
+            $data['kelass'] = $this->dropdown->getAllKelas($tp->id_tp, $smt->id_smt);
+        } else {
+            $data['groups'] = $this->ion_auth->groups()->result();
+            $data['kelass'] = $this->dropdown->getAllKelas($tp->id_tp, $smt->id_smt);
         }
-        $data['groups'] = $this->ion_auth->groups()->result();
-        $data['kelass'] = $this->dropdown->getAllKelas($tp->id_tp, $smt->id_smt);
         $data['mapels'] = $this->dropdown->getAllMapel();
         $data['levels'] = $this->dropdown->getAllLevelGuru();
         $data['ekskul'] = $this->dropdown->getAllEkskul();
@@ -327,55 +356,32 @@ class Dataguru extends CI_Controller
         if ($copy) {
             $tmp_wali = $kelass2[$wali];
             $kelas_wali = $kelass1[$tmp_wali];
-            $mapels = [];
-            $check_mapel = $this->input->post('mapel', true);
-            if (!$check_mapel) {
-            }
-            $row_mapels = count($this->input->post('mapel', true));
-            $i = 0;
-            if (!($i <= $row_mapels)) {
-            }
-            $mapel = $this->input->post('mapel[' . $i . ']', true);
-            $nama_mapel = $this->input->post('nama_mapel' . $mapel, true);
-            $check = $this->input->post('kelasmapel' . $mapel, true);
-            if (!$check) {
-            }
-            $row_kelas = count($this->input->post('kelasmapel' . $mapel, true));
-            $kelas = [];
-            $j = 0;
-            if (!($j <= $row_kelas)) {
-            }
-            $kelasmapel = $this->input->post('kelasmapel' . $mapel . '[' . $j . ']', true);
-            if ($copy) {
-            }
-            $kelas[] = ['kelas' => $kelasmapel];
-            $j++;
         } else {
             $kelas_wali = $wali;
-            $mapels = [];
-            $check_mapel = $this->input->post('mapel', true);
-            if (!$check_mapel) {
-            }
-            $row_mapels = count($this->input->post('mapel', true));
-            $i = 0;
-            if (!($i <= $row_mapels)) {
-            }
-            $mapel = $this->input->post('mapel[' . $i . ']', true);
-            $nama_mapel = $this->input->post('nama_mapel' . $mapel, true);
-            $check = $this->input->post('kelasmapel' . $mapel, true);
-            if (!$check) {
-            }
-            $row_kelas = count($this->input->post('kelasmapel' . $mapel, true));
-            $kelas = [];
-            $j = 0;
-            if (!($j <= $row_kelas)) {
-            }
-            $kelasmapel = $this->input->post('kelasmapel' . $mapel . '[' . $j . ']', true);
-            if ($copy) {
-            }
-            $kelas[] = ['kelas' => $kelasmapel];
-            $j++;
         }
+        $mapels = [];
+        $check_mapel = $this->input->post('mapel', true);
+        if (!$check_mapel) {
+        }
+        $row_mapels = count($this->input->post('mapel', true));
+        $i = 0;
+        if (!($i <= $row_mapels)) {
+        }
+        $mapel = $this->input->post('mapel[' . $i . ']', true);
+        $nama_mapel = $this->input->post('nama_mapel' . $mapel, true);
+        $check = $this->input->post('kelasmapel' . $mapel, true);
+        if (!$check) {
+        }
+        $row_kelas = count($this->input->post('kelasmapel' . $mapel, true));
+        $kelas = [];
+        $j = 0;
+        if (!($j <= $row_kelas)) {
+        }
+        $kelasmapel = $this->input->post('kelasmapel' . $mapel . '[' . $j . ']', true);
+        if ($copy) {
+        }
+        $kelas[] = ['kelas' => $kelasmapel];
+        $j++;
     }
     public function getDataKelas()
     {
@@ -419,8 +425,11 @@ class Dataguru extends CI_Controller
         $id = $this->input->post('id_level', true);
         $s_mode = $mode == '1' ? 'menyimpan' : 'menghapus';
         if ($mode == '1') {
+            $insert = ['id_level' => $id, 'level' => $this->input->post('level', true)];
+            $replaced = $this->db->replace('level_guru', $insert);
+        } else {
+            $replaced = $this->db->delete('level_guru', 'id_level=' . $id);
         }
-        $replaced = $this->db->delete('level_guru', 'id_level=' . $id);
         $data = ['success' => $replaced, 'msg' => $replaced ? 'Sukses ' . $s_mode . ' jabatan' : 'Gagal ' . $s_mode . ' jabatan'];
         $this->output_json($data);
     }

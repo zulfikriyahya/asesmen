@@ -7,9 +7,11 @@ class Guruview extends CI_Controller
     {
         parent::__construct();
         if ($this->ion_auth->logged_in()) {
+            $this->load->library('upload');
+        } else {
+            redirect('auth');
+            $this->load->library('upload');
         }
-        redirect('auth');
-        $this->load->library('upload');
         $this->load->library(['datatables', 'form_validation']);
         $this->form_validation->set_error_delimiters('', '');
         $this->load->model('Dashboard_model', 'dashboard');
@@ -18,9 +20,11 @@ class Guruview extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -29,9 +33,11 @@ class Guruview extends CI_Controller
         $user = $this->ion_auth->user()->row();
         $guru = $this->dashboard->getDetailGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
         if (!($user == null)) {
+            $data = ['user' => $user, 'judul' => 'Profile', 'subjudul' => 'Profile Saya', 'setting' => $this->dashboard->getSetting()];
+        } else {
+            redirect('auth');
+            $data = ['user' => $user, 'judul' => 'Profile', 'subjudul' => 'Profile Saya', 'setting' => $this->dashboard->getSetting()];
         }
-        redirect('auth');
-        $data = ['user' => $user, 'judul' => 'Profile', 'subjudul' => 'Profile Saya', 'setting' => $this->dashboard->getSetting()];
         $data['tp'] = $this->dashboard->getTahun();
         $data['tp_active'] = $tp;
         $data['smt'] = $this->dashboard->getSemester();
@@ -69,12 +75,15 @@ class Guruview extends CI_Controller
         $this->form_validation->set_rules('nip', 'NIP', 'required|trim|min_length[8]|max_length[30]' . $u_nip);
         $this->form_validation->set_rules('nama_guru', 'Nama Guru', 'required|trim|min_length[1]|max_length[50]');
         if ($this->form_validation->run() == FALSE) {
+            $data = ['status' => false, 'errors' => ['nip' => form_error('nip'), 'nama_guru' => form_error('nama_guru')]];
+            $this->output_json($data);
+        } else {
+            $input = ['nip' => $nip, 'nama_guru' => $nama_guru, 'email' => $email, 'jenis_kelamin' => $jenis_kelamin, 'no_hp' => $no_hp, 'agama' => $agama, 'no_ktp' => $no_ktp, 'tempat_lahir' => $tempat_lahir, 'tgl_lahir' => $this->strContains($tgl_lahir, '0000-') ? null : $tgl_lahir, 'alamat_jalan' => $alamat_jalan, 'kecamatan' => $kecamatan, 'kabupaten' => $kabupaten, 'provinsi' => $provinsi, 'kode_pos' => $kode_pos];
+            $action = $this->master->update('master_guru', $input, 'id_guru', $id_guru);
+            if ($action) {
+            }
+            $this->output_json(['status' => false]);
         }
-        $input = ['nip' => $nip, 'nama_guru' => $nama_guru, 'email' => $email, 'jenis_kelamin' => $jenis_kelamin, 'no_hp' => $no_hp, 'agama' => $agama, 'no_ktp' => $no_ktp, 'tempat_lahir' => $tempat_lahir, 'tgl_lahir' => $this->strContains($tgl_lahir, '0000-') ? null : $tgl_lahir, 'alamat_jalan' => $alamat_jalan, 'kecamatan' => $kecamatan, 'kabupaten' => $kabupaten, 'provinsi' => $provinsi, 'kode_pos' => $kode_pos];
-        $action = $this->master->update('master_guru', $input, 'id_guru', $id_guru);
-        if ($action) {
-        }
-        $this->output_json(['status' => false]);
     }
     function strContains($string, $val)
     {
@@ -84,8 +93,25 @@ class Guruview extends CI_Controller
     {
         $guru = $this->master->getGuruById($id_guru);
         if (isset($_FILES['foto']['name'])) {
+            $config['upload_path'] = './uploads/profiles/';
+            $config['allowed_types'] = 'gif|jpg|png|jpeg|JPEG|JPG|PNG|GIF';
+            $config['overwrite'] = true;
+            $config['file_name'] = $guru->nip;
+            $this->upload->initialize($config);
+            if (!$this->upload->do_upload('foto')) {
+            }
+            $result = $this->upload->data();
+            $data['src'] = base_url() . 'uploads/profiles/' . $result['file_name'];
+            $data['filename'] = pathinfo($result['file_name'], PATHINFO_FILENAME);
+            $data['status'] = true;
+            $this->db->set('foto', 'uploads/profiles/' . $result['file_name']);
+            $this->db->where('id_guru', $id_guru);
+            $this->db->update('master_guru');
+            $data['type'] = $_FILES['foto']['type'];
+            $data['size'] = $_FILES['foto']['size'];
+        } else {
+            $data['src'] = '';
         }
-        $data['src'] = '';
         $this->output_json($data);
     }
     function deleteFile($id_guru)
@@ -93,12 +119,13 @@ class Guruview extends CI_Controller
         $src = $this->input->get('src');
         $file_name = str_replace(base_url(), '', $src ?? '');
         if (!($file_name != 'user.jpg')) {
+        } else {
+            if (!unlink($file_name)) {
+            }
+            $this->db->set('foto', '');
+            $this->db->where('id_guru', $id_guru);
+            $this->db->update('master_guru');
+            echo 'File Delete Successfully';
         }
-        if (!unlink($file_name)) {
-        }
-        $this->db->set('foto', '');
-        $this->db->where('id_guru', $id_guru);
-        $this->db->update('master_guru');
-        echo 'File Delete Successfully';
     }
 }

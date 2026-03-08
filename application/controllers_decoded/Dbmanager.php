@@ -7,10 +7,12 @@ class Dbmanager extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if ($this->ion_auth->is_admin()) {
+            }
+            show_error('Hanya Admin yang boleh mengakses halaman ini', 403, 'Akses dilarang');
         }
-        if ($this->ion_auth->is_admin()) {
-        }
-        show_error('Hanya Admin yang boleh mengakses halaman ini', 403, 'Akses dilarang');
         $this->load->library('upload');
         $this->load->model('Settings_model', 'settings');
         $this->load->model('Dashboard_model', 'dashboard');
@@ -19,9 +21,11 @@ class Dbmanager extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -40,8 +44,9 @@ class Dbmanager extends CI_Controller
             $tgl = filemtime('./backups/' . $value);
             $size = $this->formatSizeUnits(filesize('./backups/' . $value));
             if (!($type !== 'html')) {
+            } else {
+                $arrFile[$key] = ['type' => $type, 'nama' => $nama, 'tgl' => $tgl, 'size' => $size, 'src' => $value];
             }
-            $arrFile[$key] = ['type' => $type, 'nama' => $nama, 'tgl' => $tgl, 'size' => $size, 'src' => $value];
         }
         $data['list'] = $arrFile;
         $data['tables'] = $this->db->list_tables();
@@ -94,8 +99,10 @@ class Dbmanager extends CI_Controller
     public function hapusBackup($src)
     {
         if (unlink('./backups/' . $src)) {
+            $this->output_json(['status' => true, 'message' => 'Backup berhasil dihapus']);
+        } else {
+            $this->output_json(['status' => false, 'message' => 'Gagal menghapus backup']);
         }
-        $this->output_json(['status' => false, 'message' => 'Gagal menghapus backup']);
     }
     function formatSizeUnits($bytes)
     {

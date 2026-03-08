@@ -6,10 +6,12 @@ class Cbtbanksoal extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
+            }
+            show_error('Hanya Administrator dan guru yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         }
-        if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
-        }
-        show_error('Hanya Administrator dan guru yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         $this->load->library('upload');
         $this->load->library(['datatables', 'form_validation']);
         $this->form_validation->set_error_delimiters('', '');
@@ -17,9 +19,11 @@ class Cbtbanksoal extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -42,49 +46,95 @@ class Cbtbanksoal extends CI_Controller
         $type = $this->input->get('type');
         $data['mode'] = $mode == null ? '1' : $mode;
         if ($this->ion_auth->is_admin()) {
-        }
-        $guru = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
-        $nguru[$guru->id_guru] = $guru->nama_guru;
-        $data['guru'] = $guru;
-        $data['gurus'] = $nguru;
-        $data['kelas'] = $this->cbt->getKelas($tp->id_tp, $smt->id_smt);
-        $data['filters'] = ['0' => 'Semua', '2' => 'Mapel', '3' => 'Level'];
-        $data['id_filter'] = $type == null ? '' : $type;
-        $banks = [];
-        if ($type == '2') {
-        }
-        if ($type == '3') {
-        }
-        $data['id_guru'] = $guru->id_guru;
-        $banks = $this->cbt->getDataBank($guru->id_guru);
-        $data['id_mapel'] = '';
-        $data['id_level'] = '';
-        if (!($type != null)) {
-        }
-        $data['banks'] = $banks;
-        $jadwal_terpakai = [];
-        if (!($banks && count($banks) > 0)) {
-        }
-        $ids = [];
-        foreach ($banks as $bank) {
-            foreach ($bank as $tp) {
-                foreach ($tp as $smt) {
-                    $ids[] = $smt->id_bank;
+            $data['profile'] = $this->dashboard->getProfileAdmin($user->id);
+            $data['gurus'] = $this->dropdown->getAllGuru();
+            $data['kelas'] = $this->cbt->getKelas($tp->id_tp, $smt->id_smt);
+            $data['filters'] = ['0' => 'Semua', '1' => 'Guru', '2' => 'Mapel', '3' => 'Level'];
+            $data['id_filter'] = $type == null ? '' : $type;
+            $banks = [];
+            if ($type == '0') {
+            }
+            if ($type == '1') {
+            }
+            if ($type == '2') {
+            }
+            if ($type == '3') {
+            }
+            $data['id_guru'] = null;
+            $data['id_mapel'] = null;
+            $data['id_level'] = null;
+            if (!($type != null)) {
+            }
+            $data['banks'] = $banks;
+            $jadwal_terpakai = [];
+            if (!($banks && count($banks) > 0)) {
+            }
+            $ids = [];
+            foreach ($banks as $bank) {
+                foreach ($bank as $tp) {
+                    foreach ($tp as $smt) {
+                        $ids[] = $smt->id_bank;
+                    }
                 }
             }
-        }
-        if (!($ids && count($ids) > 0)) {
-        }
-        $terpakai = $this->cbt->getBankTerpakai($ids);
-        foreach ($terpakai as $idj => $rows) {
-            if (!$rows) {
+            if (!($ids && count($ids) > 0)) {
             }
-            $jadwal_terpakai[$idj] = count($rows);
+            $terpakai = $this->cbt->getBankTerpakai($ids);
+            foreach ($terpakai as $idj => $rows) {
+                if (!$rows) {
+                } else {
+                    $jadwal_terpakai[$idj] = count($rows);
+                }
+            }
+            $data['total_siswa'] = $jadwal_terpakai;
+            $this->load->view('_templates/dashboard/_header', $data);
+            $this->load->view('cbt/banksoal/data');
+            $this->load->view('_templates/dashboard/_footer');
+        } else {
+            $guru = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
+            $nguru[$guru->id_guru] = $guru->nama_guru;
+            $data['guru'] = $guru;
+            $data['gurus'] = $nguru;
+            $data['kelas'] = $this->cbt->getKelas($tp->id_tp, $smt->id_smt);
+            $data['filters'] = ['0' => 'Semua', '2' => 'Mapel', '3' => 'Level'];
+            $data['id_filter'] = $type == null ? '' : $type;
+            $banks = [];
+            if ($type == '2') {
+            }
+            if ($type == '3') {
+            }
+            $data['id_guru'] = $guru->id_guru;
+            $banks = $this->cbt->getDataBank($guru->id_guru);
+            $data['id_mapel'] = '';
+            $data['id_level'] = '';
+            if (!($type != null)) {
+            }
+            $data['banks'] = $banks;
+            $jadwal_terpakai = [];
+            if (!($banks && count($banks) > 0)) {
+            }
+            $ids = [];
+            foreach ($banks as $bank) {
+                foreach ($bank as $tp) {
+                    foreach ($tp as $smt) {
+                        $ids[] = $smt->id_bank;
+                    }
+                }
+            }
+            if (!($ids && count($ids) > 0)) {
+            }
+            $terpakai = $this->cbt->getBankTerpakai($ids);
+            foreach ($terpakai as $idj => $rows) {
+                if (!$rows) {
+                } else {
+                    $jadwal_terpakai[$idj] = count($rows);
+                }
+            }
+            $data['total_siswa'] = $jadwal_terpakai;
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('cbt/banksoal/data');
+            $this->load->view('members/guru/templates/footer');
         }
-        $data['total_siswa'] = $jadwal_terpakai;
-        $this->load->view('members/guru/templates/header', $data);
-        $this->load->view('cbt/banksoal/data');
-        $this->load->view('members/guru/templates/footer');
     }
     public function data($guru = null)
     {
@@ -107,11 +157,13 @@ class Cbtbanksoal extends CI_Controller
         $mapel = json_decode(json_encode(unserialize($mapel_guru->mapel_kelas ?? '')));
         $arrMapel = [];
         if (!($mapel != null)) {
+            $this->output_json($arrMapel);
+        } else {
+            foreach ($mapel as $m) {
+                $arrMapel[$m->id_mapel] = $m->nama_mapel;
+            }
+            $this->output_json($arrMapel);
         }
-        foreach ($mapel as $m) {
-            $arrMapel[$m->id_mapel] = $m->nama_mapel;
-        }
-        $this->output_json($arrMapel);
     }
     public function getGuruMapel()
     {
@@ -125,11 +177,13 @@ class Cbtbanksoal extends CI_Controller
         foreach ($mapel_guru as $guru) {
             $mapel = json_decode(json_encode(unserialize($guru->mapel_kelas ?? '')));
             if (!($mapel != null)) {
-            }
-            foreach ($mapel as $m) {
-                if (!(isset($m->id_mapel) && $m->id_mapel == $id_mapel)) {
+            } else {
+                foreach ($mapel as $m) {
+                    if (!(isset($m->id_mapel) && $m->id_mapel == $id_mapel)) {
+                    } else {
+                        $arrGuru[$guru->id_guru] = $guru->nama_guru;
+                    }
                 }
-                $arrGuru[$guru->id_guru] = $guru->nama_guru;
             }
         }
         $this->output_json($arrGuru);
@@ -149,16 +203,19 @@ class Cbtbanksoal extends CI_Controller
         $arrMapel = [];
         $mapel = json_decode(json_encode(unserialize($mapel_guru->mapel_kelas ?? '')));
         if (!($mapel !== false)) {
-        }
-        foreach ($mapel as $m) {
-            $arrMapel[$m->id_mapel] = $m->nama_mapel;
-            if (!($id_mapel === $m->id_mapel)) {
+            $this->output_json(['mapel' => $arrMapel, 'kelas' => count($arrKelas) > 0 ? $this->cbt->getKelasByLevel($level, $arrKelas) : []]);
+        } else {
+            foreach ($mapel as $m) {
+                $arrMapel[$m->id_mapel] = $m->nama_mapel;
+                if (!($id_mapel === $m->id_mapel)) {
+                } else {
+                    foreach ($m->kelas_mapel as $kls) {
+                        array_push($arrKelas, $kls->kelas);
+                    }
+                }
             }
-            foreach ($m->kelas_mapel as $kls) {
-                array_push($arrKelas, $kls->kelas);
-            }
+            $this->output_json(['mapel' => $arrMapel, 'kelas' => count($arrKelas) > 0 ? $this->cbt->getKelasByLevel($level, $arrKelas) : []]);
         }
-        $this->output_json(['mapel' => $arrMapel, 'kelas' => count($arrKelas) > 0 ? $this->cbt->getKelasByLevel($level, $arrKelas) : []]);
     }
     public function addBank()
     {
@@ -183,37 +240,46 @@ class Cbtbanksoal extends CI_Controller
         $data['level'] = $this->dropdown->getAllLevel($setting->jenjang);
         $data['mapel_agama'] = $this->master->getAgamaSiswa();
         if ($this->ion_auth->is_admin()) {
-        }
-        $guru = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
-        $nguru[$guru->id_guru] = $guru->nama_guru;
-        $data['gurus'] = $nguru;
-        $data['guru'] = $guru;
-        $data['id_guru'] = $guru->id_guru;
-        $mapel_guru = $this->kelas->getGuruMapelKelas($guru->id_guru, $tp->id_tp, $smt->id_smt);
-        $mapel = json_decode(json_encode(unserialize($mapel_guru->mapel_kelas ?? '')));
-        $arrMapel = [];
-        $arrKelas = [];
-        if (!($mapel !== false)) {
-        }
-        foreach ($mapel as $m) {
-            $arrMapel[$m->id_mapel] = $m->nama_mapel;
-            foreach ($m->kelas_mapel as $kls) {
-                $arrKelas[$m->id_mapel][] = ['id_kelas' => $kls->kelas, 'nama_kelas' => $this->dropdown->getNamaKelasById($tp->id_tp, $smt->id_smt, $kls->kelas)];
+            $data['profile'] = $this->dashboard->getProfileAdmin($user->id);
+            $data['kelas'] = $this->dropdown->getAllKelas($tp->id_tp, $smt->id_smt);
+            $data['id_guru'] = '';
+            $data['gurus'] = $this->dropdown->getAllGuru();
+            $data['mapel'] = $this->dropdown->getAllMapel();
+            $this->load->view('_templates/dashboard/_header', $data);
+            $this->load->view('cbt/banksoal/add');
+            $this->load->view('_templates/dashboard/_footer');
+        } else {
+            $guru = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
+            $nguru[$guru->id_guru] = $guru->nama_guru;
+            $data['gurus'] = $nguru;
+            $data['guru'] = $guru;
+            $data['id_guru'] = $guru->id_guru;
+            $mapel_guru = $this->kelas->getGuruMapelKelas($guru->id_guru, $tp->id_tp, $smt->id_smt);
+            $mapel = json_decode(json_encode(unserialize($mapel_guru->mapel_kelas ?? '')));
+            $arrMapel = [];
+            $arrKelas = [];
+            if (!($mapel !== false)) {
             }
+            foreach ($mapel as $m) {
+                $arrMapel[$m->id_mapel] = $m->nama_mapel;
+                foreach ($m->kelas_mapel as $kls) {
+                    $arrKelas[$m->id_mapel][] = ['id_kelas' => $kls->kelas, 'nama_kelas' => $this->dropdown->getNamaKelasById($tp->id_tp, $smt->id_smt, $kls->kelas)];
+                }
+            }
+            $arrId = [];
+            if (!($mapel && count($mapel) > 0)) {
+            }
+            foreach ($mapel[0]->kelas_mapel as $id_mapel) {
+                array_push($arrId, $id_mapel->kelas);
+            }
+            $data['mapel_guru'] = $mapel_guru;
+            $data['mapel'] = $arrMapel;
+            $data['arrkelas'] = $arrKelas;
+            $data['kelas'] = count($arrId) > 0 ? $this->dropdown->getAllKelasByArrayId($tp->id_tp, $smt->id_smt, $arrId) : [];
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('cbt/banksoal/add');
+            $this->load->view('members/guru/templates/footer');
         }
-        $arrId = [];
-        if (!($mapel && count($mapel) > 0)) {
-        }
-        foreach ($mapel[0]->kelas_mapel as $id_mapel) {
-            array_push($arrId, $id_mapel->kelas);
-        }
-        $data['mapel_guru'] = $mapel_guru;
-        $data['mapel'] = $arrMapel;
-        $data['arrkelas'] = $arrKelas;
-        $data['kelas'] = count($arrId) > 0 ? $this->dropdown->getAllKelasByArrayId($tp->id_tp, $smt->id_smt, $arrId) : [];
-        $this->load->view('members/guru/templates/header', $data);
-        $this->load->view('cbt/banksoal/add');
-        $this->load->view('members/guru/templates/footer');
     }
     public function editBank()
     {
@@ -242,25 +308,35 @@ class Cbtbanksoal extends CI_Controller
         $data['bank'] = $this->cbt->getDataBankById($id_bank);
         $data['mapel_agama'] = $this->master->getAgamaSiswa();
         if ($this->ion_auth->is_admin()) {
+            $data['profile'] = $this->dashboard->getProfileAdmin($user->id);
+            $data['id_guru'] = $id_guru;
+            $data['gurus'] = $this->dropdown->getAllGuru();
+            $data['mapel'] = $this->dropdown->getAllMapel();
+            $mapel_guru = $this->kelas->getGuruMapelKelas($id_guru, $tp->id_tp, $smt->id_smt);
+            $data['mapel_guru'] = $mapel_guru;
+            $this->load->view('_templates/dashboard/_header', $data);
+            $this->load->view('cbt/banksoal/add');
+            $this->load->view('_templates/dashboard/_footer');
+        } else {
+            $guru = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
+            $nguru[$guru->id_guru] = $guru->nama_guru;
+            $mapel_guru = $this->kelas->getGuruMapelKelas($guru->id_guru, $tp->id_tp, $smt->id_smt);
+            $mapel = json_decode(json_encode(unserialize($mapel_guru->mapel_kelas ?? '')));
+            $arrMapel = [];
+            if (!($mapel !== false)) {
+            }
+            foreach ($mapel as $m) {
+                $arrMapel[$m->id_mapel] = $m->nama_mapel;
+            }
+            $data['gurus'] = $nguru;
+            $data['mapel_guru'] = $mapel_guru;
+            $data['guru'] = $guru;
+            $data['id_guru'] = $guru->id_guru;
+            $data['mapel'] = $arrMapel;
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('cbt/banksoal/add');
+            $this->load->view('members/guru/templates/footer');
         }
-        $guru = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
-        $nguru[$guru->id_guru] = $guru->nama_guru;
-        $mapel_guru = $this->kelas->getGuruMapelKelas($guru->id_guru, $tp->id_tp, $smt->id_smt);
-        $mapel = json_decode(json_encode(unserialize($mapel_guru->mapel_kelas ?? '')));
-        $arrMapel = [];
-        if (!($mapel !== false)) {
-        }
-        foreach ($mapel as $m) {
-            $arrMapel[$m->id_mapel] = $m->nama_mapel;
-        }
-        $data['gurus'] = $nguru;
-        $data['mapel_guru'] = $mapel_guru;
-        $data['guru'] = $guru;
-        $data['id_guru'] = $guru->id_guru;
-        $data['mapel'] = $arrMapel;
-        $this->load->view('members/guru/templates/header', $data);
-        $this->load->view('cbt/banksoal/add');
-        $this->load->view('members/guru/templates/footer');
     }
     public function saveBank()
     {
@@ -268,8 +344,13 @@ class Cbtbanksoal extends CI_Controller
         $this->load->model('Log_model', 'logging');
         $this->load->model('Cbt_model', 'cbt');
         if ($this->input->post()) {
+            $tp = $this->master->getTahunActive();
+            $smt = $this->master->getSemesterActive();
+            $this->cbt->saveBankSoal($tp->id_tp, $smt->id_smt);
+            $status = TRUE;
+        } else {
+            $status = FALSE;
         }
-        $status = FALSE;
         $data['status'] = $status;
         $id = $this->input->post('id_bank', true);
         if (!$id) {
@@ -284,13 +365,15 @@ class Cbtbanksoal extends CI_Controller
         $this->load->model('Cbt_model', 'cbt');
         $id = $this->input->get('id_bank', true);
         if ($this->cbt->cekJadwalBankSoal($id) > 0) {
+            $this->output_json(['status' => false, 'message' => 'Ada jadwal ujian yang menggunakan bank soal ini']);
+        } else {
+            if (!$this->master->delete('cbt_soal', $id, 'bank_id')) {
+            }
+            if (!$this->master->delete('cbt_bank_soal', $id, 'id_bank')) {
+            }
+            $this->logging->saveLog(5, 'menghapus bank soal');
+            $this->output_json(['status' => true, 'message' => 'berhasil']);
         }
-        if (!$this->master->delete('cbt_soal', $id, 'bank_id')) {
-        }
-        if (!$this->master->delete('cbt_bank_soal', $id, 'id_bank')) {
-        }
-        $this->logging->saveLog(5, 'menghapus bank soal');
-        $this->output_json(['status' => true, 'message' => 'berhasil']);
     }
     public function deleteAllBank()
     {
@@ -299,13 +382,15 @@ class Cbtbanksoal extends CI_Controller
         $this->load->model('Cbt_model', 'cbt');
         $ids = json_decode($this->input->post('ids', true));
         if ($this->cbt->cekJadwalBankSoal($ids) > 0) {
+            $this->output_json(['status' => false, 'message' => 'Ada jadwal ujian yang menggunakan bank soal ini']);
+        } else {
+            if (!$this->master->delete('cbt_soal', $ids, 'bank_id')) {
+            }
+            if (!$this->master->delete('cbt_bank_soal', $ids, 'id_bank')) {
+            }
+            $this->logging->saveLog(5, 'menghapus bank soal');
+            $this->output_json(['status' => true, 'message' => 'berhasil']);
         }
-        if (!$this->master->delete('cbt_soal', $ids, 'bank_id')) {
-        }
-        if (!$this->master->delete('cbt_bank_soal', $ids, 'id_bank')) {
-        }
-        $this->logging->saveLog(5, 'menghapus bank soal');
-        $this->output_json(['status' => true, 'message' => 'berhasil']);
     }
     public function detail($id)
     {
@@ -327,11 +412,16 @@ class Cbtbanksoal extends CI_Controller
         $terpakai = $this->cbt->getBankTerpakai([$id]);
         $data['total_siswa'] = isset($terpakai[$id]) ? count($terpakai[$id]) : 0;
         if ($this->ion_auth->is_admin()) {
+            $data['profile'] = $this->dashboard->getProfileAdmin($user->id);
+            $this->load->view('_templates/dashboard/_header', $data);
+            $this->load->view('cbt/banksoal/detail');
+            $this->load->view('_templates/dashboard/_footer');
+        } else {
+            $data['guru'] = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('cbt/banksoal/detail');
+            $this->load->view('members/guru/templates/footer');
         }
-        $data['guru'] = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
-        $this->load->view('members/guru/templates/header', $data);
-        $this->load->view('cbt/banksoal/detail');
-        $this->load->view('members/guru/templates/footer');
     }
     public function saveSelected()
     {
@@ -344,12 +434,39 @@ class Cbtbanksoal extends CI_Controller
         $arrId = [];
         $i = 0;
         if (!($i <= $soal)) {
+            $updated = 0;
+            foreach ($arrId as $id) {
+                $this->db->set('tampilkan', 1);
+                $this->db->where('id_soal', $id);
+                $this->db->update('cbt_soal');
+                $updated++;
+            }
+            foreach ($unchek as $id) {
+                $this->db->set('tampilkan', 0);
+                $this->db->where('id_soal', $id);
+                $this->db->update('cbt_soal');
+            }
+            sleep(1);
+            $bank = $this->cbt->getDataBankById($bank_id);
+            $soals = $this->cbt->getAllSoalByBank($bank_id);
+            $total_soal_tampil = isset(array_count_values(array_column($soals, 'tampilkan'))['1']) ? array_count_values(array_column($soals, 'tampilkan'))['1'] : 0;
+            $total_soal_seharusnya_tampil = $bank->tampil_pg + $bank->tampil_kompleks + $bank->tampil_jodohkan + $bank->tampil_isian + $bank->tampil_esai;
+            $tampil_kurang = $total_soal_tampil < $total_soal_seharusnya_tampil;
+            $status_soal = $tampil_kurang ? '0' : '1';
+            $this->db->set('status_soal', $status_soal);
+            $this->db->where('id_bank', $bank_id);
+            $this->db->update('cbt_bank_soal');
+            $data['check'] = $updated;
+            $this->output_json($data);
+        } else {
+            $id = $this->input->post('soal[' . $i . ']', true);
+            if (!($id != null)) {
+            }
+            array_push($arrId, $id);
+            $i++;
+            if (!($i <= $soal)) {
+            }
         }
-        $id = $this->input->post('soal[' . $i . ']', true);
-        if (!($id != null)) {
-        }
-        array_push($arrId, $id);
-        $i++;
     }
     public function copyBankSoal($id_bank)
     {
@@ -365,16 +482,18 @@ class Cbtbanksoal extends CI_Controller
         $result = $this->master->create('cbt_bank_soal', $data);
         $id = $this->db->insert_id();
         if (!($soals && count($soals) > 0)) {
+            $this->output_json($result);
+        } else {
+            foreach ($soals as $soal) {
+                unset($soal->id_soal);
+                $soal->bank_id = $id;
+                $soal->created_on = time();
+                $soal->updated_on = time();
+            }
+            $this->db->insert_batch('cbt_soal', $soals);
+            $this->logging->saveLog(3, 'membuat bank soal');
+            $this->output_json($result);
         }
-        foreach ($soals as $soal) {
-            unset($soal->id_soal);
-            $soal->bank_id = $id;
-            $soal->created_on = time();
-            $soal->updated_on = time();
-        }
-        $this->db->insert_batch('cbt_soal', $soals);
-        $this->logging->saveLog(3, 'membuat bank soal');
-        $this->output_json($result);
     }
     public function buatsoal($id_bank)
     {
@@ -406,14 +525,16 @@ class Cbtbanksoal extends CI_Controller
         $data_komplit = $this->cbt->cekSoalBelumKomplit($jenis, $bank->opsi);
         $data['soal_belum_komplit'] = isset($data_komplit[$id_bank]) ? $data_komplit[$id_bank] : [];
         if ($jenis == '1') {
-        }
-        if ($jenis == '2') {
-        }
-        if ($jenis == '3') {
-        }
-        if ($jenis == '4') {
-        }
-        if ($jenis == '5') {
+            $data['jml_pg'] = $this->cbt->getNomorSoalTerbesar($id_bank, 1);
+        } else {
+            if ($jenis == '2') {
+            }
+            if ($jenis == '3') {
+            }
+            if ($jenis == '4') {
+            }
+            if ($jenis == '5') {
+            }
         }
         $data['bank'] = $bank;
         $data['soals'] = $this->cbt->getAllSoalByBank($id_bank, $jenis);
@@ -436,10 +557,16 @@ class Cbtbanksoal extends CI_Controller
         $soal = $this->cbt->getSoalByNomor($bank_id, $nomor, $jenis);
         $data = $soal;
         if ($data != null) {
+            $data->file = unserialize($soal->file ?? '');
+            if ($jenis == '2') {
+            }
+            if ($jenis == '3') {
+            }
+        } else {
+            if (!($nomor != 1)) {
+            }
+            $data = ['bank_id' => $bank_id, 'jenis' => $jenis, 'nomor_soal' => $nomor];
         }
-        if (!($nomor != 1)) {
-        }
-        $data = ['bank_id' => $bank_id, 'jenis' => $jenis, 'nomor_soal' => $nomor];
         $this->output_json($data);
     }
     public function tambahSoal()
@@ -473,11 +600,16 @@ class Cbtbanksoal extends CI_Controller
         $data['level'] = $this->dropdown->getAllLevel($setting->jenjang);
         $data['kelas'] = $this->dropdown->getAllKelas($tp->id_tp, $smt->id_smt);
         if ($this->ion_auth->is_admin()) {
+            $data['profile'] = $this->dashboard->getProfileAdmin($user->id);
+            $this->load->view('_templates/dashboard/_header', $data);
+            $this->load->view('cbt/banksoal/import');
+            $this->load->view('_templates/dashboard/_footer');
+        } else {
+            $data['guru'] = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('cbt/banksoal/import');
+            $this->load->view('members/guru/templates/footer');
         }
-        $data['guru'] = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
-        $this->load->view('members/guru/templates/header', $data);
-        $this->load->view('cbt/banksoal/import');
-        $this->load->view('members/guru/templates/footer');
     }
     public function import()
     {
@@ -499,9 +631,12 @@ class Cbtbanksoal extends CI_Controller
         $soals = $this->cbt->getAllSoalByBank($id_bank);
         foreach ($soals as $soal) {
             if (!isset($soal->file)) {
-            }
-            $soal->file = unserialize($soal->file ?? '');
-            if ($soal->jenis == '2') {
+                if ($soal->jenis == '2') {
+                }
+            } else {
+                $soal->file = unserialize($soal->file ?? '');
+                if ($soal->jenis == '2') {
+                }
             }
             if ($soal->jenis == '3') {
             }
@@ -530,14 +665,16 @@ class Cbtbanksoal extends CI_Controller
     {
         $this->form_validation->set_rules('soal', 'Soal', 'required');
         if ($jenis == 1) {
+            $this->form_validation->set_rules('jawaban_pg', 'Kunci Jawaban', 'required');
+        } else {
+            if ($jenis == 2) {
+            }
+            if ($jenis == 3) {
+            }
+            if ($jenis == 4) {
+            }
+            $this->form_validation->set_rules('jawaban_essai', 'Kunci Jawaban', 'required');
         }
-        if ($jenis == 2) {
-        }
-        if ($jenis == 3) {
-        }
-        if ($jenis == 4) {
-        }
-        $this->form_validation->set_rules('jawaban_essai', 'Kunci Jawaban', 'required');
     }
     public function saveSoal()
     {
@@ -552,14 +689,20 @@ class Cbtbanksoal extends CI_Controller
         $this->file_config();
         $data = ['bank_id' => $bank_id, 'jenis' => $jenis, 'nomor_soal' => $nomor_soal, 'soal' => $soal];
         if ($jenis == 1) {
+            $abjad = ['a', 'b', 'c', 'd', 'e'];
+            foreach ($abjad as $abj) {
+                $data['opsi_' . $abj] = $this->input->post('jawaban_' . $abj, false);
+            }
+            $data['jawaban'] = $this->input->post('jawaban_pg', true);
+        } else {
+            if ($jenis == 2) {
+            }
+            if ($jenis == 3) {
+            }
+            if ($jenis == 4) {
+            }
+            $data['jawaban'] = $this->input->post('jawaban_essai', false);
         }
-        if ($jenis == 2) {
-        }
-        if ($jenis == 3) {
-        }
-        if ($jenis == 4) {
-        }
-        $data['jawaban'] = $this->input->post('jawaban_essai', false);
         if ($this->form_validation->run() === FALSE) {
         }
         if ($method === 'add') {
@@ -587,17 +730,19 @@ class Cbtbanksoal extends CI_Controller
         $this->db->where('id_soal', $id_soal);
         $deleted = $this->db->delete('cbt_soal');
         if (!$deleted) {
+            $this->output_json($deleted);
+        } else {
+            $update = [];
+            $nomor_baru = 1;
+            foreach ($all_soal as $soal) {
+                $update[] = ['id_soal' => $soal->id_soal, 'nomor_soal' => $nomor_baru];
+                $nomor_baru++;
+            }
+            if (!(count($update) > 0)) {
+            }
+            $this->db->update_batch('cbt_soal', $update, 'id_soal');
+            $this->output_json($deleted);
         }
-        $update = [];
-        $nomor_baru = 1;
-        foreach ($all_soal as $soal) {
-            $update[] = ['id_soal' => $soal->id_soal, 'nomor_soal' => $nomor_baru];
-            $nomor_baru++;
-        }
-        if (!(count($update) > 0)) {
-        }
-        $this->db->update_batch('cbt_soal', $update, 'id_soal');
-        $this->output_json($deleted);
     }
     function uploadFile()
     {
@@ -606,47 +751,51 @@ class Cbtbanksoal extends CI_Controller
         $soal = $this->cbt->getFileSoalById($id_soal);
         $files = $soal == null || $soal->file == null ? [] : unserialize($soal->file ?? '');
         if (!isset($_FILES['file_uploads']['name'])) {
+            $data['files'] = $files;
+        } else {
+            $nama_file_asal = $_FILES['file_uploads']['name'];
+            $kode_file = $id_soal . '_' . time();
+            $config['upload_path'] = './uploads/bank_soal/';
+            $config['allowed_types'] = 'mpeg|mpg|mpeg3|mp3|wav|wave|mp4|avi';
+            $config['file_name'] = $kode_file;
+            $this->upload->initialize($config);
+            if (!$this->upload->do_upload('file_uploads')) {
+            }
+            $file = $this->upload->data();
+            $ext = pathinfo($file['file_name'], PATHINFO_EXTENSION);
+            $src = 'uploads/bank_soal/' . $kode_file . '.' . $ext;
+            $data['src'] = $src;
+            $data['filename'] = $nama_file_asal;
+            $data['status'] = true;
+            $type = $_FILES['file_uploads']['type'];
+            $data['type'] = $type;
+            $data['size'] = $_FILES['file_uploads']['size'];
+            $data['soal'] = $soal;
+            $files[] = ['file_name' => $nama_file_asal, 'alias' => $kode_file, 'src' => $src, 'type' => $type];
+            $this->db->set('file', serialize($files));
+            $this->db->where('id_soal', $id_soal);
+            $this->db->update('cbt_soal');
+            $data['files'] = $files;
         }
-        $nama_file_asal = $_FILES['file_uploads']['name'];
-        $kode_file = $id_soal . '_' . time();
-        $config['upload_path'] = './uploads/bank_soal/';
-        $config['allowed_types'] = 'mpeg|mpg|mpeg3|mp3|wav|wave|mp4|avi';
-        $config['file_name'] = $kode_file;
-        $this->upload->initialize($config);
-        if (!$this->upload->do_upload('file_uploads')) {
-        }
-        $file = $this->upload->data();
-        $ext = pathinfo($file['file_name'], PATHINFO_EXTENSION);
-        $src = 'uploads/bank_soal/' . $kode_file . '.' . $ext;
-        $data['src'] = $src;
-        $data['filename'] = $nama_file_asal;
-        $data['status'] = true;
-        $type = $_FILES['file_uploads']['type'];
-        $data['type'] = $type;
-        $data['size'] = $_FILES['file_uploads']['size'];
-        $data['soal'] = $soal;
-        $files[] = ['file_name' => $nama_file_asal, 'alias' => $kode_file, 'src' => $src, 'type' => $type];
-        $this->db->set('file', serialize($files));
-        $this->db->where('id_soal', $id_soal);
-        $this->db->update('cbt_soal');
-        $data['files'] = $files;
         $this->output_json($data);
     }
     function upload_image()
     {
         $status = false;
         if (!isset($_FILES['file']['name'])) {
+            $data['status'] = $status;
+        } else {
+            $config['upload_path'] = './uploads/bank_soal/';
+            $config['allowed_types'] = 'jpg|jpeg|png|gif|mp3|ogg|wav|mp4|mpeg|webm';
+            $config['file_name'] = 'file_' . date('YmdHis');
+            $this->upload->initialize($config);
+            if (!$this->upload->do_upload('file')) {
+            }
+            $uploaded = $this->upload->data();
+            $data['filename'] = 'uploads/bank_soal/' . $uploaded['file_name'];
+            $status = true;
+            $data['status'] = $status;
         }
-        $config['upload_path'] = './uploads/bank_soal/';
-        $config['allowed_types'] = 'jpg|jpeg|png|gif|mp3|ogg|wav|mp4|mpeg|webm';
-        $config['file_name'] = 'file_' . date('YmdHis');
-        $this->upload->initialize($config);
-        if (!$this->upload->do_upload('file')) {
-        }
-        $uploaded = $this->upload->data();
-        $data['filename'] = 'uploads/bank_soal/' . $uploaded['file_name'];
-        $status = true;
-        $data['status'] = $status;
         $this->output_json($data);
     }
     function uploadSoalImage()
@@ -663,8 +812,9 @@ class Cbtbanksoal extends CI_Controller
         $src = $this->input->post('src');
         $file_name = str_replace(base_url(), '', $src ?? '');
         if (!unlink($file_name)) {
+        } else {
+            echo 'File Delete Successfully';
         }
-        echo 'File Delete Successfully';
     }
     function doImport()
     {
@@ -680,20 +830,21 @@ class Cbtbanksoal extends CI_Controller
             $data_soal = [];
             foreach ($values as $val) {
                 if (!isset($val->NO)) {
+                } else {
+                    $no = trim($val->NO ?? '');
+                    if (!(isset($val->SOAL) && $val->SOAL != '')) {
+                    }
+                    $data_soal[$no]['soal'] = $val->SOAL;
+                    if ($jenis == '1') {
+                    }
+                    if ($jenis == '2') {
+                    }
+                    if ($jenis == '3') {
+                    }
+                    if (!isset($val->KUNCI)) {
+                    }
+                    $data_soal[$no]['kunci'] = $val->KUNCI;
                 }
-                $no = trim($val->NO ?? '');
-                if (!(isset($val->SOAL) && $val->SOAL != '')) {
-                }
-                $data_soal[$no]['soal'] = $val->SOAL;
-                if ($jenis == '1') {
-                }
-                if ($jenis == '2') {
-                }
-                if ($jenis == '3') {
-                }
-                if (!isset($val->KUNCI)) {
-                }
-                $data_soal[$no]['kunci'] = $val->KUNCI;
             }
             $datas[$jenis] = $data_soal;
         }
@@ -702,20 +853,21 @@ class Cbtbanksoal extends CI_Controller
             foreach ($keys as $no => $v) {
                 $isi_soal = isset($v['soal']) ? $v['soal'] : '';
                 if (!($isi_soal != '')) {
+                } else {
+                    $insert = ['jenis' => $jenis, 'nomor_soal' => $no, 'soal' => $isi_soal, 'file' => serialize([])];
+                    if ($jenis == '1') {
+                    }
+                    if ($jenis == '2') {
+                    }
+                    if ($jenis == '3') {
+                    }
+                    if ($jenis == '4') {
+                    }
+                    if (!isset($v['kunci'])) {
+                    }
+                    $insert['jawaban'] = $v['kunci'];
+                    $data_insert[] = $insert;
                 }
-                $insert = ['jenis' => $jenis, 'nomor_soal' => $no, 'soal' => $isi_soal, 'file' => serialize([])];
-                if ($jenis == '1') {
-                }
-                if ($jenis == '2') {
-                }
-                if ($jenis == '3') {
-                }
-                if ($jenis == '4') {
-                }
-                if (!isset($v['kunci'])) {
-                }
-                $insert['jawaban'] = $v['kunci'];
-                $data_insert[] = $insert;
             }
         }
         $inserted = [];
@@ -727,8 +879,13 @@ class Cbtbanksoal extends CI_Controller
         $data['total'] = count($inserted);
         $data['json'] = $json;
         if (count($inserted) > 0) {
+            $this->db->where('bank_id', $bank_id);
+            if (!$this->db->delete('cbt_soal')) {
+            }
+            $data['insert'] = $this->db->insert_batch('cbt_soal', $inserted);
+        } else {
+            $data['insert'] = 0;
         }
-        $data['insert'] = 0;
         $this->output_json($data);
     }
     function uploadSoal()
@@ -747,21 +904,22 @@ class Cbtbanksoal extends CI_Controller
             foreach ($nomor as $no => $v) {
                 $isi_soal = isset($v['soal']) ? $this->decode_data(rawurldecode($v['soal']), $bank_id, $jenis, $no) : '';
                 if (!($isi_soal != '')) {
+                } else {
+                    $insert = ['jenis' => $jenis, 'nomor_soal' => $no, 'soal' => $isi_soal, 'file' => serialize([])];
+                    if ($jenis == 1) {
+                    }
+                    if ($jenis == '2') {
+                    }
+                    if ($jenis == '3') {
+                    }
+                    if ($jenis == '4') {
+                    }
+                    if (!isset($v['kunci'])) {
+                    }
+                    $insert['jawaban'] = $this->decode_data(rawurldecode($v['kunci']), $bank_id, $jenis, $no);
+                    $jml_sess++;
+                    $data_insert[] = $insert;
                 }
-                $insert = ['jenis' => $jenis, 'nomor_soal' => $no, 'soal' => $isi_soal, 'file' => serialize([])];
-                if ($jenis == 1) {
-                }
-                if ($jenis == '2') {
-                }
-                if ($jenis == '3') {
-                }
-                if ($jenis == '4') {
-                }
-                if (!isset($v['kunci'])) {
-                }
-                $insert['jawaban'] = $this->decode_data(rawurldecode($v['kunci']), $bank_id, $jenis, $no);
-                $jml_sess++;
-                $data_insert[] = $insert;
             }
         }
         $tmpl['1'] = $jml_spg1 == $bank->tampil_pg ? '1' : '0';
@@ -777,8 +935,13 @@ class Cbtbanksoal extends CI_Controller
         $data['data_insert'] = $inserted;
         $data['total'] = count($inserted);
         if (count($inserted) > 0) {
+            $this->db->where('bank_id', $bank_id);
+            if (!$this->db->delete('cbt_soal')) {
+            }
+            $data['insert'] = $this->db->insert_batch('cbt_soal', $inserted);
+        } else {
+            $data['insert'] = 0;
         }
-        $data['insert'] = 0;
         if (!count($inserted)) {
         }
         $sttmpl['1'] = $jml_spg1 >= $bank->tampil_pg ? '1' : '0';

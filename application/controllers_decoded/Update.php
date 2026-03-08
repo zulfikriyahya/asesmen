@@ -14,9 +14,11 @@ class Update extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -52,42 +54,26 @@ class Update extends CI_Controller
             $sql = 'SELECT `column_name`, `numeric_precision`, `extra`, `is_nullable`' . ' FROM `information_schema`.`columns` WHERE table_schema = "' . $this->db->database . '" AND table_name = "' . $table . '"';
             if (!(($query = $this->db->query($sql)) === FALSE)) {
                 $query = $query->result_object();
-                $retval = array();
-                $i = 0;
-                $c = count($query);
-                if (!($i < $c)) {
-                }
-                if (!($datafld[$i]->name == $query[$i]->column_name)) {
-                }
-                if (!($query[$i]->extra != '')) {
-                }
-                if ($query[$i]->extra == 'auto_increment') {
-                }
-                $datafld[$i]->extra = $query[$i]->extra;
-                $retval[$i] = new stdClass();
-                $retval[$i]->name = $query[$i]->column_name;
-                $retval[$i]->extra = $query[$i]->extra;
-                $i++;
             } else {
                 $currentDb = FALSE;
                 $query = $query->result_object();
-                $retval = array();
-                $i = 0;
-                $c = count($query);
-                if (!($i < $c)) {
-                }
-                if (!($datafld[$i]->name == $query[$i]->column_name)) {
-                }
-                if (!($query[$i]->extra != '')) {
-                }
-                if ($query[$i]->extra == 'auto_increment') {
-                }
-                $datafld[$i]->extra = $query[$i]->extra;
-                $retval[$i] = new stdClass();
-                $retval[$i]->name = $query[$i]->column_name;
-                $retval[$i]->extra = $query[$i]->extra;
-                $i++;
             }
+            $retval = array();
+            $i = 0;
+            $c = count($query);
+            if (!($i < $c)) {
+            }
+            if (!($datafld[$i]->name == $query[$i]->column_name)) {
+            }
+            if (!($query[$i]->extra != '')) {
+            }
+            if ($query[$i]->extra == 'auto_increment') {
+            }
+            $datafld[$i]->extra = $query[$i]->extra;
+            $retval[$i] = new stdClass();
+            $retval[$i]->name = $query[$i]->column_name;
+            $retval[$i]->extra = $query[$i]->extra;
+            $i++;
         }
         $json = file_get_contents('./assets/app/db/database.json');
         $json = json_decode($json);
@@ -102,8 +88,25 @@ class Update extends CI_Controller
         $edit_columns = [];
         foreach ($full_tables as $table) {
             if ($this->db->table_exists($table)) {
+                if (!isset($json[$table])) {
+                }
+                foreach ($json[$table] as $jtbl) {
+                    if ($this->db->field_exists($jtbl->name, $table)) {
+                        foreach ($fields[$table] as $ftbl) {
+                            if (!($jtbl->name == $ftbl->name)) {
+                            } else {
+                                if (!($jtbl->default != $ftbl->default || $jtbl->max_length != $ftbl->max_length || $jtbl->type != $ftbl->type)) {
+                                }
+                                $edit_columns[$table][] = $jtbl;
+                            }
+                        }
+                    } else {
+                        $add_columns[$table][] = $jtbl;
+                    }
+                }
+            } else {
+                $create_tables[$table] = $json[$table];
             }
-            $create_tables[$table] = $json[$table];
         }
         $counts = count($create_tables) + count($add_columns) + count($edit_columns);
         $data = ['db' => $fields, 'create' => $create_tables, 'modify' => $edit_columns, 'add' => $add_columns, 'counts' => $counts, 'json' => $json, 'current' => $currentDb];
@@ -126,18 +129,46 @@ class Update extends CI_Controller
         sort($full_tables);
         foreach ($full_tables as $table) {
             if ($this->db->table_exists($table)) {
-            }
-            if (!isset($json[$table])) {
-            }
-            foreach ($json[$table] as $tbl => $jtbl) {
-                $field = [$jtbl->name => ['type' => $jtbl->type, 'constraint' => $jtbl->max_length, 'null' => $jtbl->primary_key == 0]];
-                $this->dbforge->add_field($field);
-                if (!($jtbl->primary_key == 1)) {
+                if (!isset($json[$table])) {
                 }
-                $this->dbforge->add_key($jtbl->name, true);
+                foreach ($json[$table] as $jtbl) {
+                    if ($this->db->field_exists($jtbl->name, $table)) {
+                        foreach ($fields[$table] as $ftbl) {
+                            if (!($jtbl->name == $ftbl->name)) {
+                            } else {
+                                if (!($jtbl->default != $ftbl->default || $jtbl->max_length != $ftbl->max_length || $jtbl->type != $ftbl->type)) {
+                                }
+                                if ($jtbl->primary_key == 0) {
+                                }
+                                if ($jtbl->auto_increment == true) {
+                                }
+                                $field = array($jtbl->name => array('type' => $jtbl->type, 'constraint' => $jtbl->max_length, 'null' => false));
+                                $this->dbforge->add_key($jtbl->name, true);
+                                $this->dbforge->modify_column($table, $field);
+                            }
+                        }
+                    } else {
+                        if ($jtbl->primary_key == 0) {
+                        }
+                        $field = array($jtbl->name => array('type' => $jtbl->type, 'constraint' => $jtbl->max_length, 'null' => false));
+                        $this->dbforge->add_key($jtbl->name, true);
+                        $this->dbforge->add_column($table, $field);
+                    }
+                }
+            } else {
+                if (!isset($json[$table])) {
+                }
+                foreach ($json[$table] as $tbl => $jtbl) {
+                    $field = [$jtbl->name => ['type' => $jtbl->type, 'constraint' => $jtbl->max_length, 'null' => $jtbl->primary_key == 0]];
+                    $this->dbforge->add_field($field);
+                    if (!($jtbl->primary_key == 1)) {
+                    } else {
+                        $this->dbforge->add_key($jtbl->name, true);
+                    }
+                }
+                $this->dbforge->create_table($table, TRUE);
+                $this->db->query('ALTER TABLE  `' . $table . '` ENGINE = InnoDB');
             }
-            $this->dbforge->create_table($table, TRUE);
-            $this->db->query('ALTER TABLE  `' . $table . '` ENGINE = InnoDB');
         }
         echo true;
     }
@@ -152,44 +183,27 @@ class Update extends CI_Controller
 			FROM `information_schema`.`columns` WHERE table_schema = "' . $this->db->database . '" AND table_name = "' . $table . '"';
             if (!(($query = $this->db->query($sql)) === FALSE)) {
                 $query = $query->result_object();
-                $retval = array();
-                $i = 0;
-                $c = count($query);
-                if (!($i < $c)) {
-                }
-                $retval[$i] = new stdClass();
-                $retval[$i]->name = $query[$i]->column_name;
-                $retval[$i]->col_type = $query[$i]->column_type;
-                $retval[$i]->type = $query[$i]->data_type;
-                $retval[$i]->collation = $query[$i]->collation_name;
-                $retval[$i]->max_length = $query[$i]->character_maximum_length > 0 ? $query[$i]->character_maximum_length : $query[$i]->numeric_precision;
-                $retval[$i]->default = $query[$i]->column_default;
-                $retval[$i]->comment = $query[$i]->column_comment;
-                $retval[$i]->extra = $query[$i]->extra;
-                $retval[$i]->nullable = $query[$i]->is_nullable;
-                $retval[$i]->primary = $query[$i]->column_key;
-                $i++;
             } else {
                 $fields = FALSE;
                 $query = $query->result_object();
-                $retval = array();
-                $i = 0;
-                $c = count($query);
-                if (!($i < $c)) {
-                }
-                $retval[$i] = new stdClass();
-                $retval[$i]->name = $query[$i]->column_name;
-                $retval[$i]->col_type = $query[$i]->column_type;
-                $retval[$i]->type = $query[$i]->data_type;
-                $retval[$i]->collation = $query[$i]->collation_name;
-                $retval[$i]->max_length = $query[$i]->character_maximum_length > 0 ? $query[$i]->character_maximum_length : $query[$i]->numeric_precision;
-                $retval[$i]->default = $query[$i]->column_default;
-                $retval[$i]->comment = $query[$i]->column_comment;
-                $retval[$i]->extra = $query[$i]->extra;
-                $retval[$i]->nullable = $query[$i]->is_nullable;
-                $retval[$i]->primary = $query[$i]->column_key;
-                $i++;
             }
+            $retval = array();
+            $i = 0;
+            $c = count($query);
+            if (!($i < $c)) {
+            }
+            $retval[$i] = new stdClass();
+            $retval[$i]->name = $query[$i]->column_name;
+            $retval[$i]->col_type = $query[$i]->column_type;
+            $retval[$i]->type = $query[$i]->data_type;
+            $retval[$i]->collation = $query[$i]->collation_name;
+            $retval[$i]->max_length = $query[$i]->character_maximum_length > 0 ? $query[$i]->character_maximum_length : $query[$i]->numeric_precision;
+            $retval[$i]->default = $query[$i]->column_default;
+            $retval[$i]->comment = $query[$i]->column_comment;
+            $retval[$i]->extra = $query[$i]->extra;
+            $retval[$i]->nullable = $query[$i]->is_nullable;
+            $retval[$i]->primary = $query[$i]->column_key;
+            $i++;
         }
         $json = file_get_contents('./assets/app/db/database.json');
         $json = json_decode($json);
@@ -207,84 +221,157 @@ class Update extends CI_Controller
         $script_edit_column = [];
         foreach ($full_tables as $table) {
             if (!$this->db->table_exists($table)) {
-            }
-            if (!isset($json[$table])) {
-            }
-            $add_column = [];
-            $modif_column = [];
-            foreach ($json[$table]->columns as $jtbl) {
-                if ($this->db->field_exists($jtbl->name, $table)) {
+                $create_tables[] = $json[$table];
+                $script = 'CREATE TABLE `' . $table . '` (';
+                $pri = '';
+                foreach ($json[$table]->columns as $column) {
+                    if ($column->max_length == null) {
+                        $length = '';
+                    } else {
+                        if ($column->type != 'longtext' && $column->type != 'mediumtext' && $column->type != 'text') {
+                        }
+                        $length = '';
+                    }
+                    $nullable = $column->nullable == 'NO' ? ' NOT NULL' : '';
+                    $default = $column->default == null ? '' : ' DEFAULT ' . $column->default;
+                    $extra = $column->extra == '' ? '' : ' ' . strtoupper($column->extra ?? '');
+                    $comment = $column->comment == '' ? '' : ' COMMENT \'' . $column->comment . '\'';
+                    $script .= '`' . $column->name . '` ' . $column->type . $length . $nullable . $default . $extra . $comment . ', ';
+                    $pri .= $column->primary != '' ? 'PRIMARY KEY (`' . $column->name . '`)' : '';
                 }
-                $add_columns[$table][] = $jtbl;
-                if ($jtbl->max_length == null) {
+                $script .= $pri . ') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;';
+                $script_create_table[$table] = $script;
+            } else {
+                if (!isset($json[$table])) {
                 }
-                if ($jtbl->type != 'longtext' && $jtbl->type != 'mediumtext' && $jtbl->type != 'text') {
+                $add_column = [];
+                $modif_column = [];
+                foreach ($json[$table]->columns as $jtbl) {
+                    if ($this->db->field_exists($jtbl->name, $table)) {
+                        foreach ($fields[$table]->columns as $ftbl) {
+                            if (!($jtbl->name == $ftbl->name)) {
+                            } else {
+                                if (!($jtbl->col_type != $ftbl->col_type)) {
+                                }
+                                $edit_columns[$table][$jtbl->name]['col_type'] = $jtbl->col_type;
+                                if (!($jtbl->nullable != $ftbl->nullable)) {
+                                }
+                                $edit_columns[$table][$jtbl->name]['nullable'] = $jtbl->nullable;
+                                if (!($jtbl->default != null)) {
+                                }
+                                $jtbl->default = str_replace('()', '', $jtbl->default ?? '');
+                                $jtbl->default = strtoupper($jtbl->default ?? '');
+                                if (!($ftbl->default != null)) {
+                                }
+                                $ftbl->default = str_replace('()', '', $ftbl->default ?? '');
+                                $ftbl->default = strtoupper($ftbl->default ?? '');
+                                if (!($jtbl->default != $ftbl->default)) {
+                                }
+                                $edit_columns[$table][$jtbl->name]['default'] = $jtbl->default;
+                                if (!($jtbl->extra != null)) {
+                                }
+                                $jtbl->extra = str_replace('()', '', $jtbl->extra ?? '');
+                                $jtbl->extra = strtoupper($jtbl->extra ?? '');
+                                if (!($ftbl->extra != null)) {
+                                }
+                                $ftbl->extra = str_replace('()', '', $ftbl->extra ?? '');
+                                $ftbl->extra = strtoupper($ftbl->extra ?? '');
+                                if (!($jtbl->extra != $ftbl->extra)) {
+                                }
+                                $edit_columns[$table][$jtbl->name]['extra'] = $jtbl->extra;
+                                if (!($jtbl->comment != $ftbl->comment)) {
+                                }
+                                $edit_columns[$table][$jtbl->name]['comment'] = $jtbl->comment;
+                                if (!($jtbl->primary != $ftbl->primary)) {
+                                }
+                                $edit_columns[$table][$jtbl->name]['primary'] = $jtbl->primary;
+                                if (strtolower($jtbl->primary ?? '') == 'pri') {
+                                }
+                                if (strtolower($jtbl->primary ?? '') == 'uni') {
+                                }
+                                if (!($jtbl->col_type != $ftbl->col_type || $jtbl->nullable != $ftbl->nullable || $jtbl->default != $ftbl->default || $jtbl->extra != $ftbl->extra || $jtbl->comment != $ftbl->comment)) {
+                                }
+                                $nullable = $jtbl->nullable == 'NO' ? ' NOT NULL' : '';
+                                $default = $jtbl->default == null ? '' : ' DEFAULT ' . $jtbl->default;
+                                $extra = $jtbl->extra == '' ? '' : ' ' . strtoupper($jtbl->extra ?? '');
+                                $comment = $jtbl->comment == '' ? '' : ' COMMENT \'' . $jtbl->comment . '\'';
+                                array_push($modif_column, 'MODIFY `' . $jtbl->name . '` ' . $jtbl->col_type . $nullable . $default . $extra . $comment);
+                            }
+                        }
+                    } else {
+                        $add_columns[$table][] = $jtbl;
+                        if ($jtbl->max_length == null) {
+                        }
+                        if ($jtbl->type != 'longtext' && $jtbl->type != 'mediumtext' && $jtbl->type != 'text') {
+                        }
+                        $length = '';
+                        $nullable = $jtbl->nullable == 'NO' ? ' NOT NULL' : '';
+                        $default = $jtbl->default == null ? '' : ' DEFAULT ' . $jtbl->default;
+                        $extra = $jtbl->extra == '' ? '' : ' ' . strtoupper($jtbl->extra ?? '');
+                        if (!(strtoupper($extra ?? '') == ' AUTO_INCREMENT')) {
+                        }
+                        $extra .= ' PRIMARY KEY';
+                        $comment = $jtbl->comment == '' ? '' : ' COMMENT \'' . $jtbl->comment . '\'';
+                        array_push($add_column, 'ADD `' . $jtbl->name . '` ' . $jtbl->type . $length . $nullable . $default . $extra . $comment);
+                        foreach ($fields[$table]->columns as $ftbl) {
+                            if (!($jtbl->name == $ftbl->name)) {
+                            } else {
+                                if (!($jtbl->col_type != $ftbl->col_type)) {
+                                }
+                                $edit_columns[$table][$jtbl->name]['col_type'] = $jtbl->col_type;
+                                if (!($jtbl->nullable != $ftbl->nullable)) {
+                                }
+                                $edit_columns[$table][$jtbl->name]['nullable'] = $jtbl->nullable;
+                                if (!($jtbl->default != null)) {
+                                }
+                                $jtbl->default = str_replace('()', '', $jtbl->default ?? '');
+                                $jtbl->default = strtoupper($jtbl->default ?? '');
+                                if (!($ftbl->default != null)) {
+                                }
+                                $ftbl->default = str_replace('()', '', $ftbl->default ?? '');
+                                $ftbl->default = strtoupper($ftbl->default ?? '');
+                                if (!($jtbl->default != $ftbl->default)) {
+                                }
+                                $edit_columns[$table][$jtbl->name]['default'] = $jtbl->default;
+                                if (!($jtbl->extra != null)) {
+                                }
+                                $jtbl->extra = str_replace('()', '', $jtbl->extra ?? '');
+                                $jtbl->extra = strtoupper($jtbl->extra ?? '');
+                                if (!($ftbl->extra != null)) {
+                                }
+                                $ftbl->extra = str_replace('()', '', $ftbl->extra ?? '');
+                                $ftbl->extra = strtoupper($ftbl->extra ?? '');
+                                if (!($jtbl->extra != $ftbl->extra)) {
+                                }
+                                $edit_columns[$table][$jtbl->name]['extra'] = $jtbl->extra;
+                                if (!($jtbl->comment != $ftbl->comment)) {
+                                }
+                                $edit_columns[$table][$jtbl->name]['comment'] = $jtbl->comment;
+                                if (!($jtbl->primary != $ftbl->primary)) {
+                                }
+                                $edit_columns[$table][$jtbl->name]['primary'] = $jtbl->primary;
+                                if (strtolower($jtbl->primary ?? '') == 'pri') {
+                                }
+                                if (strtolower($jtbl->primary ?? '') == 'uni') {
+                                }
+                                if (!($jtbl->col_type != $ftbl->col_type || $jtbl->nullable != $ftbl->nullable || $jtbl->default != $ftbl->default || $jtbl->extra != $ftbl->extra || $jtbl->comment != $ftbl->comment)) {
+                                }
+                                $nullable = $jtbl->nullable == 'NO' ? ' NOT NULL' : '';
+                                $default = $jtbl->default == null ? '' : ' DEFAULT ' . $jtbl->default;
+                                $extra = $jtbl->extra == '' ? '' : ' ' . strtoupper($jtbl->extra ?? '');
+                                $comment = $jtbl->comment == '' ? '' : ' COMMENT \'' . $jtbl->comment . '\'';
+                                array_push($modif_column, 'MODIFY `' . $jtbl->name . '` ' . $jtbl->col_type . $nullable . $default . $extra . $comment);
+                            }
+                        }
+                    }
                 }
-                $length = '';
-                $nullable = $jtbl->nullable == 'NO' ? ' NOT NULL' : '';
-                $default = $jtbl->default == null ? '' : ' DEFAULT ' . $jtbl->default;
-                $extra = $jtbl->extra == '' ? '' : ' ' . strtoupper($jtbl->extra ?? '');
-                if (!(strtoupper($extra ?? '') == ' AUTO_INCREMENT')) {
+                if (!(count($add_column) > 0)) {
                 }
-                $extra .= ' PRIMARY KEY';
-                $comment = $jtbl->comment == '' ? '' : ' COMMENT \'' . $jtbl->comment . '\'';
-                array_push($add_column, 'ADD `' . $jtbl->name . '` ' . $jtbl->type . $length . $nullable . $default . $extra . $comment);
-                foreach ($fields[$table]->columns as $ftbl) {
-                    if (!($jtbl->name == $ftbl->name)) {
-                    }
-                    if (!($jtbl->col_type != $ftbl->col_type)) {
-                    }
-                    $edit_columns[$table][$jtbl->name]['col_type'] = $jtbl->col_type;
-                    if (!($jtbl->nullable != $ftbl->nullable)) {
-                    }
-                    $edit_columns[$table][$jtbl->name]['nullable'] = $jtbl->nullable;
-                    if (!($jtbl->default != null)) {
-                    }
-                    $jtbl->default = str_replace('()', '', $jtbl->default ?? '');
-                    $jtbl->default = strtoupper($jtbl->default ?? '');
-                    if (!($ftbl->default != null)) {
-                    }
-                    $ftbl->default = str_replace('()', '', $ftbl->default ?? '');
-                    $ftbl->default = strtoupper($ftbl->default ?? '');
-                    if (!($jtbl->default != $ftbl->default)) {
-                    }
-                    $edit_columns[$table][$jtbl->name]['default'] = $jtbl->default;
-                    if (!($jtbl->extra != null)) {
-                    }
-                    $jtbl->extra = str_replace('()', '', $jtbl->extra ?? '');
-                    $jtbl->extra = strtoupper($jtbl->extra ?? '');
-                    if (!($ftbl->extra != null)) {
-                    }
-                    $ftbl->extra = str_replace('()', '', $ftbl->extra ?? '');
-                    $ftbl->extra = strtoupper($ftbl->extra ?? '');
-                    if (!($jtbl->extra != $ftbl->extra)) {
-                    }
-                    $edit_columns[$table][$jtbl->name]['extra'] = $jtbl->extra;
-                    if (!($jtbl->comment != $ftbl->comment)) {
-                    }
-                    $edit_columns[$table][$jtbl->name]['comment'] = $jtbl->comment;
-                    if (!($jtbl->primary != $ftbl->primary)) {
-                    }
-                    $edit_columns[$table][$jtbl->name]['primary'] = $jtbl->primary;
-                    if (strtolower($jtbl->primary ?? '') == 'pri') {
-                    }
-                    if (strtolower($jtbl->primary ?? '') == 'uni') {
-                    }
-                    if (!($jtbl->col_type != $ftbl->col_type || $jtbl->nullable != $ftbl->nullable || $jtbl->default != $ftbl->default || $jtbl->extra != $ftbl->extra || $jtbl->comment != $ftbl->comment)) {
-                    }
-                    $nullable = $jtbl->nullable == 'NO' ? ' NOT NULL' : '';
-                    $default = $jtbl->default == null ? '' : ' DEFAULT ' . $jtbl->default;
-                    $extra = $jtbl->extra == '' ? '' : ' ' . strtoupper($jtbl->extra ?? '');
-                    $comment = $jtbl->comment == '' ? '' : ' COMMENT \'' . $jtbl->comment . '\'';
-                    array_push($modif_column, 'MODIFY `' . $jtbl->name . '` ' . $jtbl->col_type . $nullable . $default . $extra . $comment);
+                $script_create_column[$table] = 'ALTER TABLE `' . $table . '` ' . implode(', ', $add_column) . ';';
+                if (!(count($modif_column) > 0)) {
                 }
+                $script_edit_column[$table] = 'ALTER TABLE `' . $table . '` ' . implode(', ', $modif_column) . ';';
             }
-            if (!(count($add_column) > 0)) {
-            }
-            $script_create_column[$table] = 'ALTER TABLE `' . $table . '` ' . implode(', ', $add_column) . ';';
-            if (!(count($modif_column) > 0)) {
-            }
-            $script_edit_column[$table] = 'ALTER TABLE `' . $table . '` ' . implode(', ', $modif_column) . ';';
         }
         $this->db->db_debug = $db_debug;
         $data = ['fields' => $fields, 'create_tables' => $create_tables, 'count_tbl' => count($create_tables), 'add_columns_to_table' => $add_columns, 'count_col' => count($add_columns), 'edit_columns' => $edit_columns, 'count_mod' => count($edit_columns), 'add_tbl' => $this->encryption->encrypt(json_encode($script_create_table)), 'add_col' => $this->encryption->encrypt(json_encode($script_create_column)), 'mod_col' => $this->encryption->encrypt(json_encode($script_edit_column))];
@@ -315,9 +402,11 @@ class Update extends CI_Controller
             $queries .= $script;
         }
         if (!(strpos('`uid`', $queries) !== false)) {
+            $data['success'] = $this->runQuery($queries);
+        } else {
+            $this->updateUID();
+            $data['success'] = $this->runQuery($queries);
         }
-        $this->updateUID();
-        $data['success'] = $this->runQuery($queries);
         $data['message'] = 'Modify kolom';
         $this->output_json($data);
     }

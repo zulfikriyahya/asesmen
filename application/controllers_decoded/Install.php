@@ -13,34 +13,40 @@ class Install extends CI_Controller
         parent::__construct();
         include APPPATH . 'config/database.php';
         if (!($db['default']['database'] != '')) {
+            $this->load->model('Install_model', 'install');
+        } else {
+            $this->load->database();
+            $this->load->dbforge();
+            $this->load->model('Install_model', 'install');
         }
-        $this->load->database();
-        $this->load->dbforge();
-        $this->load->model('Install_model', 'install');
         $this->load->model('Dashboard_model', 'dashboard');
     }
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
         $res = $this->install->check_installer();
         if ($res == '0') {
+            redirect('update');
+        } else {
+            if ($res == '2') {
+            }
+            if ($res == '3') {
+            }
+            $data['msg'] = 'belum ada data sekolah';
+            $data = $this->getSaved();
+            $data->error = $res;
+            $this->load->view('install/header', ['data' => $data]);
+            $this->load->view('install/step');
+            $this->load->view('install/footer');
         }
-        if ($res == '2') {
-        }
-        if ($res == '3') {
-        }
-        $data['msg'] = 'belum ada data sekolah';
-        $data = $this->getSaved();
-        $data->error = $res;
-        $this->load->view('install/header', ['data' => $data]);
-        $this->load->view('install/step');
-        $this->load->view('install/footer');
     }
     function getSaved()
     {
@@ -108,20 +114,43 @@ class Install extends CI_Controller
         $hostpass = $this->input->post('hostpass', true);
         $database = $this->input->post('database', true);
         if ($this->validate_host($hostname, $hostuser, $database)) {
+            $template_path = './assets/app/db/database.php';
+            $output_path = APPPATH . 'config/database.php';
+            $database_file = file_get_contents($template_path);
+            $new = str_replace('%HOSTNAME%', $hostname, $database_file);
+            $new = str_replace('%USERNAME%', $hostuser, $new);
+            $new = str_replace('%PASSWORD%', $hostpass, $new);
+            $new = str_replace('%DATABASE%', $database, $new);
+            $handle = fopen($output_path, 'w+');
+            @chmod($output_path, 0777);
+            if (is_writable($output_path)) {
+            }
+            $data['host'] = false;
+            $data['host_msg'] = 'tidak ada akses ke file database.php, pastikan permission sudah dizinkan';
+        } else {
+            $data['host'] = false;
+            $data['host_msg'] = 'tidak boleh ada yang kosong';
         }
-        $data['host'] = false;
-        $data['host_msg'] = 'tidak boleh ada yang kosong';
         $this->output_json($data);
     }
     public function createDb()
     {
         $page = $this->input->post('page', true);
         if ($page == '0') {
+            $hostname = $this->input->post('hostname', true);
+            $hostuser = $this->input->post('hostuser', true);
+            $hostpass = $this->input->post('hostpass', true);
+            $database = $this->input->post('database', true);
+            $data['table'] = $this->create_tables($hostname, $hostuser, $hostpass, $database);
+            $data['host'] = true;
+            $data['host_msg'] = 'sukses';
+            $data['database'] = true;
+        } else {
+            $data['host'] = true;
+            $data['host_msg'] = 'step salah';
+            $data['database'] = false;
+            $data['table'] = false;
         }
-        $data['host'] = true;
-        $data['host_msg'] = 'step salah';
-        $data['database'] = false;
-        $data['table'] = false;
         $this->output_json($data);
     }
     function validate_host($host, $usr, $db)

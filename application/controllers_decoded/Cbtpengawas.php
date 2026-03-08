@@ -6,10 +6,12 @@ class Cbtpengawas extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if ($this->ion_auth->is_admin()) {
+            }
+            show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         }
-        if ($this->ion_auth->is_admin()) {
-        }
-        show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         $this->load->library(['datatables', 'form_validation']);
         $this->load->model('Master_model', 'master');
         $this->load->model('Dashboard_model', 'dashboard');
@@ -20,9 +22,11 @@ class Cbtpengawas extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -42,11 +46,14 @@ class Cbtpengawas extends CI_Controller
         $id_jenis = $this->cbt->getDistinctJenisJadwal($tp->id_tp, $smt->id_smt);
         $ids = [];
         if (!($id_jenis && count($id_jenis) > 0)) {
-        }
-        foreach ($id_jenis as $jenis) {
-            array_push($ids, $jenis->id_jenis);
-        }
-        if ($ids && count($ids) > 0) {
+            if ($ids && count($ids) > 0) {
+            }
+        } else {
+            foreach ($id_jenis as $jenis) {
+                array_push($ids, $jenis->id_jenis);
+            }
+            if ($ids && count($ids) > 0) {
+            }
         }
         $data['jenis'] = ['' => 'belum ada jadwal ujian'];
         $jenis_selected = $this->input->get('jenis', true);
@@ -61,9 +68,10 @@ class Cbtpengawas extends CI_Controller
                     $jadwal->bank_kelas = unserialize($jadwal->bank_kelas ?? '');
                     foreach ($jadwal->bank_kelas as $kb) {
                         if (!($kb['kelas_id'] != '')) {
+                        } else {
+                            $klss = $this->cbt->getKelasUjian($kb['kelas_id']);
+                            $jadwal->peserta[] = $klss;
                         }
-                        $klss = $this->cbt->getKelasUjian($kb['kelas_id']);
-                        $jadwal->peserta[] = $klss;
                     }
                 }
             }
@@ -94,8 +102,9 @@ class Cbtpengawas extends CI_Controller
             $dataInsert = ['id_pengawas' => $id_pengawas, 'id_jadwal' => $jadwal, 'id_tp' => $id_tp, 'id_smt' => $id_smt, 'id_ruang' => $ruang, 'id_sesi' => $sesi, 'id_guru' => implode(',', $d->guru)];
             $update = $this->db->replace('cbt_pengawas', $dataInsert);
             if (!$update) {
+            } else {
+                $updated++;
             }
-            $updated++;
         }
         $data['error'] = '--';
         $data['status'] = $updated;

@@ -35,9 +35,21 @@ class Compare extends CI_Controller
         $tables_to_update = array_diff($tables_to_update, $tables_to_create);
         $sql_commands_to_run = is_array($tables_to_update) && !empty($tables_to_update) ? array_merge($sql_commands_to_run, $this->update_existing_tables($tables_to_update)) : '';
         if (is_array($sql_commands_to_run) && !empty($sql_commands_to_run)) {
-        }
-        echo '<h2>The database appears to be up to date</h2>
+            echo '<h2>The database is out of Sync!</h2>
 ';
+            echo '<p>The following SQL commands need to be executed to bring the Live database tables up to date: </p>
+';
+            echo '<pre style=\'padding: 20px; background-color: #FFFAF0;\'>
+';
+            foreach ($sql_commands_to_run as $sql_command) {
+                echo "{$sql_command}\n";
+            }
+            echo '<pre>
+';
+        } else {
+            echo '<h2>The database appears to be up to date</h2>
+';
+        }
     }
     function manage_tables($tables, $action)
     {
@@ -81,8 +93,9 @@ class Compare extends CI_Controller
             $development_table = $development_table_structures[$table];
             $live_table = isset($live_table_structures[$table]) ? $live_table_structures[$table] : '';
             if (!($this->count_differences($development_table, $live_table) > 0)) {
+            } else {
+                $tables_need_updating[] = $table;
             }
-            $tables_need_updating[] = $table;
         }
         return $tables_need_updating;
     }
@@ -142,13 +155,34 @@ class Compare extends CI_Controller
         foreach ($source_field_structures as $table => $fields) {
             foreach ($fields as $field) {
                 if ($this->in_array_recursive($field['Field'], $destination_field_structures[$table])) {
+                    $modify_field = '';
+                    $n = 0;
+                    if (!($n < count($fields))) {
+                    }
+                    if (!(isset($fields[$n]) && isset($destination_field_structures[$table][$n]) && $fields[$n]['Field'] == $destination_field_structures[$table][$n]['Field'])) {
+                    }
+                    $differences = array_diff($fields[$n], $destination_field_structures[$table][$n]);
+                    if (!(is_array($differences) && !empty($differences))) {
+                    }
+                    $modify_field = "ALTER TABLE {$table} MODIFY COLUMN `" . $fields[$n]['Field'] . '` ' . $fields[$n]['Type'] . ' CHARACTER SET ' . $this->CHARACTER_SET;
+                    $modify_field .= isset($fields[$n]['Default']) && $fields[$n]['Default'] != '' ? ' DEFAULT \'' . $fields[$n]['Default'] . '\'' : '';
+                    $modify_field .= isset($fields[$n]['Null']) && $fields[$n]['Null'] == 'YES' ? ' NULL' : ' NOT NULL';
+                    $modify_field .= isset($fields[$n]['Extra']) && $fields[$n]['Extra'] != '' ? ' ' . $fields[$n]['Extra'] : '';
+                    $modify_field .= isset($previous_field) && $previous_field != '' ? ' AFTER ' . $previous_field : '';
+                    $modify_field .= ';';
+                    $previous_field = $fields[$n]['Field'];
+                    if (!($modify_field != '' && !in_array($modify_field, $sql_commands_to_run))) {
+                    }
+                    $sql_commands_to_run[] = $modify_field;
+                    $n++;
+                } else {
+                    $add_field = "ALTER TABLE {$table} ADD COLUMN `" . $field['Field'] . '` ' . $field['Type'] . ' CHARACTER SET ' . $this->CHARACTER_SET;
+                    $add_field .= isset($field['Null']) && $field['Null'] == 'YES' ? ' Null' : '';
+                    $add_field .= ' DEFAULT ' . $field['Default'];
+                    $add_field .= isset($field['Extra']) && $field['Extra'] != '' ? ' ' . $field['Extra'] : '';
+                    $add_field .= ';';
+                    $sql_commands_to_run[] = $add_field;
                 }
-                $add_field = "ALTER TABLE {$table} ADD COLUMN `" . $field['Field'] . '` ' . $field['Type'] . ' CHARACTER SET ' . $this->CHARACTER_SET;
-                $add_field .= isset($field['Null']) && $field['Null'] == 'YES' ? ' Null' : '';
-                $add_field .= ' DEFAULT ' . $field['Default'];
-                $add_field .= isset($field['Extra']) && $field['Extra'] != '' ? ' ' . $field['Extra'] : '';
-                $add_field .= ';';
-                $sql_commands_to_run[] = $add_field;
             }
         }
         return $sql_commands_to_run;
@@ -158,8 +192,9 @@ class Compare extends CI_Controller
         foreach ($haystack as $array => $item) {
             $item = $item['Field'];
             if (!(($strict ? $item === $needle : $item == $needle) || is_array($item) && in_array_recursive($needle, $item, $strict))) {
+            } else {
+                return true;
             }
-            return true;
         }
         return false;
     }

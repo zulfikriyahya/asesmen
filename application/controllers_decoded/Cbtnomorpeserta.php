@@ -6,10 +6,12 @@ class Cbtnomorpeserta extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if ($this->ion_auth->is_admin()) {
+            }
+            show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         }
-        if ($this->ion_auth->is_admin()) {
-        }
-        show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         $this->load->library(['datatables', 'form_validation']);
         $this->load->library('upload');
         $this->load->model('Master_model', 'master');
@@ -21,9 +23,11 @@ class Cbtnomorpeserta extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -52,9 +56,11 @@ class Cbtnomorpeserta extends CI_Controller
         foreach ($input as $in) {
             $nomorAda = isset($arrNomor[$in->id]) ? $arrNomor[$in->id] : null;
             if ($nomorAda != null && $nomorAda->nomor_peserta == $in->nomor && $nomorAda->id_siswa != $in->id) {
+                $update = false;
+            } else {
+                $insert = ['id_nomor' => $in->id . $tp->id_tp, 'id_siswa' => $in->id, 'id_tp' => $tp->id_tp, 'nomor_peserta' => $in->nomor];
+                $update = $this->db->replace('cbt_nomor_peserta', $insert);
             }
-            $insert = ['id_nomor' => $in->id . $tp->id_tp, 'id_siswa' => $in->id, 'id_tp' => $tp->id_tp, 'nomor_peserta' => $in->nomor];
-            $update = $this->db->replace('cbt_nomor_peserta', $insert);
         }
         $this->output_json($update);
     }

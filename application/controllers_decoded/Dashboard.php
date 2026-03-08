@@ -7,9 +7,11 @@ class Dashboard extends CI_Controller
     {
         parent::__construct();
         if ($this->ion_auth->logged_in()) {
+            $this->load->model('Master_model', 'master');
+        } else {
+            redirect('auth');
+            $this->load->model('Master_model', 'master');
         }
-        redirect('auth');
-        $this->load->model('Master_model', 'master');
         $this->load->model('Dashboard_model', 'dashboard');
         $this->load->model('Log_model', 'logging');
         $this->load->model('Dropdown_model', 'dropdown');
@@ -72,9 +74,11 @@ class Dashboard extends CI_Controller
         $data['smt_active'] = $smt;
         $kelass = [];
         if (!($tp != null)) {
+            $data['kelases'] = $kelass;
+        } else {
+            $kelass = $this->dropdown->getAllKelas($tp->id_tp, $smt->id_smt);
+            $data['kelases'] = $kelass;
         }
-        $kelass = $this->dropdown->getAllKelas($tp->id_tp, $smt->id_smt);
-        $data['kelases'] = $kelass;
         $day = date('N', strtotime(date('Y-m-d')));
         $jadwal = $this->dashboard->loadJadwalHariIni($tp->id_tp, $smt->id_smt, null, $day);
         $kbms = $this->dashboard->getJadwalKbm($tp->id_tp, $smt->id_smt);
@@ -108,9 +112,10 @@ class Dashboard extends CI_Controller
                     $jadwal->bank_kelas = unserialize($jadwal->bank_kelas);
                     foreach ($jadwal->bank_kelas as $kb) {
                         if (!($kb['kelas_id'] != '')) {
+                        } else {
+                            $p = $this->cbt->getKelasUjian($kb['kelas_id']);
+                            $jadwal->peserta[] = $p;
                         }
-                        $p = $this->cbt->getKelasUjian($kb['kelas_id']);
-                        $jadwal->peserta[] = $p;
                     }
                 }
             }
@@ -135,9 +140,11 @@ class Dashboard extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function gantiTahun()
     {
@@ -145,14 +152,22 @@ class Dashboard extends CI_Controller
         $rows = count($this->input->post('tahun', true));
         $i = 0;
         if (!($i <= $rows)) {
+            $this->dashboard->update('master_tp', $update, 'id_tp', null, true);
+            $data['update'] = $update;
+            $data['status'] = true;
+            $this->logging->saveLog(4, 'mengganti tahun ajaran aktif');
+            $this->output_json($data);
+        } else {
+            $id_tp = $this->input->post('id_tp[' . $i . ']', true);
+            $tahun = $this->input->post('tahun[' . $i . ']', true);
+            if ($id_tp === $aktif) {
+            }
+            $active = 0;
+            $update[] = array('id_tp' => $id_tp, 'tahun' => $tahun, 'active' => $active);
+            $i++;
+            if (!($i <= $rows)) {
+            }
         }
-        $id_tp = $this->input->post('id_tp[' . $i . ']', true);
-        $tahun = $this->input->post('tahun[' . $i . ']', true);
-        if ($id_tp === $aktif) {
-        }
-        $active = 0;
-        $update[] = array('id_tp' => $id_tp, 'tahun' => $tahun, 'active' => $active);
-        $i++;
     }
     public function gantiSemester()
     {
@@ -160,14 +175,22 @@ class Dashboard extends CI_Controller
         $rows = count($this->input->post('smt', true));
         $i = 1;
         if (!($i <= $rows)) {
+            $this->dashboard->update('master_smt', $update, 'id_smt', null, true);
+            $data['update'] = $update;
+            $data['status'] = true;
+            $this->logging->saveLog(4, 'mengganti semester aktif');
+            $this->output_json($data);
+        } else {
+            $id_smt = $this->input->post('id_smt[' . $i . ']', true);
+            $smt = $this->input->post('smt[' . $i . ']', true);
+            if ($id_smt === $aktif) {
+            }
+            $active = 0;
+            $update[] = array('id_smt' => $id_smt, 'smt' => $smt, 'active' => $active);
+            $i++;
+            if (!($i <= $rows)) {
+            }
         }
-        $id_smt = $this->input->post('id_smt[' . $i . ']', true);
-        $smt = $this->input->post('smt[' . $i . ']', true);
-        if ($id_smt === $aktif) {
-        }
-        $active = 0;
-        $update[] = array('id_smt' => $id_smt, 'smt' => $smt, 'active' => $active);
-        $i++;
     }
     public function getNotifikasi()
     {
@@ -180,8 +203,10 @@ class Dashboard extends CI_Controller
     {
         $this->db->trans_start();
         if ($this->db->empty_table('log')) {
+            $deleted = ['status' => true, 'message' => 'berhasil'];
+        } else {
+            $deleted = ['status' => false, 'message' => 'gagal'];
         }
-        $deleted = ['status' => false, 'message' => 'gagal'];
         $this->db->trans_complete();
         $this->output_json($deleted);
     }

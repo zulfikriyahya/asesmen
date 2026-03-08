@@ -12,10 +12,12 @@ class Log_model extends CI_Model
         $user_id = $this->ion_auth->user()->row()->id;
         $group = $this->ion_auth->get_users_groups($user_id)->row();
         if ($this->agent->is_browser()) {
+            $agent = $this->agent->browser() . ' ' . $this->agent->version();
+        } else {
+            if ($this->agent->is_mobile()) {
+            }
+            $agent = 'Data user gagal di dapatkan';
         }
-        if ($this->agent->is_mobile()) {
-        }
-        $agent = 'Data user gagal di dapatkan';
         $os = $this->agent->platform();
         $ip = $this->input->ip_address();
         $this->insertLog($user_id, $group->id, $group->name, $type, $desc, $agent, $os, $ip);

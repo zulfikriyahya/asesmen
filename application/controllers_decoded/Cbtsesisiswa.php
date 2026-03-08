@@ -6,10 +6,12 @@ class Cbtsesisiswa extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if ($this->ion_auth->is_admin()) {
+            }
+            show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         }
-        if ($this->ion_auth->is_admin()) {
-        }
-        show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         $this->load->library(['datatables', 'form_validation']);
         $this->load->model('Master_model', 'master');
         $this->load->model('Dashboard_model', 'dashboard');
@@ -21,9 +23,11 @@ class Cbtsesisiswa extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -35,9 +39,11 @@ class Cbtsesisiswa extends CI_Controller
         $kelas_selected = $kls != null ? $kls : '0';
         $siswas = [];
         if (!($kelas_selected != '0')) {
+            $data['siswas'] = $siswas;
+        } else {
+            $siswas = $this->cbt->getRuangSesiSiswa($kls, $tp->id_tp, $smt->id_smt);
+            $data['siswas'] = $siswas;
         }
-        $siswas = $this->cbt->getRuangSesiSiswa($kls, $tp->id_tp, $smt->id_smt);
-        $data['siswas'] = $siswas;
         $data['kelas_selected'] = $kelas_selected;
         $this->load->view('_templates/dashboard/_header', $data);
         $this->load->view('cbt/sesisiswa/data');
@@ -67,10 +73,12 @@ class Cbtsesisiswa extends CI_Controller
     {
         $chk = $this->input->post('checked', true);
         if (!$chk) {
+            $this->output_json(['status' => false]);
+        } else {
+            if (!$this->master->delete('cbt_sesi', $chk, 'id_sesi')) {
+            }
+            $this->output_json(['status' => true, 'total' => count($chk)]);
         }
-        if (!$this->master->delete('cbt_sesi', $chk, 'id_sesi')) {
-        }
-        $this->output_json(['status' => true, 'total' => count($chk)]);
     }
     public function editsesisiswa()
     {

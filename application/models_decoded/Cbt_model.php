@@ -1937,8 +1937,9 @@ class Cbt_model extends CI_Model
         $retur = [];
         foreach ($result as $row) {
             if (!($row->id_siswa != null)) {
+            } else {
+                $retur[$row->id_jadwal][$row->dikoreksi][] = $row->id_siswa;
             }
-            $retur[$row->id_jadwal][$row->dikoreksi][] = $row->id_siswa;
         }
         return $retur;
     }
@@ -2019,8 +2020,9 @@ class Cbt_model extends CI_Model
             $ret = [];
             foreach ($result as $row) {
                 if (!($row->id_kelas != '')) {
+                } else {
+                    $ret[$row->tp][$row->smt][$row->kode_jenis][$row->id_kelas] = $row->nama_kelas;
                 }
-                $ret[$row->tp][$row->smt][$row->kode_jenis][$row->id_kelas] = $row->nama_kelas;
             }
             return $ret;
         } else {
@@ -2030,8 +2032,9 @@ class Cbt_model extends CI_Model
             $ret = [];
             foreach ($result as $row) {
                 if (!($row->id_kelas != '')) {
+                } else {
+                    $ret[$row->tp][$row->smt][$row->kode_jenis][$row->id_kelas] = $row->nama_kelas;
                 }
-                $ret[$row->tp][$row->smt][$row->kode_jenis][$row->id_kelas] = $row->nama_kelas;
             }
             return $ret;
         }

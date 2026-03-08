@@ -7,10 +7,12 @@ class JurusanMapel extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if ($this->ion_auth->is_admin()) {
+            }
+            show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         }
-        if ($this->ion_auth->is_admin()) {
-        }
-        show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         $this->load->library(['datatables', 'form_validation']);
         $this->load->model('Master_model', 'master');
         $this->form_validation->set_error_delimiters('', '');
@@ -18,9 +20,11 @@ class JurusanMapel extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -57,30 +61,35 @@ class JurusanMapel extends CI_Controller
         $this->form_validation->set_rules('mapel_id', 'Mata Kuliah', 'required');
         $this->form_validation->set_rules('jurusan_id[]', 'Jurusan', 'required');
         if ($this->form_validation->run() == FALSE) {
+            $data = ['status' => false, 'errors' => ['mapel_id' => form_error('mapel_id'), 'jurusan_id[]' => form_error('jurusan_id[]')]];
+            $this->output_json($data);
+        } else {
+            $mapel_id = $this->input->post('mapel_id', true);
+            $jurusan_id = $this->input->post('jurusan_id', true);
+            $input = [];
+            foreach ($jurusan_id as $key => $val) {
+                $input[] = ['mapel_id' => $mapel_id, 'jurusan_id' => $val];
+            }
+            if ($method === 'add') {
+            }
+            if (!($method === 'edit')) {
+            }
+            $id = $this->input->post('mapel_id', true);
+            $this->master->delete('jurusan_mapel', $id, 'mapel_id');
+            $action = $this->master->create('jurusan_mapel', $input, true);
+            $data['status'] = $action ? TRUE : FALSE;
         }
-        $mapel_id = $this->input->post('mapel_id', true);
-        $jurusan_id = $this->input->post('jurusan_id', true);
-        $input = [];
-        foreach ($jurusan_id as $key => $val) {
-            $input[] = ['mapel_id' => $mapel_id, 'jurusan_id' => $val];
-        }
-        if ($method === 'add') {
-        }
-        if (!($method === 'edit')) {
-        }
-        $id = $this->input->post('mapel_id', true);
-        $this->master->delete('jurusan_mapel', $id, 'mapel_id');
-        $action = $this->master->create('jurusan_mapel', $input, true);
-        $data['status'] = $action ? TRUE : FALSE;
         $this->output_json($data);
     }
     public function delete()
     {
         $chk = $this->input->post('checked', true);
         if (!$chk) {
+            $this->output_json(['status' => false]);
+        } else {
+            if (!$this->master->delete('jurusan_mapel', $chk, 'mapel_id')) {
+            }
+            $this->output_json(['status' => true, 'total' => count($chk)]);
         }
-        if (!$this->master->delete('jurusan_mapel', $chk, 'mapel_id')) {
-        }
-        $this->output_json(['status' => true, 'total' => count($chk)]);
     }
 }

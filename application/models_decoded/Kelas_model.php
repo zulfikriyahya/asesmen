@@ -329,9 +329,11 @@ class Kelas_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 if (isset($ret[$row->id_kelas])) {
+                    array_push($ret[$row->id_kelas], $row);
+                } else {
+                    $ret[$row->id_kelas] = [];
+                    array_push($ret[$row->id_kelas], $row);
                 }
-                $ret[$row->id_kelas] = [];
-                array_push($ret[$row->id_kelas], $row);
             }
             return $ret;
         }
@@ -350,11 +352,12 @@ class Kelas_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 if (!($row->id_mapel != '')) {
+                } else {
+                    if (isset($ret[$row->id_mapel][$row->id_kelas])) {
+                    }
+                    $ret[$row->id_mapel][$row->id_kelas] = [];
+                    array_push($ret[$row->id_mapel][$row->id_kelas], $row);
                 }
-                if (isset($ret[$row->id_mapel][$row->id_kelas])) {
-                }
-                $ret[$row->id_mapel][$row->id_kelas] = [];
-                array_push($ret[$row->id_mapel][$row->id_kelas], $row);
             }
             return $ret;
         }
@@ -640,9 +643,11 @@ class Kelas_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 if (isset($ret[$row->id_kelas])) {
+                    array_push($ret[$row->id_kelas], $row);
+                } else {
+                    $ret[$row->id_kelas] = [];
+                    array_push($ret[$row->id_kelas], $row);
                 }
-                $ret[$row->id_kelas] = [];
-                array_push($ret[$row->id_kelas], $row);
             }
             return $ret;
         }

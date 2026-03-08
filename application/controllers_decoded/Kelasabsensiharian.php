@@ -6,10 +6,12 @@ class Kelasabsensiharian extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
+            }
+            show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         }
-        if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
-        }
-        show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         $this->load->library(['datatables', 'form_validation']);
         $this->load->model('Master_model', 'master');
         $this->load->model('Dashboard_model', 'dashboard');
@@ -20,9 +22,11 @@ class Kelasabsensiharian extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -37,14 +41,20 @@ class Kelasabsensiharian extends CI_Controller
         $data['kelas'] = $this->dropdown->getAllKelas($tp->id_tp, $smt->id_smt);
         $data['mapel'] = $this->dropdown->getAllMapel();
         if ($this->ion_auth->is_admin()) {
+            $data['profile'] = $this->dashboard->getProfileAdmin($user->id);
+            $data['guru'] = $this->dropdown->getAllGuru();
+            $this->load->view('_templates/dashboard/_header', $data);
+            $this->load->view('kelas/absenharian/data');
+            $this->load->view('_templates/dashboard/_footer');
+        } else {
+            $guru = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
+            $nguru[$guru->id_guru] = $guru->nama_guru;
+            $data['guru'] = $guru;
+            $data['id_guru'] = $guru->id_guru;
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('kelas/absenharian/data');
+            $this->load->view('members/guru/templates/footer');
         }
-        $guru = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
-        $nguru[$guru->id_guru] = $guru->nama_guru;
-        $data['guru'] = $guru;
-        $data['id_guru'] = $guru->id_guru;
-        $this->load->view('members/guru/templates/header', $data);
-        $this->load->view('kelas/absenharian/data');
-        $this->load->view('members/guru/templates/footer');
     }
     public function loadAbsensi()
     {
@@ -59,8 +69,10 @@ class Kelasabsensiharian extends CI_Controller
         $tanggal = str_pad($tanggal, 2, '0', STR_PAD_LEFT);
         $info = $this->dashboard->getJadwalKbm($id_tp, $id_smt, $id_kelas);
         if ($info != null) {
+            $istirahat = unserialize($info->istirahat);
+        } else {
+            $istirahat = [];
         }
-        $istirahat = [];
         $jadwal = $this->dashboard->loadJadwalHariIni($id_tp, $id_smt, $id_kelas, $hari);
         $arrIdMapel = [];
         foreach ($jadwal as $jd) {
@@ -85,9 +97,11 @@ class Kelasabsensiharian extends CI_Controller
         foreach ($siswa as $s) {
             $status_materi = [];
             if (!(count($arrIdKjm) > 0)) {
+                $status = [];
+            } else {
+                $status_materi = $this->kelas->getRekapStatusMateri($s->id_siswa, $arrIdKjm);
+                $status = [];
             }
-            $status_materi = $this->kelas->getRekapStatusMateri($s->id_siswa, $arrIdKjm);
-            $status = [];
             foreach ($status_materi as $stat) {
                 $status[$stat->jam_ke][$stat->id_mapel][$stat->jenis] = $stat;
             }

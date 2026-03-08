@@ -6,10 +6,12 @@ class Walisiswa extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
+            }
+            show_error('Hanya Administrator dan guru yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         }
-        if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
-        }
-        show_error('Hanya Administrator dan guru yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         $this->load->library(['datatables', 'form_validation']);
         $this->load->model('Master_model', 'master');
         $this->load->model('Dashboard_model', 'dashboard');
@@ -19,9 +21,11 @@ class Walisiswa extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -98,19 +102,39 @@ class Walisiswa extends CI_Controller
         $u_nis = $siswa->nis === $nis ? '' : '|is_unique[master_siswa.nis]';
         $this->form_validation->set_rules('nis', 'NIS', 'required|numeric|trim|min_length[6]|max_length[30]' . $u_nis);
         if ($this->form_validation->run() == FALSE) {
+            $data['insert'] = false;
+            $data['text'] = 'Data Sudah ada, Pastikan NIS, dan NISN belum digunakan siswa lain';
+        } else {
+            $input = ['nisn' => $this->input->post('nisn', true), 'nis' => $this->input->post('nis', true), 'nama' => $this->input->post('nama', true), 'jenis_kelamin' => $this->input->post('jenis_kelamin', true), 'tempat_lahir' => $this->input->post('tempat_lahir', true), 'tanggal_lahir' => $this->input->post('tanggal_lahir', true), 'agama' => $this->input->post('agama', true), 'status_keluarga' => $this->input->post('status_keluarga', true), 'anak_ke' => $this->input->post('anak_ke', true), 'alamat' => $this->input->post('alamat', true), 'rt' => $this->input->post('rt', true), 'rw' => $this->input->post('rw', true), 'kelurahan' => $this->input->post('kelurahan', true), 'kecamatan' => $this->input->post('kecamatan', true), 'kabupaten' => $this->input->post('kabupaten', true), 'provinsi' => $this->input->post('provinsi', true), 'kode_pos' => $this->input->post('kode_pos', true), 'hp' => $this->input->post('hp', true), 'nama_ayah' => $this->input->post('nama_ayah', true), 'nohp_ayah' => $this->input->post('nohp_ayah', true), 'pendidikan_ayah' => $this->input->post('pendidikan_ayah', true), 'pekerjaan_ayah' => $this->input->post('pekerjaan_ayah', true), 'alamat_ayah' => $this->input->post('alamat_ayah', true), 'nama_ibu' => $this->input->post('nama_ibu', true), 'nohp_ibu' => $this->input->post('nohp_ibu', true), 'pendidikan_ibu' => $this->input->post('pendidikan_ibu', true), 'pekerjaan_ibu' => $this->input->post('pekerjaan_ibu', true), 'alamat_ibu' => $this->input->post('alamat_ibu', true), 'nama_wali' => $this->input->post('nama_wali', true), 'pendidikan_wali' => $this->input->post('pendidikan_wali', true), 'pekerjaan_wali' => $this->input->post('pekerjaan_wali', true), 'nohp_wali' => $this->input->post('nohp_wali', true), 'alamat_wali' => $this->input->post('alamat_wali', true), 'tahun_masuk' => $this->input->post('tahun_masuk', true), 'kelas_awal' => $this->input->post('kelas_awal', true), 'tgl_lahir_ayah' => $this->input->post('tgl_lahir_ayah', true), 'tgl_lahir_ibu' => $this->input->post('tgl_lahir_ibu', true), 'tgl_lahir_wali' => $this->input->post('tgl_lahir_wali', true), 'sekolah_asal' => $this->input->post('sekolah_asal', true), 'foto' => 'uploads/foto_siswa/' . $nis . '.jpg'];
+            $action = $this->master->update('master_siswa', $input, 'id_siswa', $id_siswa);
+            $data['insert'] = $input;
+            $data['text'] = 'Siswa berhasil diperbaharui';
         }
-        $input = ['nisn' => $this->input->post('nisn', true), 'nis' => $this->input->post('nis', true), 'nama' => $this->input->post('nama', true), 'jenis_kelamin' => $this->input->post('jenis_kelamin', true), 'tempat_lahir' => $this->input->post('tempat_lahir', true), 'tanggal_lahir' => $this->input->post('tanggal_lahir', true), 'agama' => $this->input->post('agama', true), 'status_keluarga' => $this->input->post('status_keluarga', true), 'anak_ke' => $this->input->post('anak_ke', true), 'alamat' => $this->input->post('alamat', true), 'rt' => $this->input->post('rt', true), 'rw' => $this->input->post('rw', true), 'kelurahan' => $this->input->post('kelurahan', true), 'kecamatan' => $this->input->post('kecamatan', true), 'kabupaten' => $this->input->post('kabupaten', true), 'provinsi' => $this->input->post('provinsi', true), 'kode_pos' => $this->input->post('kode_pos', true), 'hp' => $this->input->post('hp', true), 'nama_ayah' => $this->input->post('nama_ayah', true), 'nohp_ayah' => $this->input->post('nohp_ayah', true), 'pendidikan_ayah' => $this->input->post('pendidikan_ayah', true), 'pekerjaan_ayah' => $this->input->post('pekerjaan_ayah', true), 'alamat_ayah' => $this->input->post('alamat_ayah', true), 'nama_ibu' => $this->input->post('nama_ibu', true), 'nohp_ibu' => $this->input->post('nohp_ibu', true), 'pendidikan_ibu' => $this->input->post('pendidikan_ibu', true), 'pekerjaan_ibu' => $this->input->post('pekerjaan_ibu', true), 'alamat_ibu' => $this->input->post('alamat_ibu', true), 'nama_wali' => $this->input->post('nama_wali', true), 'pendidikan_wali' => $this->input->post('pendidikan_wali', true), 'pekerjaan_wali' => $this->input->post('pekerjaan_wali', true), 'nohp_wali' => $this->input->post('nohp_wali', true), 'alamat_wali' => $this->input->post('alamat_wali', true), 'tahun_masuk' => $this->input->post('tahun_masuk', true), 'kelas_awal' => $this->input->post('kelas_awal', true), 'tgl_lahir_ayah' => $this->input->post('tgl_lahir_ayah', true), 'tgl_lahir_ibu' => $this->input->post('tgl_lahir_ibu', true), 'tgl_lahir_wali' => $this->input->post('tgl_lahir_wali', true), 'sekolah_asal' => $this->input->post('sekolah_asal', true), 'foto' => 'uploads/foto_siswa/' . $nis . '.jpg'];
-        $action = $this->master->update('master_siswa', $input, 'id_siswa', $id_siswa);
-        $data['insert'] = $input;
-        $data['text'] = 'Siswa berhasil diperbaharui';
         $this->output_json($data);
     }
     function uploadFile($id_siswa)
     {
         $siswa = $this->master->getSiswaById($id_siswa);
         if (isset($_FILES['foto']['name'])) {
+            $config['upload_path'] = './uploads/foto_siswa/';
+            $config['allowed_types'] = 'gif|jpg|png|jpeg|JPEG|JPG|PNG|GIF';
+            $config['overwrite'] = true;
+            $config['file_name'] = $siswa->nis;
+            $this->upload->initialize($config);
+            if (!$this->upload->do_upload('foto')) {
+            }
+            $result = $this->upload->data();
+            $data['src'] = base_url() . 'uploads/foto_siswa/' . $result['file_name'];
+            $data['filename'] = pathinfo($result['file_name'], PATHINFO_FILENAME);
+            $data['status'] = true;
+            $this->db->set('foto', 'uploads/foto_siswa/' . $result['file_name']);
+            $this->db->where('id_siswa', $id_siswa);
+            $this->db->update('master_siswa');
+            $data['type'] = $_FILES['foto']['type'];
+            $data['size'] = $_FILES['foto']['size'];
+        } else {
+            $data['src'] = '';
         }
-        $data['src'] = '';
         $this->output_json($data);
     }
     function deleteFile($id_siswa)
@@ -118,22 +142,25 @@ class Walisiswa extends CI_Controller
         $src = $this->input->post('src');
         $file_name = str_replace(base_url(), '', $src ?? '');
         if (!($file_name != 'assets/img/siswa.png')) {
+        } else {
+            if (!unlink($file_name)) {
+            }
+            $this->db->set('foto', '');
+            $this->db->where('id_siswa', $id_siswa);
+            $this->db->update('master_siswa');
+            echo 'File Delete Successfully';
         }
-        if (!unlink($file_name)) {
-        }
-        $this->db->set('foto', '');
-        $this->db->where('id_siswa', $id_siswa);
-        $this->db->update('master_siswa');
-        echo 'File Delete Successfully';
     }
     public function delete()
     {
         $chk = $this->input->post('checked', true);
         if (!$chk) {
+            $this->output_json(['status' => false]);
+        } else {
+            if (!$this->master->delete('master_siswa', $chk, 'id_siswa')) {
+            }
+            $this->master->delete('buku_induk', $chk, 'id_siswa');
+            $this->output_json(['status' => true, 'total' => count($chk)]);
         }
-        if (!$this->master->delete('master_siswa', $chk, 'id_siswa')) {
-        }
-        $this->master->delete('buku_induk', $chk, 'id_siswa');
-        $this->output_json(['status' => true, 'total' => count($chk)]);
     }
 }

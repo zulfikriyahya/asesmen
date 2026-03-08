@@ -7,10 +7,12 @@ class Datakelas extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if ($this->ion_auth->is_admin()) {
+            }
+            show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         }
-        if ($this->ion_auth->is_admin()) {
-        }
-        show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         $this->load->library(['datatables', 'form_validation']);
         $this->load->model('Kelas_model', 'kelas');
         $this->load->model('Dashboard_model', 'dashboard');
@@ -22,9 +24,11 @@ class Datakelas extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -42,10 +46,12 @@ class Datakelas extends CI_Controller
         $kelas = [];
         $kelas_lama = [];
         if (!($chek > 0)) {
+            $data['kelas'] = $kelas;
+        } else {
+            $kelas = $this->kelas->getKelasList($tp->id_tp, $smt->id_smt);
+            $kelas_lama = $this->kelas->getKelasList($tp->id_tp - 1, '2');
+            $data['kelas'] = $kelas;
         }
-        $kelas = $this->kelas->getKelasList($tp->id_tp, $smt->id_smt);
-        $kelas_lama = $this->kelas->getKelasList($tp->id_tp - 1, '2');
-        $data['kelas'] = $kelas;
         $data['kelas_lama'] = $kelas_lama;
         $data['jurusan'] = $this->kelas->get_jurusan();
         $data['level'] = $this->kelas->getLevel($setting->jenjang);
@@ -74,8 +80,10 @@ class Datakelas extends CI_Controller
         $data['siswas'] = $this->kelas->get_siswa_kelas($id, $tp->id_tp, $smt->id_smt);
         $struktur = $this->kelas->getStrukturKelas($id);
         if ($struktur == null) {
+            $data['struktur'] = json_decode(json_encode($this->kelas->dummyStruktur()));
+        } else {
+            $data['struktur'] = $struktur;
         }
-        $data['struktur'] = $struktur;
         $this->load->view('_templates/dashboard/_header', $data);
         $this->load->view('master/kelas/detail');
         $this->load->view('_templates/dashboard/_footer');
@@ -151,31 +159,22 @@ class Datakelas extends CI_Controller
         $siswakelas = $this->kelas->get_status_siswa_kelas($id, $id_tp, $id_smt);
         if (!(count($siswakelas) > 0)) {
             $rowsSelect = count($this->input->post('siswa', true));
-            $i = 0;
-            if (!($i <= $rowsSelect)) {
-            }
-            $id_siswa = $this->input->post('siswa[' . $i . ']', true);
-            if (!($id_siswa != null)) {
-            }
-            $insert = ['id_kelas_siswa' => $id_tp . $id_smt . $id_siswa, 'id_tp' => $id_tp, 'id_smt' => $id_smt, 'id_kelas' => $id, 'id_siswa' => $id_siswa];
-            $this->db->replace('kelas_siswa', $insert);
-            $i++;
         } else {
             foreach ($siswakelas as $id_siswa => $sis) {
                 $insert = ['id_kelas_siswa' => $id_tp . $id_smt . $id_siswa, 'id_tp' => $id_tp, 'id_smt' => $id_smt, 'id_kelas' => 0, 'id_siswa' => $id_siswa];
                 $this->db->replace('kelas_siswa', $insert);
             }
             $rowsSelect = count($this->input->post('siswa', true));
-            $i = 0;
-            if (!($i <= $rowsSelect)) {
-            }
-            $id_siswa = $this->input->post('siswa[' . $i . ']', true);
-            if (!($id_siswa != null)) {
-            }
-            $insert = ['id_kelas_siswa' => $id_tp . $id_smt . $id_siswa, 'id_tp' => $id_tp, 'id_smt' => $id_smt, 'id_kelas' => $id, 'id_siswa' => $id_siswa];
-            $this->db->replace('kelas_siswa', $insert);
-            $i++;
         }
+        $i = 0;
+        if (!($i <= $rowsSelect)) {
+        }
+        $id_siswa = $this->input->post('siswa[' . $i . ']', true);
+        if (!($id_siswa != null)) {
+        }
+        $insert = ['id_kelas_siswa' => $id_tp . $id_smt . $id_siswa, 'id_tp' => $id_tp, 'id_smt' => $id_smt, 'id_kelas' => $id, 'id_siswa' => $id_siswa];
+        $this->db->replace('kelas_siswa', $insert);
+        $i++;
     }
     public function manage()
     {
@@ -201,11 +200,13 @@ class Datakelas extends CI_Controller
         $data2 = $this->kelas->getKelasSiswa($kelas, $tp->id_tp, '2');
         $ids = [];
         if (!(count($data2) > 0)) {
+            $this->output_json(['smt1' => $data1, 'smt2' => $ids]);
+        } else {
+            foreach ($data2 as $s) {
+                $ids[] = $s->id_siswa;
+            }
+            $this->output_json(['smt1' => $data1, 'smt2' => $ids]);
         }
-        foreach ($data2 as $s) {
-            $ids[] = $s->id_siswa;
-        }
-        $this->output_json(['smt1' => $data1, 'smt2' => $ids]);
     }
     public function copyFromSmt1()
     {
@@ -222,9 +223,10 @@ class Datakelas extends CI_Controller
         foreach ($arrSiswa as $value) {
             $id_siswa = $value['id'];
             if (!($id_siswa != null)) {
+            } else {
+                $insert = ['id_kelas_siswa' => $tp->id_tp . $smt->id_smt . $id_siswa, 'id_tp' => $tp->id_tp, 'id_smt' => $smt->id_smt, 'id_kelas' => $idk, 'id_siswa' => $id_siswa];
+                $res[] = $this->db->replace('kelas_siswa', $insert);
             }
-            $insert = ['id_kelas_siswa' => $tp->id_tp . $smt->id_smt . $id_siswa, 'id_tp' => $tp->id_tp, 'id_smt' => $smt->id_smt, 'id_kelas' => $idk, 'id_siswa' => $id_siswa];
-            $res[] = $this->db->replace('kelas_siswa', $insert);
         }
         $this->output_json($res);
     }
@@ -243,15 +245,16 @@ class Datakelas extends CI_Controller
         $res = [];
         foreach ($idkelases as $ik) {
             if (!($ik != '')) {
-            }
-            $kelas = $this->kelas->get_one($ik, $tp->id_tp, '1');
-            $jumlah = serialize($siswakelas[$ik]);
-            $data = array('nama_kelas' => $kelas->nama_kelas, 'kode_kelas' => $kelas->kode_kelas, 'jurusan_id' => $kelas->jurusan_id, 'id_tp' => $tp->id_tp, 'id_smt' => $smt->id_smt, 'level_id' => $kelas->level_id, 'guru_id' => $kelas->guru_id, 'siswa_id' => $kelas->siswa_id, 'jumlah_siswa' => $jumlah);
-            $this->db->insert('master_kelas', $data);
-            $idk = $this->db->insert_id();
-            foreach ($siswakelas[$ik] as $s) {
-                $insert = ['id_kelas_siswa' => $tp->id_tp . $smt->id_smt . $s['id'], 'id_tp' => $tp->id_tp, 'id_smt' => $smt->id_smt, 'id_kelas' => $idk, 'id_siswa' => $s['id']];
-                $res[] = $this->db->replace('kelas_siswa', $insert);
+            } else {
+                $kelas = $this->kelas->get_one($ik, $tp->id_tp, '1');
+                $jumlah = serialize($siswakelas[$ik]);
+                $data = array('nama_kelas' => $kelas->nama_kelas, 'kode_kelas' => $kelas->kode_kelas, 'jurusan_id' => $kelas->jurusan_id, 'id_tp' => $tp->id_tp, 'id_smt' => $smt->id_smt, 'level_id' => $kelas->level_id, 'guru_id' => $kelas->guru_id, 'siswa_id' => $kelas->siswa_id, 'jumlah_siswa' => $jumlah);
+                $this->db->insert('master_kelas', $data);
+                $idk = $this->db->insert_id();
+                foreach ($siswakelas[$ik] as $s) {
+                    $insert = ['id_kelas_siswa' => $tp->id_tp . $smt->id_smt . $s['id'], 'id_tp' => $tp->id_tp, 'id_smt' => $smt->id_smt, 'id_kelas' => $idk, 'id_siswa' => $s['id']];
+                    $res[] = $this->db->replace('kelas_siswa', $insert);
+                }
             }
         }
         $this->output_json($res);
@@ -273,13 +276,15 @@ class Datakelas extends CI_Controller
         $data['kelas_lama'] = $this->dropdown->getAllKelas($tp->id_tp - 1, '2', '!=' . $level);
         $data['kelas_baru'] = $this->dropdown->getAllKelas($tp->id_tp, '1');
         if (!($kelas != null)) {
+            $this->load->view('_templates/dashboard/_header', $data);
+        } else {
+            $data['siswa_kelas_baru'] = $this->master->getSiswaKelasBaru($tp->id_tp, $smt->id_smt);
+            $data['siswas'] = $this->rapor->getKenaikanSiswa($kelas, $tp->id_tp - 1, '2');
+            $data['kelas_selected'] = $kelas;
+            $lvlKls = $this->kelas->get_one($kelas, $tp->id_tp - 1, '2');
+            $data['kelases'] = $this->dropdown->getAllKelas($tp->id_tp - 1, '2', '=' . ($lvlKls->level_id + 1));
+            $this->load->view('_templates/dashboard/_header', $data);
         }
-        $data['siswa_kelas_baru'] = $this->master->getSiswaKelasBaru($tp->id_tp, $smt->id_smt);
-        $data['siswas'] = $this->rapor->getKenaikanSiswa($kelas, $tp->id_tp - 1, '2');
-        $data['kelas_selected'] = $kelas;
-        $lvlKls = $this->kelas->get_one($kelas, $tp->id_tp - 1, '2');
-        $data['kelases'] = $this->dropdown->getAllKelas($tp->id_tp - 1, '2', '=' . ($lvlKls->level_id + 1));
-        $this->load->view('_templates/dashboard/_header', $data);
         $this->load->view('master/kelas/naikkelas');
         $this->load->view('_templates/dashboard/_footer');
     }
@@ -302,14 +307,19 @@ class Datakelas extends CI_Controller
             $kelas = $this->kelas->get_one($ik, $tp->id_tp - 1, '2');
             $kelas_baru = $this->kelas->getKelasByNama($kelas->nama_kelas, $tp->id_tp, $smt->id_smt);
             if ($kelas_baru == null) {
+                $jumlah = serialize($siswakelas[$ik]);
+                $data = array('nama_kelas' => $kelas->nama_kelas, 'kode_kelas' => $kelas->kode_kelas, 'jurusan_id' => $kelas->jurusan_id, 'id_tp' => $tp->id_tp, 'id_smt' => $smt->id_smt, 'level_id' => $kelas->level_id, 'guru_id' => $kelas->guru_id, 'siswa_id' => $kelas->siswa_id, 'jumlah_siswa' => $jumlah);
+                $this->db->insert('master_kelas', $data);
+                array_push($idks, $this->db->insert_id());
+            } else {
+                if ($mode == 'persiswa') {
+                }
+                $jumlah = serialize($siswakelas[$ik]);
+                array_push($idks, $kelas_baru->id_kelas);
+                $data = array('nama_kelas' => $kelas->nama_kelas, 'kode_kelas' => $kelas->kode_kelas, 'jurusan_id' => $kelas->jurusan_id, 'id_tp' => $tp->id_tp, 'id_smt' => $smt->id_smt, 'level_id' => $kelas->level_id, 'guru_id' => $kelas->guru_id, 'siswa_id' => $kelas->siswa_id, 'jumlah_siswa' => $jumlah);
+                $this->db->where('id_kelas', $kelas_baru->id_kelas);
+                $this->db->update('master_kelas', $data);
             }
-            if ($mode == 'persiswa') {
-            }
-            $jumlah = serialize($siswakelas[$ik]);
-            array_push($idks, $kelas_baru->id_kelas);
-            $data = array('nama_kelas' => $kelas->nama_kelas, 'kode_kelas' => $kelas->kode_kelas, 'jurusan_id' => $kelas->jurusan_id, 'id_tp' => $tp->id_tp, 'id_smt' => $smt->id_smt, 'level_id' => $kelas->level_id, 'guru_id' => $kelas->guru_id, 'siswa_id' => $kelas->siswa_id, 'jumlah_siswa' => $jumlah);
-            $this->db->where('id_kelas', $kelas_baru->id_kelas);
-            $this->db->update('master_kelas', $data);
             foreach ($idks as $idk) {
                 foreach ($siswakelas[$ik] as $s) {
                     $insert = ['id_kelas_siswa' => $tp->id_tp . $smt->id_smt . $s['id'], 'id_tp' => $tp->id_tp, 'id_smt' => $smt->id_smt, 'id_kelas' => $idk, 'id_siswa' => $s['id']];

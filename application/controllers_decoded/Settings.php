@@ -7,10 +7,12 @@ class Settings extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if ($this->ion_auth->is_admin()) {
+            }
+            show_error('Hanya Admin yang boleh mengakses halaman ini', 403, 'Akses dilarang');
         }
-        if ($this->ion_auth->is_admin()) {
-        }
-        show_error('Hanya Admin yang boleh mengakses halaman ini', 403, 'Akses dilarang');
         $this->load->library('upload');
         $this->load->model('Settings_model', 'settings');
         $this->load->model('Dashboard_model', 'dashboard');
@@ -19,9 +21,11 @@ class Settings extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -51,8 +55,22 @@ class Settings extends CI_Controller
     function uploadFile($logo)
     {
         if (isset($_FILES['logo']['name'])) {
+            $config['upload_path'] = './uploads/settings/';
+            $config['allowed_types'] = 'gif|jpg|png|jpeg|JPEG|JPG|PNG|GIF';
+            $config['overwrite'] = true;
+            $config['file_name'] = $logo;
+            $this->upload->initialize($config);
+            if (!$this->upload->do_upload('logo')) {
+            }
+            $result = $this->upload->data();
+            $data['src'] = base_url() . 'uploads/settings/' . $result['file_name'];
+            $data['filename'] = pathinfo($result['file_name'], PATHINFO_FILENAME);
+            $data['status'] = true;
+            $data['type'] = $_FILES['logo']['type'];
+            $data['size'] = $_FILES['logo']['size'];
+        } else {
+            $data['src'] = '';
         }
-        $data['src'] = '';
         $this->output_json($data);
     }
     function deleteFile()
@@ -60,8 +78,9 @@ class Settings extends CI_Controller
         $src = $this->input->post('src');
         $file_name = str_replace(base_url(), '', $src ?? '');
         if (!unlink($file_name)) {
+        } else {
+            echo 'File Delete Successfully';
         }
-        echo 'File Delete Successfully';
     }
     public function saveSetting()
     {

@@ -769,8 +769,9 @@ class Master_model extends CI_Model
         $ret = [];
         foreach ($result as $row) {
             if (!($row->tahun_lulus != '')) {
+            } else {
+                $ret[$row->tahun_lulus] = $row->tahun_lulus;
             }
-            $ret[$row->tahun_lulus] = $row->tahun_lulus;
         }
         return $ret;
     }
@@ -782,8 +783,9 @@ class Master_model extends CI_Model
         $ret = [];
         foreach ($result as $row) {
             if (!($row->kelas_akhir != '')) {
+            } else {
+                $ret[$row->kelas_akhir] = $row->kelas_akhir;
             }
-            $ret[$row->kelas_akhir] = $row->kelas_akhir;
         }
         return $ret;
     }
@@ -823,8 +825,9 @@ class Master_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 if (!($row->id_level == '4')) {
+                } else {
+                    $ret[$row->id_tp][$row->id_smt][$row->id_kelas] = $row;
                 }
-                $ret[$row->id_tp][$row->id_smt][$row->id_kelas] = $row;
             }
             return $ret;
         }

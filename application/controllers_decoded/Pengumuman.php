@@ -6,10 +6,12 @@ class Pengumuman extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
+            }
+            show_error('Hanya Administrator dan guru yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         }
-        if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
-        }
-        show_error('Hanya Administrator dan guru yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         $this->load->library(['datatables', 'form_validation']);
         $this->load->model('Master_model', 'master');
         $this->load->model('Dashboard_model', 'dashboard');
@@ -21,9 +23,11 @@ class Pengumuman extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -40,14 +44,21 @@ class Pengumuman extends CI_Controller
         $data['kelas'] = $kelas;
         $data['running_text'] = $this->dashboard->getRunningText();
         if ($this->ion_auth->is_admin()) {
+            $data['subjudul'] = 'Semua Pengumuman';
+            $data['profile'] = $this->dashboard->getProfileAdmin($user->id);
+            $data['pengumumans'] = $this->post->getPostUser(0);
+            $this->load->view('_templates/dashboard/_header', $data);
+            $this->load->view('pengumuman/data');
+            $this->load->view('_templates/dashboard/_footer');
+        } else {
+            $data['subjudul'] = 'Pengumuman Anda';
+            $guru = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
+            $data['guru'] = $guru;
+            $data['pengumumans'] = $this->post->getPostUser($guru->id_guru);
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('pengumuman/data');
+            $this->load->view('members/guru/templates/footer');
         }
-        $data['subjudul'] = 'Pengumuman Anda';
-        $guru = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
-        $data['guru'] = $guru;
-        $data['pengumumans'] = $this->post->getPostUser($guru->id_guru);
-        $this->load->view('members/guru/templates/header', $data);
-        $this->load->view('pengumuman/data');
-        $this->load->view('members/guru/templates/footer');
     }
     public function kepada($kepada, $id_kepada = null)
     {
@@ -90,10 +101,12 @@ class Pengumuman extends CI_Controller
         $data['comments'] = $comments;
         $data['balasans'] = $balasan;
         if ($kepada === 'semua_guru') {
+            $data['kepada'] = 'Semua Guru';
+        } else {
+            if ($kepada === 'semua_siswa') {
+            }
+            $data['kepada'] = urldecode($kepada);
         }
-        if ($kepada === 'semua_siswa') {
-        }
-        $data['kepada'] = urldecode($kepada);
         if ($this->ion_auth->is_admin()) {
         }
         $data['guru'] = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
@@ -149,14 +162,16 @@ class Pengumuman extends CI_Controller
         $dari = '0';
         $dari_group = 1;
         if ($this->ion_auth->is_admin()) {
+            $data = ['id_post' => $this->input->post('id_post'), 'dari' => $dari, 'dari_group' => $dari_group, 'text' => $this->input->post('text')];
+        } else {
+            $user = $this->ion_auth->user()->row();
+            $tp = $this->master->getTahunActive();
+            $smt = $this->master->getSemesterActive();
+            $guru = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
+            $dari = $guru->id_guru;
+            $dari_group = 2;
+            $data = ['id_post' => $this->input->post('id_post'), 'dari' => $dari, 'dari_group' => $dari_group, 'text' => $this->input->post('text')];
         }
-        $user = $this->ion_auth->user()->row();
-        $tp = $this->master->getTahunActive();
-        $smt = $this->master->getSemesterActive();
-        $guru = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
-        $dari = $guru->id_guru;
-        $dari_group = 2;
-        $data = ['id_post' => $this->input->post('id_post'), 'dari' => $dari, 'dari_group' => $dari_group, 'text' => $this->input->post('text')];
         $insert = $this->db->replace('post_comments', $data);
         $id = $this->db->insert_id();
         $this->db->query('SET SQL_BIG_SELECTS=1');
@@ -174,14 +189,16 @@ class Pengumuman extends CI_Controller
         $dari = '0';
         $dari_group = 1;
         if ($this->ion_auth->is_admin()) {
+            $data = ['id_comment' => $this->input->post('id_comment'), 'dari' => $dari, 'dari_group' => $dari_group, 'text' => $this->input->post('text')];
+        } else {
+            $user = $this->ion_auth->user()->row();
+            $tp = $this->master->getTahunActive();
+            $smt = $this->master->getSemesterActive();
+            $guru = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
+            $dari = $guru->id_guru;
+            $dari_group = 2;
+            $data = ['id_comment' => $this->input->post('id_comment'), 'dari' => $dari, 'dari_group' => $dari_group, 'text' => $this->input->post('text')];
         }
-        $user = $this->ion_auth->user()->row();
-        $tp = $this->master->getTahunActive();
-        $smt = $this->master->getSemesterActive();
-        $guru = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
-        $dari = $guru->id_guru;
-        $dari_group = 2;
-        $data = ['id_comment' => $this->input->post('id_comment'), 'dari' => $dari, 'dari_group' => $dari_group, 'text' => $this->input->post('text')];
         $insert = $this->db->replace('post_reply', $data);
         $id = $this->db->insert_id();
         $this->db->query('SET SQL_BIG_SELECTS=1');
@@ -204,10 +221,12 @@ class Pengumuman extends CI_Controller
         }
         $this->db->where('id_post', $id_post);
         if (!$this->db->delete('post_comments')) {
+            $this->db->trans_complete();
+        } else {
+            $this->db->where('id_post', $id_post);
+            $deleted = $this->db->delete('post');
+            $this->db->trans_complete();
         }
-        $this->db->where('id_post', $id_post);
-        $deleted = $this->db->delete('post');
-        $this->db->trans_complete();
         $this->output_json($deleted);
     }
     public function hapusKomentar($id_comment)

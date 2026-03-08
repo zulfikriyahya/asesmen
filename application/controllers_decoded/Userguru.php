@@ -7,10 +7,12 @@ class Userguru extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
+            }
+            show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         }
-        if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
-        }
-        show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         $this->load->library(['datatables', 'form_validation']);
         $this->load->model('Users_model', 'users');
         $this->load->model('Master_model', 'master');
@@ -20,9 +22,11 @@ class Userguru extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function data()
     {
@@ -36,9 +40,17 @@ class Userguru extends CI_Controller
         $group = $this->ion_auth->get_users_groups($user->id)->row()->name;
         $data = ['user' => $user, 'judul' => 'User Management', 'subjudul' => 'Data User Guru', 'profile' => $this->dashboard->getProfileAdmin($user->id), 'setting' => $this->dashboard->getSetting()];
         if ($group === 'admin') {
+            $data['tp'] = $this->dashboard->getTahun();
+            $data['tp_active'] = $this->dashboard->getTahunActive();
+            $data['smt'] = $this->dashboard->getSemester();
+            $data['smt_active'] = $this->dashboard->getSemesterActive();
+            $this->load->view('_templates/dashboard/_header', $data);
+            $this->load->view('users/guru/data');
+            $this->load->view('_templates/dashboard/_footer');
+        } else {
+            $id = $this->users->getGuruByUsername($user->username);
+            $this->edit($id->id_guru);
         }
-        $id = $this->users->getGuruByUsername($user->username);
-        $this->edit($id->id_guru);
     }
     public function activate($id)
     {
@@ -52,25 +64,29 @@ class Userguru extends CI_Controller
         $additional_data = ['first_name' => $first_name, 'last_name' => $last_name];
         $group = array('2');
         if ($this->ion_auth->username_check($username)) {
+            $data = ['status' => false, 'msg' => 'Username ' . $username . ' tidak tersedia (sudah digunakan).'];
+        } else {
+            if ($this->ion_auth->email_check($email)) {
+            }
+            $id_user = $this->ion_auth->register($username, $password, $email, $additional_data, $group);
+            $data = ['status' => true, 'msg' => 'Akun ' . $guru->nama_guru . ' diaktifkan.'];
+            $this->db->set('id_user', $id_user);
+            $this->db->where('id_guru', $id);
+            $this->db->update('master_guru');
         }
-        if ($this->ion_auth->email_check($email)) {
-        }
-        $id_user = $this->ion_auth->register($username, $password, $email, $additional_data, $group);
-        $data = ['status' => true, 'msg' => 'Akun ' . $guru->nama_guru . ' diaktifkan.'];
-        $this->db->set('id_user', $id_user);
-        $this->db->where('id_guru', $id);
-        $this->db->update('master_guru');
         $data['pass'] = $password;
         $this->output_json($data);
     }
     public function deactivate($id = NULL)
     {
         if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
+            $data = ['status' => false, 'msg' => 'You must be an administrator to view this page.'];
+        } else {
+            $id = (int) $id;
+            if ($this->ion_auth->logged_in() && $this->ion_auth->is_admin()) {
+            }
+            $data = ['status' => false, 'msg' => 'Anda bukan admin.'];
         }
-        $id = (int) $id;
-        if ($this->ion_auth->logged_in() && $this->ion_auth->is_admin()) {
-        }
-        $data = ['status' => false, 'msg' => 'Anda bukan admin.'];
         $this->output_json($data);
     }
     public function aktifkanSemua()
@@ -79,9 +95,10 @@ class Userguru extends CI_Controller
         $jum = 0;
         foreach ($guruAktif as $guru) {
             if ($guru->aktif > 0) {
+            } else {
+                $this->activate($guru->id_guru);
+                $jum += 1;
             }
-            $this->activate($guru->id_guru);
-            $jum += 1;
         }
         $data = ['status' => true, 'jumlah' => $jum, 'msg' => $jum . ' Guru diaktifkan.'];
         $this->output_json($data);
@@ -92,6 +109,9 @@ class Userguru extends CI_Controller
         $jum = 0;
         foreach ($guruAktif as $guru) {
             if ($guru->aktif > 0) {
+                $del = $this->deactivate($guru->id, '');
+                $this->output_json($del);
+                $jum += 1;
             }
         }
         $data = ['status' => true, 'jumlah' => $jum, 'msg' => $jum . ' Guru dinonaktifkan.'];
@@ -113,10 +133,19 @@ class Userguru extends CI_Controller
         $data['smt_active'] = $smt;
         $group = $this->ion_auth->get_users_groups($user->id)->row()->name;
         if ($group === 'admin') {
+            $data['profile'] = $this->dashboard->getProfileAdmin($user->id);
+            $data['groups'] = $this->ion_auth->groups()->result();
+            $data['kelass'] = $this->users->getKelas($tp->id_tp, $smt->id_smt);
+            $data['mapels'] = $this->users->getMapel();
+            $data['levels'] = $this->users->getLevelGuru();
+            $this->load->view('_templates/dashboard/_header', $data);
+            $this->load->view('users/guru/edit');
+            $this->load->view('_templates/dashboard/_footer');
+        } else {
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('users/guru/edit');
+            $this->load->view('members/guru/templates/footer');
         }
-        $this->load->view('members/guru/templates/header', $data);
-        $this->load->view('users/guru/edit');
-        $this->load->view('members/guru/templates/footer');
     }
     public function editLogin()
     {
@@ -128,29 +157,31 @@ class Userguru extends CI_Controller
         $this->form_validation->set_rules('new', $this->lang->line('change_password_validation_new_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|matches[new_confirm]');
         $this->form_validation->set_rules('new_confirm', $this->lang->line('change_password_validation_new_password_confirm_label'), 'required');
         if ($guru_lain && $guru_lain->id_guru != $id_guru) {
+            $data = ['status' => false, 'errors' => ['username' => 'Username sudah digunakan']];
+        } else {
+            if ($this->form_validation->run() === FALSE) {
+            }
+            $guru = $this->db->get_where('master_guru', 'id_guru="' . $id_guru . '"')->row();
+            $nama = explode(' ', $guru->nama_guru ?? '');
+            $first_name = $nama[0];
+            $last_name = end($nama);
+            $username = trim($username ?? '');
+            $password = trim($pass ?? '');
+            $email = strtolower($username) . '@guru.com';
+            $additional_data = ['first_name' => $first_name, 'last_name' => $last_name];
+            $group = array('2');
+            $user_guru = $this->db->get_where('users', 'email="' . $email . '"')->row();
+            $deleted = true;
+            if (!($user_guru != null)) {
+            }
+            $deleted = $this->ion_auth->delete_user((int) $user_guru->id);
+            if ($deleted) {
+            }
+            $status = false;
+            $msg = 'Gagal mengganti username/passsword';
+            $data['status'] = $status;
+            $data['text'] = $msg;
         }
-        if ($this->form_validation->run() === FALSE) {
-        }
-        $guru = $this->db->get_where('master_guru', 'id_guru="' . $id_guru . '"')->row();
-        $nama = explode(' ', $guru->nama_guru ?? '');
-        $first_name = $nama[0];
-        $last_name = end($nama);
-        $username = trim($username ?? '');
-        $password = trim($pass ?? '');
-        $email = strtolower($username) . '@guru.com';
-        $additional_data = ['first_name' => $first_name, 'last_name' => $last_name];
-        $group = array('2');
-        $user_guru = $this->db->get_where('users', 'email="' . $email . '"')->row();
-        $deleted = true;
-        if (!($user_guru != null)) {
-        }
-        $deleted = $this->ion_auth->delete_user((int) $user_guru->id);
-        if ($deleted) {
-        }
-        $status = false;
-        $msg = 'Gagal mengganti username/passsword';
-        $data['status'] = $status;
-        $data['text'] = $msg;
         $this->output_json($data);
     }
     function buangspasi($teks)
@@ -184,11 +215,13 @@ class Userguru extends CI_Controller
     {
         $username = $this->input->get('username', true);
         if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
+            $data = ['status' => false, 'msg' => 'You must be an administrator to view this page.'];
+        } else {
+            $this->db->where('login', $username);
+            if ($this->db->delete('login_attempts')) {
+            }
+            $data = ['status' => false, 'msg' => ' gagal direset'];
         }
-        $this->db->where('login', $username);
-        if ($this->db->delete('login_attempts')) {
-        }
-        $data = ['status' => false, 'msg' => ' gagal direset'];
         $this->output_json($data, true);
     }
 }

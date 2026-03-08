@@ -7,9 +7,11 @@ class HasilUjian extends CI_Controller
     {
         parent::__construct();
         if ($this->ion_auth->logged_in()) {
+            $this->load->library(['datatables']);
+        } else {
+            redirect('auth');
+            $this->load->library(['datatables']);
         }
-        redirect('auth');
-        $this->load->library(['datatables']);
         $this->load->model('Master_model', 'master');
         $this->load->model('Ujian_model', 'ujian');
         $this->user = $this->ion_auth->user()->row();
@@ -17,17 +19,21 @@ class HasilUjian extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function data()
     {
         $nip_guru = null;
         if (!$this->ion_auth->in_group('guru')) {
+            $this->output_json($this->ujian->getHasilUjian($nip_guru), false);
+        } else {
+            $nip_guru = $this->user->username;
+            $this->output_json($this->ujian->getHasilUjian($nip_guru), false);
         }
-        $nip_guru = $this->user->username;
-        $this->output_json($this->ujian->getHasilUjian($nip_guru), false);
     }
     public function NilaiMhs($id)
     {

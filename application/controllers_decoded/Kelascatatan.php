@@ -6,10 +6,12 @@ class Kelascatatan extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
+            }
+            show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         }
-        if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
-        }
-        show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         $this->load->library(['datatables', 'form_validation']);
         $this->load->model('Master_model', 'master');
         $this->load->model('Dashboard_model', 'dashboard');
@@ -20,9 +22,11 @@ class Kelascatatan extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -40,14 +44,17 @@ class Kelascatatan extends CI_Controller
         $data['kelas_selected'] = $id_kelas;
         $data['mapel_selected'] = $id_mapel;
         if (!($id_kelas != null)) {
-        }
-        $cat_kelas = $this->kelas->getCatatanMapelKelas($id_kelas, $id_mapel, $tp->id_tp, $smt->id_smt);
-        foreach ($cat_kelas as $ck) {
-            $ck->reading = unserialize($ck->reading);
-        }
-        $data['cat_kelas'] = $cat_kelas;
-        $data['cat_siswa'] = $this->kelas->getCatatanMapelSiswa($tp->id_tp, $smt->id_smt, $id_kelas, $id_mapel);
-        if ($this->ion_auth->is_admin()) {
+            if ($this->ion_auth->is_admin()) {
+            }
+        } else {
+            $cat_kelas = $this->kelas->getCatatanMapelKelas($id_kelas, $id_mapel, $tp->id_tp, $smt->id_smt);
+            foreach ($cat_kelas as $ck) {
+                $ck->reading = unserialize($ck->reading);
+            }
+            $data['cat_kelas'] = $cat_kelas;
+            $data['cat_siswa'] = $this->kelas->getCatatanMapelSiswa($tp->id_tp, $smt->id_smt, $id_kelas, $id_mapel);
+            if ($this->ion_auth->is_admin()) {
+            }
         }
         $guru = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
         $data['guru'] = $guru;
@@ -75,8 +82,9 @@ class Kelascatatan extends CI_Controller
             foreach ($m->kelas_mapel as $kls_mapel) {
                 foreach ($kelasses as $key => $kelass) {
                     if (!($kls_mapel->kelas == $key)) {
+                    } else {
+                        $arrKelas[$m->id_mapel][$key] = $kelass;
                     }
-                    $arrKelas[$m->id_mapel][$key] = $kelass;
                 }
             }
         }
@@ -104,12 +112,17 @@ class Kelascatatan extends CI_Controller
         $data['mapel'] = $id_mapel;
         $data['kelas'] = $id_kelas;
         if ($this->ion_auth->is_admin()) {
+            $data['profile'] = $this->dashboard->getProfileAdmin($user->id);
+            $this->load->view('_templates/dashboard/_header', $data);
+            $this->load->view('members/guru/kelas/catatan/persiswa');
+            $this->load->view('_templates/dashboard/_footer');
+        } else {
+            $guru = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
+            $data['guru'] = $guru;
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('members/guru/kelas/catatan/persiswa');
+            $this->load->view('members/guru/templates/footer');
         }
-        $guru = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
-        $data['guru'] = $guru;
-        $this->load->view('members/guru/templates/header', $data);
-        $this->load->view('members/guru/kelas/catatan/persiswa');
-        $this->load->view('members/guru/templates/footer');
     }
     public function saveCatatanKelas()
     {

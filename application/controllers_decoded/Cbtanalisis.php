@@ -6,19 +6,23 @@ class Cbtanalisis extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
+            }
+            show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         }
-        if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
-        }
-        show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         $this->load->library(['datatables', 'form_validation']);
         $this->form_validation->set_error_delimiters('', '');
     }
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -42,111 +46,121 @@ class Cbtanalisis extends CI_Controller
         $data['smt_selected'] = $smt_sel;
         $data['jadwal_selected'] = $jadwal;
         if (!($jadwal != null)) {
-        }
-        $info = $this->cbt->getJadwalById($jadwal);
-        $all_jawaban = $this->cbt->getJawabanByBank($info->id_bank);
-        $jawabans_siswa = [];
-        $ids = [];
-        foreach ($all_jawaban as $jawaban_siswa) {
-            array_push($ids, $jawaban_siswa->id_siswa);
-            $jawabans_siswa[$jawaban_siswa->jenis_soal][$jawaban_siswa->nomor_soal][$jawaban_siswa->id_siswa] = $jawaban_siswa->jawaban_siswa;
-        }
-        $nilai_pg = $this->cbt->getAllNilaiSiswa($jadwal);
-        $all_soals = $this->cbt->getSoalByBank($info->id_bank);
-        if (!isset($all_soals[1])) {
-        }
-        foreach ($all_soals[1] as $no => $soal) {
-            $soal->jawaban_siswa = [];
-            $soal->skor_siswa = [];
-            $soal->jumlah_benar = 0;
-            $soal->jumlah_salah = 0;
-            $total_siswa = 0;
-            $x = [];
-            $jwbn_siswa = isset($jawabans_siswa[1][$no]) && isset($jawabans_siswa[1][$no]) ? $jawabans_siswa[1][$no] : [];
-            foreach ($jwbn_siswa as $id => $jawab_siswa) {
-                $total_siswa++;
-                if ($jawab_siswa == $soal->jawaban) {
+            if ($this->ion_auth->is_admin()) {
+            }
+        } else {
+            $info = $this->cbt->getJadwalById($jadwal);
+            $all_jawaban = $this->cbt->getJawabanByBank($info->id_bank);
+            $jawabans_siswa = [];
+            $ids = [];
+            foreach ($all_jawaban as $jawaban_siswa) {
+                array_push($ids, $jawaban_siswa->id_siswa);
+                $jawabans_siswa[$jawaban_siswa->jenis_soal][$jawaban_siswa->nomor_soal][$jawaban_siswa->id_siswa] = $jawaban_siswa->jawaban_siswa;
+            }
+            $nilai_pg = $this->cbt->getAllNilaiSiswa($jadwal);
+            $all_soals = $this->cbt->getSoalByBank($info->id_bank);
+            if (!isset($all_soals[1])) {
+            }
+            foreach ($all_soals[1] as $no => $soal) {
+                $soal->jawaban_siswa = [];
+                $soal->skor_siswa = [];
+                $soal->jumlah_benar = 0;
+                $soal->jumlah_salah = 0;
+                $total_siswa = 0;
+                $x = [];
+                $jwbn_siswa = isset($jawabans_siswa[1][$no]) && isset($jawabans_siswa[1][$no]) ? $jawabans_siswa[1][$no] : [];
+                foreach ($jwbn_siswa as $id => $jawab_siswa) {
+                    $total_siswa++;
+                    if ($jawab_siswa == $soal->jawaban) {
+                        $soal->jumlah_benar++;
+                        array_push($x, 1);
+                    } else {
+                        $soal->jumlah_salah++;
+                        array_push($x, 0);
+                    }
+                    if ($jawab_siswa == 'A') {
+                    }
+                    if ($jawab_siswa == 'B') {
+                    }
+                    if ($jawab_siswa == 'C') {
+                    }
+                    if ($jawab_siswa == 'D') {
+                    }
+                    if ($jawab_siswa == 'E') {
+                    }
                 }
-                $soal->jumlah_salah++;
-                array_push($x, 0);
-                if ($jawab_siswa == 'A') {
+                $benar = $soal->jumlah_benar;
+                $salah = $soal->jumlah_salah;
+                $jml_siswa = $total_siswa;
+                $kesukaran = 0;
+                $status_soal = '';
+                if (!($jml_siswa > 0)) {
+                    $soal->tingkat_kesukaran = $kesukaran;
+                } else {
+                    $kesukaran = round($benar / $jml_siswa, 2);
+                    if ($kesukaran >= 0.7) {
+                    }
+                    if ($kesukaran >= 0.3) {
+                    }
+                    $status_soal = 'sukar';
+                    $soal->tingkat_kesukaran = $kesukaran;
                 }
-                if ($jawab_siswa == 'B') {
+                $soal->status_kesukaran = $status_soal;
+                $cek = $jml_siswa % 2;
+                if (!($cek == 1)) {
                 }
-                if ($jawab_siswa == 'C') {
+                $jml_siswa--;
+                $bagi = $jml_siswa / 2;
+                $pos_a = 0;
+                $pos_b = $bagi;
+                $y = [];
+                $yng_benar_golonganatas = 0;
+                $yng_benar_golonganbawah = 0;
+                $no = 1;
+                foreach ($nilai_pg as $id => $nilai) {
+                    array_push($y, $nilai->pg_benar);
+                    if (!isset($jwbn_siswa[$id])) {
+                        $no++;
+                    } else {
+                        $siswa_menjawab = $jwbn_siswa[$id];
+                        if ($no <= $bagi) {
+                        }
+                        if (!($siswa_menjawab == $soal->jawaban)) {
+                        }
+                        $yng_benar_golonganbawah++;
+                        $no++;
+                    }
                 }
-                if ($jawab_siswa == 'D') {
+                $soal->total_siswa = $total_siswa;
+                $soal->benar_atas = $yng_benar_golonganatas;
+                $soal->benar_bawah = $yng_benar_golonganbawah;
+                $pearson = $this->pearson($x, $y);
+                $soal->nilai_valid = $pearson;
+                $soal->table_r = $this->nilaiSignifikansi($total_siswa);
+                $validitas = $this->nilaiSignifikansi($total_siswa) <= $pearson ? 'Valid' : 'Tidak valid';
+                $soal->status_valid = $validitas;
+                $bagi_daya = $bagi > 0 ? $bagi : 1;
+                if ($yng_benar_golonganatas == 0 && $yng_benar_golonganbawah != 0) {
                 }
-                if ($jawab_siswa == 'E') {
+                if ($yng_benar_golonganatas != 0 && $yng_benar_golonganbawah == 0) {
                 }
-            }
-            $benar = $soal->jumlah_benar;
-            $salah = $soal->jumlah_salah;
-            $jml_siswa = $total_siswa;
-            $kesukaran = 0;
-            $status_soal = '';
-            if (!($jml_siswa > 0)) {
-            }
-            $kesukaran = round($benar / $jml_siswa, 2);
-            if ($kesukaran >= 0.7) {
-            }
-            if ($kesukaran >= 0.3) {
-            }
-            $status_soal = 'sukar';
-            $soal->tingkat_kesukaran = $kesukaran;
-            $soal->status_kesukaran = $status_soal;
-            $cek = $jml_siswa % 2;
-            if (!($cek == 1)) {
-            }
-            $jml_siswa--;
-            $bagi = $jml_siswa / 2;
-            $pos_a = 0;
-            $pos_b = $bagi;
-            $y = [];
-            $yng_benar_golonganatas = 0;
-            $yng_benar_golonganbawah = 0;
-            $no = 1;
-            foreach ($nilai_pg as $id => $nilai) {
-                array_push($y, $nilai->pg_benar);
-                if (!isset($jwbn_siswa[$id])) {
+                if ($yng_benar_golonganatas == 0 && $yng_benar_golonganbawah == 0) {
                 }
-                $siswa_menjawab = $jwbn_siswa[$id];
-                if ($no <= $bagi) {
+                $daya_pembeda = $yng_benar_golonganatas / $bagi_daya - $yng_benar_golonganbawah / $bagi_daya;
+                $soal->daya_pembeda = $daya_pembeda;
+                if ($daya_pembeda >= 0.7) {
                 }
-                if (!($siswa_menjawab == $soal->jawaban)) {
+                if ($daya_pembeda >= 0.4) {
                 }
-                $yng_benar_golonganbawah++;
-                $no++;
+                if ($daya_pembeda >= 0.2) {
+                }
+                $soal->status_daya = 'Jelek';
             }
-            $soal->total_siswa = $total_siswa;
-            $soal->benar_atas = $yng_benar_golonganatas;
-            $soal->benar_bawah = $yng_benar_golonganbawah;
-            $pearson = $this->pearson($x, $y);
-            $soal->nilai_valid = $pearson;
-            $soal->table_r = $this->nilaiSignifikansi($total_siswa);
-            $validitas = $this->nilaiSignifikansi($total_siswa) <= $pearson ? 'Valid' : 'Tidak valid';
-            $soal->status_valid = $validitas;
-            $bagi_daya = $bagi > 0 ? $bagi : 1;
-            if ($yng_benar_golonganatas == 0 && $yng_benar_golonganbawah != 0) {
+            $data['info'] = $info;
+            $data['soals'] = $all_soals;
+            $data['nilai'] = $nilai_pg;
+            if ($this->ion_auth->is_admin()) {
             }
-            if ($yng_benar_golonganatas != 0 && $yng_benar_golonganbawah == 0) {
-            }
-            if ($yng_benar_golonganatas == 0 && $yng_benar_golonganbawah == 0) {
-            }
-            $daya_pembeda = $yng_benar_golonganatas / $bagi_daya - $yng_benar_golonganbawah / $bagi_daya;
-            $soal->daya_pembeda = $daya_pembeda;
-            if ($daya_pembeda >= 0.7) {
-            }
-            if ($daya_pembeda >= 0.4) {
-            }
-            if ($daya_pembeda >= 0.2) {
-            }
-            $soal->status_daya = 'Jelek';
-        }
-        $data['info'] = $info;
-        $data['soals'] = $all_soals;
-        $data['nilai'] = $nilai_pg;
-        if ($this->ion_auth->is_admin()) {
         }
         $guru = $this->dashboard->getDataGuruByUserId($user->id, $thn_sel, $smt_sel);
         $nguru[$guru->id_guru] = $guru->nama_guru;
@@ -249,13 +263,16 @@ class Cbtanalisis extends CI_Controller
         $jawabans_siswa = [];
         foreach ($jawabans as $jawaban_siswa) {
             if (!($jawaban_siswa->jenis_soal == '2')) {
-            }
-            $jawaban_siswa->opsi_a = @unserialize($jawaban_siswa->opsi_a ?? '');
-            $jawaban_siswa->jawaban_siswa = @unserialize($jawaban_siswa->jawaban_siswa ?? '');
-            $jawaban_siswa->jawaban_benar = @unserialize($jawaban_siswa->jawaban_benar ?? '');
-            $jawaban_siswa->jawaban_benar = array_map('strtoupper', $jawaban_siswa->jawaban_benar ?? ['']);
-            $jawaban_siswa->jawaban_benar = array_filter($jawaban_siswa->jawaban_benar ?? [''], 'strlen');
-            if (!($jawaban_siswa->jenis_soal == '3')) {
+                if (!($jawaban_siswa->jenis_soal == '3')) {
+                }
+            } else {
+                $jawaban_siswa->opsi_a = @unserialize($jawaban_siswa->opsi_a ?? '');
+                $jawaban_siswa->jawaban_siswa = @unserialize($jawaban_siswa->jawaban_siswa ?? '');
+                $jawaban_siswa->jawaban_benar = @unserialize($jawaban_siswa->jawaban_benar ?? '');
+                $jawaban_siswa->jawaban_benar = array_map('strtoupper', $jawaban_siswa->jawaban_benar ?? ['']);
+                $jawaban_siswa->jawaban_benar = array_filter($jawaban_siswa->jawaban_benar ?? [''], 'strlen');
+                if (!($jawaban_siswa->jenis_soal == '3')) {
+                }
             }
             $jawaban_siswa->jawaban_siswa = @unserialize($jawaban_siswa->jawaban_siswa ?? '');
             $jawaban_siswa->jawaban_benar = @unserialize($jawaban_siswa->jawaban_benar ?? '');
@@ -277,17 +294,20 @@ class Cbtanalisis extends CI_Controller
             $benar_pg = 0;
             $salah_pg = 0;
             if (!($info->tampil_pg > 0)) {
-            }
-            if (!($jawaban_pg && count($jawaban_pg) > 0)) {
-            }
-            foreach ($jawaban_pg as $jwb_pg) {
-                if (!($jwb_pg != null && $jwb_pg->jawaban_siswa != null)) {
+                $skor_pg = $bagi_pg == 0 ? 0 : $benar_pg / $bagi_pg * $bobot_pg;
+            } else {
+                if (!($jawaban_pg && count($jawaban_pg) > 0)) {
                 }
-                if (strtoupper($jwb_pg->jawaban_siswa) == strtoupper($jwb_pg->jawaban_benar ?? '')) {
+                foreach ($jawaban_pg as $jwb_pg) {
+                    if (!($jwb_pg != null && $jwb_pg->jawaban_siswa != null)) {
+                    } else {
+                        if (strtoupper($jwb_pg->jawaban_siswa) == strtoupper($jwb_pg->jawaban_benar ?? '')) {
+                        }
+                        $salah_pg += 1;
+                    }
                 }
-                $salah_pg += 1;
+                $skor_pg = $bagi_pg == 0 ? 0 : $benar_pg / $bagi_pg * $bobot_pg;
             }
-            $skor_pg = $bagi_pg == 0 ? 0 : $benar_pg / $bagi_pg * $bobot_pg;
             $jawaban_pg2 = $ada_jawaban_pg2 ? $jawabans_siswa[$siswa->id_siswa]['2'] : [];
             $benar_pg2 = 0;
             $skor_koreksi_pg2 = 0.0;
@@ -302,8 +322,9 @@ class Cbtanalisis extends CI_Controller
                 $arr_benar = [];
                 foreach ($jawab_pg2->jawaban_siswa as $js) {
                     if (!in_array($js, $jawab_pg2->jawaban_benar)) {
+                    } else {
+                        array_push($arr_benar, true);
                     }
-                    array_push($arr_benar, true);
                 }
                 $benar_pg2 += 1 / count($jawab_pg2->jawaban_benar) * count($arr_benar);
             }
@@ -331,9 +352,10 @@ class Cbtanalisis extends CI_Controller
                     $jwb = new stdClass();
                     foreach ($kolSoal as $pos => $kol) {
                         if (!($kol == '1')) {
+                        } else {
+                            $jwb->subtitle[] = $headSoal[$pos];
+                            $items++;
                         }
-                        $jwb->subtitle[] = $headSoal[$pos];
-                        $items++;
                     }
                     $jwb->title = array_shift($kolSoal);
                     array_push($arrJwbSoal, $jwb);
@@ -345,9 +367,10 @@ class Cbtanalisis extends CI_Controller
                     $jwbs = new stdClass();
                     foreach ($kolJawab as $po => $kol) {
                         if (!($kol == '1')) {
+                        } else {
+                            $sub = $headJawab[$po];
+                            $jwbs->subtitle[] = $sub;
                         }
-                        $sub = $headJawab[$po];
-                        $jwbs->subtitle[] = $sub;
                     }
                     array_push($arrJwbJawab, $jwbs);
                 }
@@ -356,8 +379,10 @@ class Cbtanalisis extends CI_Controller
                 foreach ($arrJwbJawab as $p => $ajjs) {
                     foreach ($ajjs->subtitle as $pp => $ajs) {
                         if (in_array($ajs, $arrJwbSoal[$p]->subtitle)) {
+                            $item_benar++;
+                        } else {
+                            $item_salah++;
                         }
-                        $item_salah++;
                     }
                 }
                 $benar_jod += 1 / $items * $item_benar;
@@ -381,9 +406,11 @@ class Cbtanalisis extends CI_Controller
                 $skor_koreksi_is += $jawab_is->nilai_koreksi;
                 $benar = $jawab_is != null && strtolower($jawab_is->jawaban_siswa ?? '') == strtolower($jawab_is->jawaban_benar ?? '');
                 if (!$benar) {
+                    $otomatis_is = $jawab_is->nilai_otomatis;
+                } else {
+                    $benar_is++;
+                    $otomatis_is = $jawab_is->nilai_otomatis;
                 }
-                $benar_is++;
-                $otomatis_is = $jawab_is->nilai_otomatis;
             }
             $s_is = $bagi_isian == 0 ? 0 : $benar_is / $bagi_isian * $bobot_isian;
             $input_is = 0;
@@ -403,9 +430,11 @@ class Cbtanalisis extends CI_Controller
                 $skor_koreksi_es += $jawab_es->nilai_koreksi;
                 $benar = $jawab_es != null && strtolower($jawab_es->jawaban_siswa ?? '') == strtolower($jawab_es->jawaban_benar ?? '');
                 if (!$benar) {
+                    $otomatis_es = $jawab_es->nilai_otomatis;
+                } else {
+                    $benar_es++;
+                    $otomatis_es = $jawab_es->nilai_otomatis;
                 }
-                $benar_es++;
-                $otomatis_es = $jawab_es->nilai_otomatis;
             }
             $s_es = $bagi_essai == 0 ? 0 : $benar_es / $bagi_essai * $bobot_essai;
             $input_es = 0;
@@ -449,8 +478,9 @@ class Cbtanalisis extends CI_Controller
         $closest = null;
         foreach ($arr as $item) {
             if (!($closest === null || abs($search - $closest) > abs($item - $search))) {
+            } else {
+                $closest = $item;
             }
-            $closest = $item;
         }
         return $closest;
     }

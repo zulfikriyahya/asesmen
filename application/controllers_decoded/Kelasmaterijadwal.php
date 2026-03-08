@@ -6,9 +6,11 @@ class Kelasmaterijadwal extends CI_Controller
     {
         parent::__construct();
         if ($this->ion_auth->logged_in()) {
+            $this->load->library(['datatables', 'form_validation']);
+        } else {
+            redirect('auth');
+            $this->load->library(['datatables', 'form_validation']);
         }
-        redirect('auth');
-        $this->load->library(['datatables', 'form_validation']);
         $this->load->model('Master_model', 'master');
         $this->load->model('Dashboard_model', 'dashboard');
         $this->load->model('Cbt_model', 'cbt');
@@ -20,9 +22,11 @@ class Kelasmaterijadwal extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -46,8 +50,11 @@ class Kelasmaterijadwal extends CI_Controller
         $data['bln_selected'] = $bln;
         $data['date_selected'] = $thn . '-' . $bln . '-' . date('d');
         if ($this->ion_auth->is_admin()) {
-        }
-        if ($this->ion_auth->in_group('guru')) {
+            $data['profile'] = $this->dashboard->getProfileAdmin($user->id);
+            $this->load->view('_templates/dashboard/_header', $data);
+            $this->load->view('kelas/materijadwal/data');
+            $this->load->view('_templates/dashboard/_footer');
+        } else if ($this->ion_auth->in_group('guru')) {
         }
     }
     public function kelas()
@@ -68,8 +75,10 @@ class Kelasmaterijadwal extends CI_Controller
         $data['kelas'] = $this->dropdown->getAllKelas($tp->id_tp, $smt->id_smt);
         $jadk = $this->kelas->getJadwalKbm($tp->id_tp, $smt->id_smt, $kelas);
         if ($jadk == null) {
+            $data['jadwal_kbm'] = json_decode(json_encode(['id_tp' => $tp->tahun, 'id_smt' => $smt->smt, 'id_kelas' => $kelas, 'kbm_jam_pel' => '', 'kbm_jam_mulai' => '', 'kbm_jml_mapel_hari' => '', 'istirahat' => serialize([]), 'ada' => false]));
+        } else {
+            $data['jadwal_kbm'] = $jadk;
         }
-        $data['jadwal_kbm'] = $jadk;
         $data['id_kelas'] = $kelas;
         $jadm = $this->kelas->getJadwalMapelGroupJam($tp->id_tp, $smt->id_smt, $kelas);
         $jml_mapel = $jadk == null ? 1 : $jadk->kbm_jml_mapel_hari;
@@ -100,13 +109,24 @@ class Kelasmaterijadwal extends CI_Controller
         $istirahat = [];
         $i = 1;
         if (!($i < 5)) {
+            $id_tp = $this->master->getTahunActive()->id_tp;
+            $id_smt = $this->master->getSemesterActive()->id_smt;
+            $id_kelas = $this->input->post('id_kelas', true);
+            $insert = ['id_kbm' => $id_tp . $id_smt . $id_kelas, 'id_tp' => $id_tp, 'id_smt' => $id_smt, 'id_kelas' => $id_kelas, 'kbm_jam_pel' => $this->input->post('jam_mapel', true), 'kbm_jam_mulai' => $this->input->post('jam_mulai', true), 'kbm_jml_mapel_hari' => $this->input->post('jml_mapel', true), 'istirahat' => serialize($istirahat)];
+            $update = $this->db->replace('kelas_jadwal_kbm', $insert);
+            $this->logging->saveLog(3, 'merubah jadwal pelajaran');
+            $data['status'] = $update;
+            $this->output_json($data);
+        } else {
+            $jamke = $this->input->post('ist' . $i, true);
+            $durasi = $this->input->post('dur_ist' . $i, true);
+            if (!$jamke) {
+            }
+            $istirahat[] = ['ist' => $jamke, 'dur' => $durasi];
+            $i++;
+            if (!($i < 5)) {
+            }
         }
-        $jamke = $this->input->post('ist' . $i, true);
-        $durasi = $this->input->post('dur_ist' . $i, true);
-        if (!$jamke) {
-        }
-        $istirahat[] = ['ist' => $jamke, 'dur' => $durasi];
-        $i++;
     }
     public function setMapel()
     {

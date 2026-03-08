@@ -6,19 +6,23 @@ class Cbtjenis extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if ($this->ion_auth->is_admin()) {
+            }
+            show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         }
-        if ($this->ion_auth->is_admin()) {
-        }
-        show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         $this->load->library(['datatables', 'form_validation']);
         $this->form_validation->set_error_delimiters('', '');
     }
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -57,10 +61,12 @@ class Cbtjenis extends CI_Controller
         $this->load->model('Master_model', 'master');
         $chk = $this->input->post('checked', true);
         if (!$chk) {
+            $this->output_json(['status' => false]);
+        } else {
+            if (!$this->master->delete('cbt_jenis', $chk, 'id_jenis')) {
+            }
+            $this->output_json(['status' => true, 'total' => count($chk)]);
         }
-        if (!$this->master->delete('cbt_jenis', $chk, 'id_jenis')) {
-        }
-        $this->output_json(['status' => true, 'total' => count($chk)]);
     }
     public function saveLog($type, $desc)
     {

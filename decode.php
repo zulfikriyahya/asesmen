@@ -127,8 +127,11 @@ class GotoResolver extends NodeVisitorAbstract
             if ($stmt instanceof Stmt\If_) {
                 $reconstructed = $this->tryReconstructIfElse($stmt, $stmts, $labels, $pos, $visited);
                 if ($reconstructed !== null) {
-                    [$ifElseStmt, $mergePos] = $reconstructed;
+                    [$ifElseStmt, $mergePos, $sharedTail] = $reconstructed;
                     $result[] = $ifElseStmt;
+                    foreach ($sharedTail as $tailStmt) {
+                        $result[] = $tailStmt;
+                    }
                     $pos = $mergePos;
                     continue;
                 }
@@ -264,6 +267,13 @@ class GotoResolver extends NodeVisitorAbstract
         $thenStmts = $this->resolveBlockWithLabels($thenStmts, $labels);
         $elseStmts = $this->resolveBlockWithLabels($elseStmts, $labels);
 
+        // ── Shared tail hoisting ──────────────────────────────────────────────
+        // Jika kedua branch diakhiri dengan statement yang identik (berdasarkan
+        // pretty-print), hoist statement tersebut ke luar if/else.
+        // Guard: jangan hoist jika tail adalah Return_/Throw_ — semantiknya
+        // berbeda per branch (return nilai bisa berbeda, throw juga).
+        [$thenStmts, $elseStmts, $sharedTail] = $this->extractSharedTail($thenStmts, $elseStmts);
+
         $elseNode = empty($elseStmts) ? null : new Stmt\Else_($elseStmts);
         $newIf = new Stmt\If_(
             $ifStmt->cond,
@@ -271,7 +281,61 @@ class GotoResolver extends NodeVisitorAbstract
             $ifStmt->getAttributes()
         );
 
-        return [$newIf, $mergePos];
+        // Return [ifNode, mergePos, sharedTail] — caller harus append sharedTail setelah ifNode
+        return [$newIf, $mergePos, $sharedTail];
+    }
+
+    /**
+     * Bandingkan suffix dari dua array statement.
+     * Kembalikan [thenCore, elseCore, sharedTail].
+     * Tidak hoist Return_/Throw_ karena semantiknya berbeda per branch.
+     */
+    private function extractSharedTail(array $thenStmts, array $elseStmts): array
+    {
+        if (empty($thenStmts) || empty($elseStmts)) {
+            return [$thenStmts, $elseStmts, []];
+        }
+
+        // Jangan hoist jika salah satu branch diakhiri Return_/Throw_
+        $thenLast = end($thenStmts);
+        $elseLast = end($elseStmts);
+        if ($thenLast instanceof Stmt\Return_ || $thenLast instanceof Stmt\Throw_) {
+            return [$thenStmts, $elseStmts, []];
+        }
+        if ($elseLast instanceof Stmt\Return_ || $elseLast instanceof Stmt\Throw_) {
+            return [$thenStmts, $elseStmts, []];
+        }
+
+        $printer   = new PhpParser\PrettyPrinter\Standard();
+        $sharedTail = [];
+        $thenLen   = count($thenStmts);
+        $elseLen   = count($elseStmts);
+        $maxShared = min($thenLen, $elseLen) - 1; // sisakan minimal 1 stmt per branch
+
+        for ($i = 1; $i <= $maxShared; $i++) {
+            $thenStmt = $thenStmts[$thenLen - $i];
+            $elseStmt = $elseStmts[$elseLen - $i];
+
+            // Bandingkan via pretty-print (AST-aware string comparison)
+            if ($printer->prettyPrint([$thenStmt]) !== $printer->prettyPrint([$elseStmt])) {
+                break;
+            }
+            // Jangan hoist Return_/Throw_ di tengah-tengah daftar juga
+            if ($thenStmt instanceof Stmt\Return_ || $thenStmt instanceof Stmt\Throw_) {
+                break;
+            }
+            array_unshift($sharedTail, $thenStmt);
+        }
+
+        if (empty($sharedTail)) {
+            return [$thenStmts, $elseStmts, []];
+        }
+
+        $trimCount = count($sharedTail);
+        $thenStmts = array_slice($thenStmts, 0, $thenLen - $trimCount);
+        $elseStmts = array_slice($elseStmts, 0, $elseLen - $trimCount);
+
+        return [$thenStmts, $elseStmts, $sharedTail];
     }
 
     /**
@@ -348,8 +412,11 @@ class GotoResolver extends NodeVisitorAbstract
                     $visited
                 );
                 if ($reconstructed !== null) {
-                    [$ifElseStmt, $mergePos] = $reconstructed;
+                    [$ifElseStmt, $mergePos, $sharedTail] = $reconstructed;
                     $result[] = $ifElseStmt;
+                    foreach ($sharedTail as $tailStmt) {
+                        $result[] = $tailStmt;
+                    }
                     $pos = $mergePos;
                     continue;
                 }
@@ -446,7 +513,7 @@ class GotoResolver extends NodeVisitorAbstract
             $ifStmt->getAttributes()
         );
 
-        return [$newIf, $mergePos];
+        return [$newIf, $mergePos, []]; // sharedTail kosong — inner branch tidak hoist
     }
 
     private function collectBranch(array $stmts, array $labels, int $startPos): array
@@ -498,7 +565,8 @@ class GotoResolver extends NodeVisitorAbstract
             }
         }
 
-        return [$result, null];
+        // Akhir array = branch tidak punya merge point berikutnya → terminal
+        return [$result, '__terminal__'];
     }
 
     private function markBranchVisited(array $stmts, array $labels, int $startPos, array &$visited): void

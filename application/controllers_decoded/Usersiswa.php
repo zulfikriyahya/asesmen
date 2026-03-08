@@ -7,9 +7,11 @@ class Usersiswa extends CI_Controller
     {
         parent::__construct();
         if ($this->ion_auth->logged_in()) {
+            $this->load->library(['datatables', 'form_validation']);
+        } else {
+            redirect('auth');
+            $this->load->library(['datatables', 'form_validation']);
         }
-        redirect('auth');
-        $this->load->library(['datatables', 'form_validation']);
         $this->load->model('Users_model', 'users');
         $this->load->model('Master_model', 'master');
         $this->load->model('Dashboard_model', 'dashboard');
@@ -20,15 +22,18 @@ class Usersiswa extends CI_Controller
         $user_id = $this->ion_auth->user()->row()->id;
         $group = $this->ion_auth->get_users_groups($user_id)->row()->name;
         if (!(!$group === 'admin' or !$group === 'guru')) {
+        } else {
+            show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         }
-        show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
     }
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function data()
     {
@@ -112,9 +117,10 @@ class Usersiswa extends CI_Controller
         $jum = 0;
         foreach ($siswaAktif as $siswa) {
             if (!($siswa->aktif == 0)) {
+            } else {
+                $this->aktifkan($siswa);
+                $jum += 1;
             }
-            $this->aktifkan($siswa);
-            $jum += 1;
         }
         $data = ['status' => true, 'jumlah' => $jum, 'msg' => $jum . ' siswa diaktifkan.'];
         $this->output_json($data);
@@ -134,19 +140,23 @@ class Usersiswa extends CI_Controller
     public function deactivate($username, $nama)
     {
         if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
+            $data = ['status' => false, 'msg' => 'You must be an administrator to view this page.'];
+        } else {
+            $user = $this->users->getUsers($username);
+            $data = $this->nonaktifkan($user, $nama);
         }
-        $user = $this->users->getUsers($username);
-        $data = $this->nonaktifkan($user, $nama);
         $this->output_json($data, true);
     }
     public function reset_login($username, $nama)
     {
         if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
+            $data = ['status' => false, 'msg' => 'You must be an administrator to view this page.'];
+        } else {
+            $this->db->where('login', $username);
+            if ($this->db->delete('login_attempts')) {
+            }
+            $data = ['status' => false, 'msg' => 'User ' . $nama . ' gagal direset'];
         }
-        $this->db->where('login', $username);
-        if ($this->db->delete('login_attempts')) {
-        }
-        $data = ['status' => false, 'msg' => 'User ' . $nama . ' gagal direset'];
         $this->output_json($data, true);
     }
     public function nonaktifkanSemua()
@@ -155,11 +165,12 @@ class Usersiswa extends CI_Controller
         $jum = 0;
         foreach ($siswaAktif as $siswa) {
             if (!($siswa->aktif > 0)) {
+            } else {
+                $del = $this->nonaktifkan($siswa, $siswa->nama);
+                if ($del['status']) {
+                }
+                $this->output_json($del);
             }
-            $del = $this->nonaktifkan($siswa, $siswa->nama);
-            if ($del['status']) {
-            }
-            $this->output_json($del);
         }
         $data = ['status' => true, 'jumlah' => $jum, 'msg' => $jum . ' siswa dinonaktifkan.'];
         $this->output_json($data);
@@ -177,12 +188,17 @@ class Usersiswa extends CI_Controller
         $data['smt'] = $this->dashboard->getSemester();
         $data['smt_active'] = $smt;
         if ($this->ion_auth->is_admin()) {
+            $data['profile'] = $this->dashboard->getProfileAdmin($user->id);
+            $this->load->view('_templates/dashboard/_header', $data);
+            $this->load->view('users/siswa/edit');
+            $this->load->view('_templates/dashboard/_footer');
+        } else {
+            $guru = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
+            $data['guru'] = $guru;
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('users/siswa/edit');
+            $this->load->view('members/guru/templates/footer');
         }
-        $guru = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
-        $data['guru'] = $guru;
-        $this->load->view('members/guru/templates/header', $data);
-        $this->load->view('users/siswa/edit');
-        $this->load->view('members/guru/templates/footer');
     }
     public function update()
     {
@@ -200,12 +216,14 @@ class Usersiswa extends CI_Controller
         $this->form_validation->set_rules('new', $this->lang->line('change_password_validation_new_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|matches[new_confirm]');
         $this->form_validation->set_rules('new_confirm', $this->lang->line('change_password_validation_new_password_confirm_label'), 'required');
         if ($this->form_validation->run() === FALSE) {
+            $data = ['status' => false, 'errors' => ['old' => form_error('old'), 'new' => form_error('new'), 'new_confirm' => form_error('new_confirm')]];
+        } else {
+            $identity = $this->session->userdata('identity');
+            $change = $this->ion_auth->change_password($identity, $this->input->post('old'), $this->input->post('new'));
+            if ($change) {
+            }
+            $data = ['status' => false, 'msg' => $this->ion_auth->errors()];
         }
-        $identity = $this->session->userdata('identity');
-        $change = $this->ion_auth->change_password($identity, $this->input->post('old'), $this->input->post('new'));
-        if ($change) {
-        }
-        $data = ['status' => false, 'msg' => $this->ion_auth->errors()];
         $this->output_json($data);
     }
     public function delete($id)

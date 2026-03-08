@@ -7,10 +7,12 @@ class Dbclear extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if ($this->ion_auth->is_admin()) {
+            }
+            show_error('Hanya Admin yang boleh mengakses halaman ini', 403, 'Akses dilarang');
         }
-        if ($this->ion_auth->is_admin()) {
-        }
-        show_error('Hanya Admin yang boleh mengakses halaman ini', 403, 'Akses dilarang');
         $this->load->library('upload');
         $this->load->dbforge();
         $this->load->model('Settings_model', 'settings');
@@ -20,9 +22,11 @@ class Dbclear extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -40,12 +44,18 @@ class Dbclear extends CI_Controller
         $tables = $this->db->list_tables();
         foreach ($tables as $table) {
             if (isset($json[$table])) {
+                if (in_array($table, $excludes)) {
+                }
+                $name = str_replace('_', ' ', $table ?? '');
+                $table_info = ['ket' => $this->keterangan()[$table], 'size' => $this->settings->rowSize($table), 'table' => $table, 'name' => ucwords($name)];
+                $data_tables[$table_info['ket']][] = $table_info;
+            } else {
+                if (in_array($table, $excludes)) {
+                }
+                if ($table == 'buku_nilai') {
+                }
+                $this->dbforge->drop_table($table, true);
             }
-            if (in_array($table, $excludes)) {
-            }
-            if ($table == 'buku_nilai') {
-            }
-            $this->dbforge->drop_table($table, true);
         }
         $data['tables'] = $data_tables;
         $this->load->view('_templates/dashboard/_header', $data);

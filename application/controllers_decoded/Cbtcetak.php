@@ -6,10 +6,12 @@ class Cbtcetak extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
+            }
+            show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         }
-        if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
-        }
-        show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         $this->load->library(['datatables', 'form_validation']);
         $this->load->library('upload');
         $this->form_validation->set_error_delimiters('', '');
@@ -17,9 +19,11 @@ class Cbtcetak extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -36,23 +40,28 @@ class Cbtcetak extends CI_Controller
         $data['smt_active'] = $smt;
         $data['kop'] = $this->cbt->getSettingKopAbsensi();
         if ($this->ion_auth->is_admin()) {
-        }
-        $data['guru'] = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
-        $pengawas = $this->cbt->getPengawasHariIni(date('Y-m-d'));
-        $data['pengawas'] = $pengawas;
-        $ids_pengawas = [];
-        foreach ($pengawas as $pws) {
-            $ids = explode(',', $pws->id_guru ?? '');
-            foreach ($ids as $id) {
-                if (!(!in_array($id, $ids_pengawas) && $id != '')) {
+            $this->load->view('_templates/dashboard/_header', $data);
+            $this->load->view('cbt/cetak/data');
+            $this->load->view('_templates/dashboard/_footer');
+        } else {
+            $data['guru'] = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
+            $pengawas = $this->cbt->getPengawasHariIni(date('Y-m-d'));
+            $data['pengawas'] = $pengawas;
+            $ids_pengawas = [];
+            foreach ($pengawas as $pws) {
+                $ids = explode(',', $pws->id_guru ?? '');
+                foreach ($ids as $id) {
+                    if (!(!in_array($id, $ids_pengawas) && $id != '')) {
+                    } else {
+                        $ids_pengawas[] = $id;
+                    }
                 }
-                $ids_pengawas[] = $id;
             }
+            $data['ids_pengawas'] = $ids_pengawas;
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('cbt/cetak/data');
+            $this->load->view('members/guru/templates/footer');
         }
-        $data['ids_pengawas'] = $ids_pengawas;
-        $this->load->view('members/guru/templates/header', $data);
-        $this->load->view('cbt/cetak/data');
-        $this->load->view('members/guru/templates/footer');
     }
     public function kartuPeserta()
     {
@@ -73,17 +82,35 @@ class Cbtcetak extends CI_Controller
         $data['ruang'] = $this->dropdown->getAllRuang();
         $data['setting_rapor'] = $this->rapor->getRaporSetting($tp->id_tp, $smt->id_smt);
         if ($this->ion_auth->is_admin()) {
+            $this->load->view('_templates/dashboard/_header', $data);
+            $this->load->view('cbt/cetak/kartu');
+            $this->load->view('_templates/dashboard/_footer');
+        } else {
+            $data['guru'] = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('cbt/cetak/kartu');
+            $this->load->view('members/guru/templates/footer');
         }
-        $data['guru'] = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
-        $this->load->view('members/guru/templates/header', $data);
-        $this->load->view('cbt/cetak/kartu');
-        $this->load->view('members/guru/templates/footer');
     }
     function uploadFile($logo)
     {
         if (isset($_FILES['logo']['name'])) {
+            $config['upload_path'] = './uploads/settings/';
+            $config['allowed_types'] = 'gif|jpg|png|jpeg|JPEG|JPG|PNG|GIF';
+            $config['overwrite'] = true;
+            $config['file_name'] = $logo;
+            $this->upload->initialize($config);
+            if (!$this->upload->do_upload('logo')) {
+            }
+            $result = $this->upload->data();
+            $data['src'] = base_url() . 'uploads/settings/' . $result['file_name'];
+            $data['filename'] = pathinfo($result['file_name'], PATHINFO_FILENAME);
+            $data['status'] = true;
+            $data['type'] = $_FILES['logo']['type'];
+            $data['size'] = $_FILES['logo']['size'];
+        } else {
+            $data['src'] = '';
         }
-        $data['src'] = '';
         $this->output_json($data);
     }
     function deleteFile()
@@ -91,8 +118,9 @@ class Cbtcetak extends CI_Controller
         $src = $this->input->post('src');
         $file_name = str_replace(base_url(), '', $src ?? '');
         if (!unlink($file_name)) {
+        } else {
+            echo 'File Delete Successfully';
         }
-        echo 'File Delete Successfully';
     }
     public function saveKartu()
     {
@@ -117,8 +145,11 @@ class Cbtcetak extends CI_Controller
         $smt = $this->dashboard->getSemesterActive();
         $kelas = $this->input->get('kelas');
         if ($kelas == 'all') {
+            $ikelas = $this->kelas->getIdKelas($tp->id_tp, $smt->id_smt);
+            $kelas = $ikelas;
+        } else {
+            $ikelas = $this->master->getKelasById($kelas);
         }
-        $ikelas = $this->master->getKelasById($kelas);
         $s = !$sesi ? null : $sesi;
         $isesi = null;
         if (!($s != null)) {
@@ -132,8 +163,9 @@ class Cbtcetak extends CI_Controller
         $pengawas = [];
         foreach ($pengawass as $p) {
             if (!(count(explode(',', $p->id_guru ?? '')) > 0)) {
+            } else {
+                $pengawas = $this->master->getGuruByArrId(explode(',', $p->id_guru ?? ''));
             }
-            $pengawas = $this->master->getGuruByArrId(explode(',', $p->id_guru ?? ''));
         }
         $data['siswa'] = [];
         $siswas = $this->cbt->getRuangSiswaByKelas($tp->id_tp, $smt->id_smt, $kelas, $s);
@@ -157,9 +189,11 @@ class Cbtcetak extends CI_Controller
         $s = $sesi == 'null' ? null : $sesi;
         $isesi = null;
         if (!($s != null)) {
+            $ijadwal = null;
+        } else {
+            $isesi = $this->cbt->getSesiById($s);
+            $ijadwal = null;
         }
-        $isesi = $this->cbt->getSesiById($s);
-        $ijadwal = null;
         if (!($jadwal != null && $jadwal != 'null')) {
         }
         $ijadwal = $this->cbt->getJadwalById($jadwal, $s);
@@ -205,11 +239,15 @@ class Cbtcetak extends CI_Controller
         $data['sesi'] = $this->dropdown->getAllSesi();
         $data['kop'] = $this->cbt->getSettingKopAbsensi();
         if ($this->ion_auth->is_admin()) {
+            $this->load->view('_templates/dashboard/_header', $data);
+            $this->load->view('cbt/cetak/absen');
+            $this->load->view('_templates/dashboard/_footer');
+        } else {
+            $data['guru'] = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('cbt/cetak/absen');
+            $this->load->view('members/guru/templates/footer');
         }
-        $data['guru'] = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
-        $this->load->view('members/guru/templates/header', $data);
-        $this->load->view('cbt/cetak/absen');
-        $this->load->view('members/guru/templates/footer');
     }
     public function beritaAcara()
     {
@@ -231,11 +269,15 @@ class Cbtcetak extends CI_Controller
         $data['sesi'] = $this->dropdown->getAllSesi();
         $data['kop'] = $this->cbt->getSettingKopBeritaAcara();
         if ($this->ion_auth->is_admin()) {
+            $this->load->view('_templates/dashboard/_header', $data);
+            $this->load->view('cbt/cetak/beritaacara');
+            $this->load->view('_templates/dashboard/_footer');
+        } else {
+            $data['guru'] = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('cbt/cetak/beritaacara');
+            $this->load->view('members/guru/templates/footer');
         }
-        $data['guru'] = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
-        $this->load->view('members/guru/templates/header', $data);
-        $this->load->view('cbt/cetak/beritaacara');
-        $this->load->view('members/guru/templates/footer');
     }
     public function saveKopBerita()
     {
@@ -267,8 +309,10 @@ class Cbtcetak extends CI_Controller
         $data['ujian'] = $this->dropdown->getAllJenisUjian();
         $data['mode'] = $mode;
         if ($mode == '1' || $mode == null) {
+            $data['siswa'] = $this->cbt->getAllPesertaByRuang($tp->id_tp, $smt->id_smt);
+        } else {
+            $data['siswa'] = $this->cbt->getAllPesertaByKelas($tp->id_tp, $smt->id_smt);
         }
-        $data['siswa'] = $this->cbt->getAllPesertaByKelas($tp->id_tp, $smt->id_smt);
         if ($this->ion_auth->is_admin()) {
         }
         $data['guru'] = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
@@ -295,11 +339,14 @@ class Cbtcetak extends CI_Controller
         $id_jenis = $this->cbt->getDistinctJenisJadwal($tp->id_tp, $smt->id_smt);
         $ids = [];
         if (!(count($id_jenis) > 0)) {
-        }
-        foreach ($id_jenis as $jenis) {
-            array_push($ids, $jenis->id_jenis);
-        }
-        if (count($ids) > 0) {
+            if (count($ids) > 0) {
+            }
+        } else {
+            foreach ($id_jenis as $jenis) {
+                array_push($ids, $jenis->id_jenis);
+            }
+            if (count($ids) > 0) {
+            }
         }
         $data['jenis'] = ['' => 'belum ada jadwal ujian'];
         $filter_selected = $this->input->get('filter', true);
@@ -324,8 +371,9 @@ class Cbtcetak extends CI_Controller
         $arrLevel = [];
         foreach ($jadwals as $jadwal) {
             if (in_array($jadwal->bank_level, $arrLevel)) {
+            } else {
+                array_push($arrLevel, $jadwal->bank_level);
             }
-            array_push($arrLevel, $jadwal->bank_level);
         }
         $kelas_level = [];
         if (!(count($arrLevel) > 0)) {
@@ -346,8 +394,9 @@ class Cbtcetak extends CI_Controller
                 foreach ($kelas_level as $kl) {
                     foreach ($jadwals as $jadwal) {
                         if (!($jadwal->bank_level == $kl->level_id)) {
+                        } else {
+                            $jadwal_pengawas[$jadwal->tgl_mulai][$id_ruang][$id_sesi][$jadwal->kode] = $jadwal;
                         }
-                        $jadwal_pengawas[$jadwal->tgl_mulai][$id_ruang][$id_sesi][$jadwal->kode] = $jadwal;
                     }
                 }
             }
@@ -368,20 +417,23 @@ class Cbtcetak extends CI_Controller
                         $pw = '';
                         foreach ($sel as $p) {
                             if (!isset($gurus[$p])) {
+                            } else {
+                                $pw .= $gurus[$p];
+                                $jp += 1;
+                                if (!($jp < $jpp)) {
+                                }
+                                $pw .= '<br>';
                             }
-                            $pw .= $gurus[$p];
-                            $jp += 1;
-                            if (!($jp < $jpp)) {
-                            }
-                            $pw .= '<br>';
                         }
                         $siswas = $this->cbt->getSiswaByRuang($tp->id_tp, $smt->id_smt, $ir, $is);
                         $forAdd = json_decode(json_encode(['jml_siswa' => count($siswas), 'tanggal' => $km->tgl_mulai, 'ruang' => $nr, 'sesi' => $ns, 'mapel' => $km->nama_mapel, 'waktu' => $km->jam_ke, 'pengawas' => $pw]));
                         array_push($result, $forAdd);
                         if (isset($perRuang[$forAdd->ruang])) {
+                            array_push($perRuang[$forAdd->ruang], $forAdd);
+                        } else {
+                            $perRuang[$forAdd->ruang] = [];
+                            array_push($perRuang[$forAdd->ruang], $forAdd);
                         }
-                        $perRuang[$forAdd->ruang] = [];
-                        array_push($perRuang[$forAdd->ruang], $forAdd);
                     }
                 }
             }

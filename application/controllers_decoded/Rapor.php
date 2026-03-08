@@ -6,10 +6,12 @@ class Rapor extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
+            }
+            show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         }
-        if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
-        }
-        show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         $this->load->dbforge();
         $this->load->database();
         $this->load->library(['datatables', 'form_validation']);
@@ -22,19 +24,23 @@ class Rapor extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
         $this->load->model('Dashboard_model', 'dashboard');
         $no_update = $this->db->field_exists('nip_kepsek', 'rapor_admin_setting');
         if ($no_update) {
+            $user = $this->ion_auth->user()->row();
+        } else {
+            $field = array('nip_kepsek' => array('type' => 'int', 'constraint' => 1, 'default' => 0), 'nip_walikelas' => array('type' => 'int', 'constraint' => 1, 'default' => 0));
+            $this->dbforge->add_column('rapor_admin_setting', $field);
+            $user = $this->ion_auth->user()->row();
         }
-        $field = array('nip_kepsek' => array('type' => 'int', 'constraint' => 1, 'default' => 0), 'nip_walikelas' => array('type' => 'int', 'constraint' => 1, 'default' => 0));
-        $this->dbforge->add_column('rapor_admin_setting', $field);
-        $user = $this->ion_auth->user()->row();
         $data = ['user' => $user, 'judul' => 'Pengaturan Rapor', 'subjudul' => 'Pengaturan Rapor', 'setting' => $this->dashboard->getSetting()];
         $tp = $this->dashboard->getTahunActive();
         $smt = $this->dashboard->getSemesterActive();
@@ -81,8 +87,9 @@ class Rapor extends CI_Controller
             foreach ($m->kelas_mapel as $kls) {
                 $key_kelas = array_search($kls->kelas, array_column($kelases, 'id_kelas'));
                 if (!($key_kelas !== false)) {
+                } else {
+                    $arrKelas[$m->id_mapel][] = ['id_kelas' => $kls->kelas, 'nama_kelas' => $kelases[$key_kelas]->nama_kelas];
                 }
-                $arrKelas[$m->id_mapel][] = ['id_kelas' => $kls->kelas, 'nama_kelas' => $kelases[$key_kelas]->nama_kelas];
             }
         }
         $data['guru'] = $guru;
@@ -92,17 +99,20 @@ class Rapor extends CI_Controller
         $arrEkstra = [];
         $arrKelasEkstra = [];
         if (!(count($ekstra) > 0)) {
-        }
-        foreach ($ekstra as $m) {
-            $arrEkstra[$m->id_ekstra] = $m->nama_ekstra;
-            foreach ($m->kelas_ekstra as $kls) {
-                $key_kelas = array_search($kls->kelas, array_column($kelases, 'id_kelas'));
-                if (!($key_kelas !== false)) {
+            $data['ekstra'] = $arrEkstra;
+        } else {
+            foreach ($ekstra as $m) {
+                $arrEkstra[$m->id_ekstra] = $m->nama_ekstra;
+                foreach ($m->kelas_ekstra as $kls) {
+                    $key_kelas = array_search($kls->kelas, array_column($kelases, 'id_kelas'));
+                    if (!($key_kelas !== false)) {
+                    } else {
+                        $arrKelasEkstra[$m->id_ekstra][] = ['id_kelas' => $kls->kelas, 'nama_kelas' => $kelases[$key_kelas]->nama_kelas];
+                    }
                 }
-                $arrKelasEkstra[$m->id_ekstra][] = ['id_kelas' => $kls->kelas, 'nama_kelas' => $kelases[$key_kelas]->nama_kelas];
             }
+            $data['ekstra'] = $arrEkstra;
         }
-        $data['ekstra'] = $arrEkstra;
         $data['kelas_ekstra'] = $arrKelasEkstra;
         $this->load->view('members/guru/templates/header', $data);
         $this->load->view('members/guru/rapor/kkm/data');
@@ -115,9 +125,11 @@ class Rapor extends CI_Controller
         $smt = $this->dashboard->getSemesterActive();
         $kkm = '';
         if (!($kelas != null)) {
+            $data['mapel'] = $mapel;
+        } else {
+            $kkm = $this->rapor->getKkm($mapel . $kelas . $tp->id_tp . $smt->id_smt . '1');
+            $data['mapel'] = $mapel;
         }
-        $kkm = $this->rapor->getKkm($mapel . $kelas . $tp->id_tp . $smt->id_smt . '1');
-        $data['mapel'] = $mapel;
         $data['kelas'] = $kelas;
         $data['kkm'] = $kkm;
         $data['tp'] = $tp->id_tp;
@@ -132,9 +144,11 @@ class Rapor extends CI_Controller
         $smt = $this->dashboard->getSemesterActive();
         $kkm = '';
         if (!($kelas != null)) {
+            $data['ekstra'] = $ekstra;
+        } else {
+            $kkm = $this->rapor->getKkm($ekstra . $kelas . $tp->id_tp . $smt->id_smt . '2');
+            $data['ekstra'] = $ekstra;
         }
-        $kkm = $this->rapor->getKkm($ekstra . $kelas . $tp->id_tp . $smt->id_smt . '2');
-        $data['ekstra'] = $ekstra;
         $data['kelas'] = $kelas;
         $data['kkm'] = $kkm;
         $data['tp'] = $tp->id_tp;
@@ -170,17 +184,20 @@ class Rapor extends CI_Controller
         $arrKelas = [];
         $kelases = $this->kelas->getKelasList($tp->id_tp, $smt->id_smt);
         if (!($mapel != null)) {
-        }
-        foreach ($mapel as $m) {
-            $arrMapel[$m->id_mapel] = $m->nama_mapel;
-            foreach ($m->kelas_mapel as $kls) {
-                $key_kelas = array_search($kls->kelas, array_column($kelases, 'id_kelas'));
-                if (!($key_kelas !== false)) {
+            $data['guru'] = $guru;
+        } else {
+            foreach ($mapel as $m) {
+                $arrMapel[$m->id_mapel] = $m->nama_mapel;
+                foreach ($m->kelas_mapel as $kls) {
+                    $key_kelas = array_search($kls->kelas, array_column($kelases, 'id_kelas'));
+                    if (!($key_kelas !== false)) {
+                    } else {
+                        $arrKelas[$m->id_mapel][] = ['id_kelas' => $kls->kelas, 'nama_kelas' => $kelases[$key_kelas]->nama_kelas];
+                    }
                 }
-                $arrKelas[$m->id_mapel][] = ['id_kelas' => $kls->kelas, 'nama_kelas' => $kelases[$key_kelas]->nama_kelas];
             }
+            $data['guru'] = $guru;
         }
-        $data['guru'] = $guru;
         $data['mapel'] = $arrMapel;
         $data['kelas'] = $arrKelas;
         $this->load->view('members/guru/templates/header', $data);
@@ -195,20 +212,25 @@ class Rapor extends CI_Controller
         $kikds = $this->rapor->getKikdMapelKelas($mapel, $kelas, $tp->id_tp, $smt->id_smt);
         $arrKiKd[] = [];
         if (!($kelas != null)) {
-        }
-        $aspek = ['1', '2'];
-        foreach ($aspek as $asp) {
-            $i = 0;
-            if (!($i < 8)) {
+            $data['mapel'] = $mapel;
+        } else {
+            $aspek = ['1', '2'];
+            foreach ($aspek as $asp) {
+                $i = 0;
+                if (!($i < 8)) {
+                } else {
+                    $no = $i + 1;
+                    $key_ki = array_search($mapel . $kelas . $asp . $no, array_column($kikds, 'id_kikd'));
+                    if ($key_ki !== false) {
+                    }
+                    $arrKiKd[$asp][$mapel . $kelas . $asp . $no] = ['materi_kikd' => ''];
+                    $i++;
+                    if (!($i < 8)) {
+                    }
+                }
             }
-            $no = $i + 1;
-            $key_ki = array_search($mapel . $kelas . $asp . $no, array_column($kikds, 'id_kikd'));
-            if ($key_ki !== false) {
-            }
-            $arrKiKd[$asp][$mapel . $kelas . $asp . $no] = ['materi_kikd' => ''];
-            $i++;
+            $data['mapel'] = $mapel;
         }
-        $data['mapel'] = $mapel;
         $data['kelas'] = $kelas;
         $data['kikd'] = $arrKiKd;
         $this->output_json($data);
@@ -258,13 +280,14 @@ class Rapor extends CI_Controller
             foreach ($m->kelas_mapel as $kls) {
                 $kelas_guru = $this->kelas->get_one($kls->kelas);
                 if (!($kelas_guru != null)) {
+                } else {
+                    $levelsMapel[] = $kelas_guru->level_id;
+                    $arrKelasMapel[$m->id_mapel][] = ['id_kelas' => $kelas_guru->id_kelas, 'level' => $kelas_guru->level_id, 'nama_kelas' => $kelas_guru->nama_kelas];
+                    $siswas[$m->id_mapel][$kelas_guru->nama_kelas] = count($this->kelas->getKelasSiswa($kelas_guru->id_kelas, $tp->id_tp, $smt->id_smt));
+                    $harian[$m->id_mapel][$kelas_guru->nama_kelas] = $this->rapor->cekNilaiHarianKelas($m->id_mapel, $kelas_guru->id_kelas, $tp->id_tp, $smt->id_smt);
+                    $pts[$m->id_mapel][$kelas_guru->nama_kelas] = $this->rapor->cekNilaiPtsKelas($m->id_mapel, $kelas_guru->id_kelas, $tp->id_tp, $smt->id_smt);
+                    $pas[$m->id_mapel][$kelas_guru->nama_kelas] = $this->rapor->cekNilaiAkhirKelas($m->id_mapel, $kelas_guru->id_kelas, $tp->id_tp, $smt->id_smt);
                 }
-                $levelsMapel[] = $kelas_guru->level_id;
-                $arrKelasMapel[$m->id_mapel][] = ['id_kelas' => $kelas_guru->id_kelas, 'level' => $kelas_guru->level_id, 'nama_kelas' => $kelas_guru->nama_kelas];
-                $siswas[$m->id_mapel][$kelas_guru->nama_kelas] = count($this->kelas->getKelasSiswa($kelas_guru->id_kelas, $tp->id_tp, $smt->id_smt));
-                $harian[$m->id_mapel][$kelas_guru->nama_kelas] = $this->rapor->cekNilaiHarianKelas($m->id_mapel, $kelas_guru->id_kelas, $tp->id_tp, $smt->id_smt);
-                $pts[$m->id_mapel][$kelas_guru->nama_kelas] = $this->rapor->cekNilaiPtsKelas($m->id_mapel, $kelas_guru->id_kelas, $tp->id_tp, $smt->id_smt);
-                $pas[$m->id_mapel][$kelas_guru->nama_kelas] = $this->rapor->cekNilaiAkhirKelas($m->id_mapel, $kelas_guru->id_kelas, $tp->id_tp, $smt->id_smt);
             }
         }
         $data['mapel'] = $arrMapel;
@@ -280,19 +303,22 @@ class Rapor extends CI_Controller
         $ektras = [];
         $siswae = [];
         if (!(count($ekstra) > 0)) {
-        }
-        foreach ($ekstra as $m) {
-            $arrEkstra[$m->id_ekstra] = $m->nama_ekstra;
-            foreach ($m->kelas_ekstra as $kls) {
-                $kelas_guru = $this->kelas->get_one($kls->kelas);
-                if (!($kelas_guru != null)) {
+            $data['ekstras'] = $ektras;
+        } else {
+            foreach ($ekstra as $m) {
+                $arrEkstra[$m->id_ekstra] = $m->nama_ekstra;
+                foreach ($m->kelas_ekstra as $kls) {
+                    $kelas_guru = $this->kelas->get_one($kls->kelas);
+                    if (!($kelas_guru != null)) {
+                    } else {
+                        $arrKelasEkstra[$m->id_ekstra][] = ['id_kelas' => $kelas_guru->id_kelas, 'level' => $kelas_guru->level_id, 'nama_kelas' => $kelas_guru->nama_kelas];
+                        $siswae[$m->id_ekstra][$kelas_guru->nama_kelas] = count($this->kelas->getKelasSiswa($kelas_guru->id_kelas, $tp->id_tp, $smt->id_smt));
+                        $ektras[$m->id_ekstra][$kelas_guru->nama_kelas] = $this->rapor->cekNilaiEkstraKelas($m->id_ekstra, $kelas_guru->id_kelas, $tp->id_tp, $smt->id_smt);
+                    }
                 }
-                $arrKelasEkstra[$m->id_ekstra][] = ['id_kelas' => $kelas_guru->id_kelas, 'level' => $kelas_guru->level_id, 'nama_kelas' => $kelas_guru->nama_kelas];
-                $siswae[$m->id_ekstra][$kelas_guru->nama_kelas] = count($this->kelas->getKelasSiswa($kelas_guru->id_kelas, $tp->id_tp, $smt->id_smt));
-                $ektras[$m->id_ekstra][$kelas_guru->nama_kelas] = $this->rapor->cekNilaiEkstraKelas($m->id_ekstra, $kelas_guru->id_kelas, $tp->id_tp, $smt->id_smt);
             }
+            $data['ekstras'] = $ektras;
         }
-        $data['ekstras'] = $ektras;
         $data['siswae'] = $siswae;
         $data['ekstra'] = $arrEkstra;
         $data['kelas_ekstra'] = $arrKelasEkstra;
@@ -330,48 +356,13 @@ class Rapor extends CI_Controller
             $jabatan->ekstra_kelas = $jabatan->ekstra_kelas == null ? [] : unserialize($jabatan->ekstra_kelas);
         }
         if (!($id_mapel != null)) {
-        }
-        $setting = $this->rapor->getRaporSetting($tp->id_tp, $smt->id_smt);
-        if ($setting->kkm_tunggal == '1') {
-            $kkm = $setting;
-            $kkm_ekstra = $setting;
-            $siswas = $this->kelas->getKelasSiswa($guru->wali_kelas, $tp->id_tp, $smt->id_smt);
-            $nilai = [];
-            $arrKiKd[] = [];
-            if (!($guru->wali_kelas != null)) {
-            }
-            $aspek = ['1', '2'];
-            foreach ($aspek as $asp) {
-                $i = 0;
-                if (!($i < 8)) {
-                }
-                $no = $i + 1;
-                $arrKiKd[$asp][$id_mapel . $guru->wali_kelas . $asp . $no] = $this->rapor->getKikdMapel($id_mapel . $guru->wali_kelas . $asp . $no, $tp->id_tp, $smt->id_smt);
-                $i++;
-            }
-            if ($filter == '1') {
-            }
-            $guru_mapel = '';
-            foreach ($jabatan_guru as $jab) {
-                foreach ($jab->ekstra_kelas as $mk) {
-                    if (!($mk['id_ekstra'] == $id_mapel)) {
-                    }
-                    foreach ($mk['kelas_ekstra'] as $km) {
-                        if (!($km['kelas'] == $guru->wali_kelas)) {
-                        }
-                        $guru_mapel = $jab->nama_guru;
-                    }
-                }
-            }
-            $dummyEkstra = ['deskripsi' => '', 'nilai' => '', 'predikat' => ''];
-            $i = 0;
-            if (!($i < count($siswas))) {
-            }
-            $siswa = $siswas[$i];
-            $ne = $this->rapor->getEkstraKelas($id_mapel, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
-            $nilai[$siswa->id_siswa] = $ne == null ? json_decode(json_encode($dummyEkstra)) : $ne;
-            $i++;
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('members/guru/rapor/nilai/nilaiguru');
+            $this->load->view('members/guru/templates/footer');
         } else {
+            $setting = $this->rapor->getRaporSetting($tp->id_tp, $smt->id_smt);
+            if ($setting->kkm_tunggal == '1') {
+            }
             $kkm = $this->rapor->getKkm($id_mapel . $guru->wali_kelas . $tp->id_tp . $smt->id_smt . '1');
             $kkm_ekstra = $this->rapor->getKkm($id_mapel . $guru->wali_kelas . $tp->id_tp . $smt->id_smt . '2');
             $siswas = $this->kelas->getKelasSiswa($guru->wali_kelas, $tp->id_tp, $smt->id_smt);
@@ -383,10 +374,13 @@ class Rapor extends CI_Controller
             foreach ($aspek as $asp) {
                 $i = 0;
                 if (!($i < 8)) {
+                } else {
+                    $no = $i + 1;
+                    $arrKiKd[$asp][$id_mapel . $guru->wali_kelas . $asp . $no] = $this->rapor->getKikdMapel($id_mapel . $guru->wali_kelas . $asp . $no, $tp->id_tp, $smt->id_smt);
+                    $i++;
+                    if (!($i < 8)) {
+                    }
                 }
-                $no = $i + 1;
-                $arrKiKd[$asp][$id_mapel . $guru->wali_kelas . $asp . $no] = $this->rapor->getKikdMapel($id_mapel . $guru->wali_kelas . $asp . $no, $tp->id_tp, $smt->id_smt);
-                $i++;
             }
             if ($filter == '1') {
             }
@@ -394,11 +388,13 @@ class Rapor extends CI_Controller
             foreach ($jabatan_guru as $jab) {
                 foreach ($jab->ekstra_kelas as $mk) {
                     if (!($mk['id_ekstra'] == $id_mapel)) {
-                    }
-                    foreach ($mk['kelas_ekstra'] as $km) {
-                        if (!($km['kelas'] == $guru->wali_kelas)) {
+                    } else {
+                        foreach ($mk['kelas_ekstra'] as $km) {
+                            if (!($km['kelas'] == $guru->wali_kelas)) {
+                            } else {
+                                $guru_mapel = $jab->nama_guru;
+                            }
                         }
-                        $guru_mapel = $jab->nama_guru;
                     }
                 }
             }
@@ -442,47 +438,13 @@ class Rapor extends CI_Controller
             $jabatan->ekstra_kelas = $jabatan->ekstra_kelas == null ? [] : unserialize($jabatan->ekstra_kelas);
         }
         if (!($id_mapel != null)) {
-        }
-        $setting = $this->rapor->getRaporSetting($tp->id_tp, $smt->id_smt);
-        if ($setting->kkm_tunggal == '1') {
-            $kkm = $setting;
-            $siswas = $this->kelas->getKelasSiswa($guru->wali_kelas, $tp->id_tp, $smt->id_smt);
-            $nilai = [];
-            $arrKiKd[] = [];
-            if (!($guru->wali_kelas != null)) {
-            }
-            $aspek = ['1', '2'];
-            foreach ($aspek as $asp) {
-                $i = 0;
-                if (!($i < 8)) {
-                }
-                $no = $i + 1;
-                $arrKiKd[$asp][$id_mapel . $guru->wali_kelas . $asp . $no] = $this->rapor->getKikdMapel($id_mapel . $guru->wali_kelas . $asp . $no, $tp->id_tp, $smt->id_smt);
-                $i++;
-            }
-            if ($filter == '1') {
-            }
-            $guru_mapel = '';
-            foreach ($jabatan_guru as $jab) {
-                foreach ($jab->ekstra_kelas as $mk) {
-                    if (!($mk['id_ekstra'] == $id_mapel)) {
-                    }
-                    foreach ($mk['kelas_ekstra'] as $km) {
-                        if (!($km['kelas'] == $guru->wali_kelas)) {
-                        }
-                        $guru_mapel = $jab->nama_guru;
-                    }
-                }
-            }
-            $dummyEkstra = ['deskripsi' => '', 'nilai' => '', 'predikat' => ''];
-            $i = 0;
-            if (!($i < count($siswas))) {
-            }
-            $siswa = $siswas[$i];
-            $ne = $this->rapor->getEkstraKelas($id_mapel, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
-            $nilai[$siswa->id_siswa] = $ne == null ? json_decode(json_encode($dummyEkstra)) : $ne;
-            $i++;
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('members/guru/rapor/nilai/periksa');
+            $this->load->view('members/guru/templates/footer');
         } else {
+            $setting = $this->rapor->getRaporSetting($tp->id_tp, $smt->id_smt);
+            if ($setting->kkm_tunggal == '1') {
+            }
             $jenis = $filter == '1' ? '1' : '2';
             $kkm = $this->rapor->getKkm($id_mapel . $guru->wali_kelas . $tp->id_tp . $smt->id_smt . $jenis);
             $siswas = $this->kelas->getKelasSiswa($guru->wali_kelas, $tp->id_tp, $smt->id_smt);
@@ -494,10 +456,13 @@ class Rapor extends CI_Controller
             foreach ($aspek as $asp) {
                 $i = 0;
                 if (!($i < 8)) {
+                } else {
+                    $no = $i + 1;
+                    $arrKiKd[$asp][$id_mapel . $guru->wali_kelas . $asp . $no] = $this->rapor->getKikdMapel($id_mapel . $guru->wali_kelas . $asp . $no, $tp->id_tp, $smt->id_smt);
+                    $i++;
+                    if (!($i < 8)) {
+                    }
                 }
-                $no = $i + 1;
-                $arrKiKd[$asp][$id_mapel . $guru->wali_kelas . $asp . $no] = $this->rapor->getKikdMapel($id_mapel . $guru->wali_kelas . $asp . $no, $tp->id_tp, $smt->id_smt);
-                $i++;
             }
             if ($filter == '1') {
             }
@@ -505,11 +470,13 @@ class Rapor extends CI_Controller
             foreach ($jabatan_guru as $jab) {
                 foreach ($jab->ekstra_kelas as $mk) {
                     if (!($mk['id_ekstra'] == $id_mapel)) {
-                    }
-                    foreach ($mk['kelas_ekstra'] as $km) {
-                        if (!($km['kelas'] == $guru->wali_kelas)) {
+                    } else {
+                        foreach ($mk['kelas_ekstra'] as $km) {
+                            if (!($km['kelas'] == $guru->wali_kelas)) {
+                            } else {
+                                $guru_mapel = $jab->nama_guru;
+                            }
                         }
-                        $guru_mapel = $jab->nama_guru;
                     }
                 }
             }
@@ -536,24 +503,71 @@ class Rapor extends CI_Controller
         $kelas = [];
         foreach ($mapels as $m) {
             if (!($m->id_mapel === $id_mapel)) {
-            }
-            $mapel = ['id_mapel' => $m->id_mapel, 'nama_mapel' => $m->nama_mapel];
-            foreach ($m->kelas_mapel as $kls) {
-                if (!($kls->kelas === $id_kelas)) {
+                foreach ($m->kelas_mapel as $kls) {
+                    if (!($kls->kelas === $id_kelas)) {
+                    } else {
+                        $kelas = ['id_kelas' => $kls->kelas, 'nama_kelas' => $this->dropdown->getNamaKelasById($tp->id_tp, $smt->id_smt, $kls->kelas)];
+                    }
                 }
-                $kelas = ['id_kelas' => $kls->kelas, 'nama_kelas' => $this->dropdown->getNamaKelasById($tp->id_tp, $smt->id_smt, $kls->kelas)];
+            } else {
+                $mapel = ['id_mapel' => $m->id_mapel, 'nama_mapel' => $m->nama_mapel];
+                foreach ($m->kelas_mapel as $kls) {
+                    if (!($kls->kelas === $id_kelas)) {
+                    } else {
+                        $kelas = ['id_kelas' => $kls->kelas, 'nama_kelas' => $this->dropdown->getNamaKelasById($tp->id_tp, $smt->id_smt, $kls->kelas)];
+                    }
+                }
             }
         }
         $siswas = $this->kelas->getKelasSiswa($id_kelas, $tp->id_tp, $smt->id_smt);
         $nilai = [];
         $i = 0;
         if (!($i < count($siswas))) {
+            $setting = $this->rapor->getRaporSetting($tp->id_tp, $smt->id_smt);
+            $kkm = null;
+            if (!($setting != null)) {
+            }
+            if ($setting->kkm_tunggal == '1') {
+            }
+            $kkm = $this->rapor->getKkm($id_mapel . $id_kelas . $tp->id_tp . $smt->id_smt . '1');
+            $arrKiKd[] = [];
+            if (!($id_kelas != null)) {
+            }
+            $aspek = ['1', '2'];
+            foreach ($aspek as $asp) {
+                $i = 0;
+                if (!($i < 8)) {
+                } else {
+                    $no = $i + 1;
+                    $r = $this->rapor->getKikdMapel($id_mapel . $id_kelas . $asp . $no, $tp->id_tp, $smt->id_smt);
+                    if (!($r == null)) {
+                    }
+                    $r = $this->rapor->getKikdMapel($id_mapel . $id_kelas . $asp . $no, $tp->id_tp - 1, $smt->id_smt);
+                    $arrKiKd[$asp][$id_mapel . $id_kelas . $asp . $no] = $r;
+                    $i++;
+                    if (!($i < 8)) {
+                    }
+                }
+            }
+            $data = ['user' => $user, 'judul' => 'Nilai Harian Kelas ', 'subjudul' => 'Input Nilai Harian Mapel ', 'setting' => $this->dashboard->getSetting(), 'guru' => $guru, 'mapel' => $mapel, 'kelas' => $kelas, 'siswa' => $siswas, 'nilai' => $nilai, 'kkm' => $kkm];
+            $data['tp'] = $this->dashboard->getTahun();
+            $data['tp_active'] = $tp;
+            $data['smt'] = $this->dashboard->getSemester();
+            $data['smt_active'] = $smt;
+            $data['kikd'] = $arrKiKd;
+            $data['setting_rapor'] = $setting;
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('members/guru/rapor/nilai/harian');
+            $this->load->view('members/guru/templates/footer');
+        } else {
+            $siswa = $siswas[$i];
+            $dummyNilai = ['p1' => '', 'p2' => '', 'p3' => '', 'p4' => '', 'p5' => '', 'p6' => '', 'p7' => '', 'p8' => '', 'p_rata_rata' => '', 'p_predikat' => '=', 'p_deskripsi' => '', 'k1' => '', 'k2' => '', 'k3' => '', 'k4' => '', 'k5' => '', 'k6' => '', 'k7' => '', 'k8' => '', 'k_rata_rata' => '', 'k_predikat' => '', 'k_deskripsi' => ''];
+            $ns = $this->rapor->getNilaiHarianKelas($id_mapel, $id_kelas, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
+            $nilai[$siswa->id_siswa] = $ns == null ? $dummyNilai : $ns;
+            $i++;
+            if (!($i < count($siswas))) {
+            }
         }
-        $siswa = $siswas[$i];
-        $dummyNilai = ['p1' => '', 'p2' => '', 'p3' => '', 'p4' => '', 'p5' => '', 'p6' => '', 'p7' => '', 'p8' => '', 'p_rata_rata' => '', 'p_predikat' => '=', 'p_deskripsi' => '', 'k1' => '', 'k2' => '', 'k3' => '', 'k4' => '', 'k5' => '', 'k6' => '', 'k7' => '', 'k8' => '', 'k_rata_rata' => '', 'k_predikat' => '', 'k_deskripsi' => ''];
-        $ns = $this->rapor->getNilaiHarianKelas($id_mapel, $id_kelas, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
-        $nilai[$siswa->id_siswa] = $ns == null ? $dummyNilai : $ns;
-        $i++;
     }
     public function downloadNilaiHarian($id_mapel, $id_kelas)
     {
@@ -585,16 +599,23 @@ class Rapor extends CI_Controller
         $kikds = $this->rapor->getKikdMapelKelas($id_mapel, $id_kelas, $tp->id_tp, $smt->id_smt);
         foreach ($kikds as $ki) {
             if ($ki->aspek == 1) {
+                $nn = substr($ki->id_kikd, -1);
+                $ki->nop = $nn;
+                $ki->kodep = 'P' . $nn;
+                $ki->p = $ki->materi_kikd;
+            } else {
+                $nn = substr($ki->id_kikd, -1);
+                $ki->nok = $nn;
+                $ki->kodek = 'K' . $nn;
+                $ki->k = $ki->materi_kikd;
             }
-            $nn = substr($ki->id_kikd, -1);
-            $ki->nok = $nn;
-            $ki->kodek = 'K' . $nn;
-            $ki->k = $ki->materi_kikd;
         }
         if (!(count($kikds) == 0)) {
+            $this->output_json(['siswa' => $siswas, 'kikd' => $kikds]);
+        } else {
+            $kikds[] = ['nok' => 1, 'kodek' => 'K1', 'k' => 'Praktik/Portofolio/Proyek yang dinilai (lihat tabel KATA KERJA sebelah kanan)', 'nop' => 1, 'kodep' => 'P1', 'p' => 'Materi yang dinilai (lihat tabel KATA KERJA sebelah kanan)'];
+            $this->output_json(['siswa' => $siswas, 'kikd' => $kikds]);
         }
-        $kikds[] = ['nok' => 1, 'kodek' => 'K1', 'k' => 'Praktik/Portofolio/Proyek yang dinilai (lihat tabel KATA KERJA sebelah kanan)', 'nop' => 1, 'kodep' => 'P1', 'p' => 'Materi yang dinilai (lihat tabel KATA KERJA sebelah kanan)'];
-        $this->output_json(['siswa' => $siswas, 'kikd' => $kikds]);
     }
     public function uploadNilaiHarian()
     {
@@ -629,18 +650,21 @@ class Rapor extends CI_Controller
         foreach ($datas as $data) {
             $update = $this->db->replace('rapor_nilai_harian', $data);
             if (!$update) {
+            } else {
+                $updated++;
             }
-            $updated++;
         }
         foreach ($kikdp as $kip) {
             if (!($kip != null)) {
+            } else {
+                $this->db->replace('rapor_kikd', $kip);
             }
-            $this->db->replace('rapor_kikd', $kip);
         }
         foreach ($kikdk as $kik) {
             if (!($kik != null)) {
+            } else {
+                $this->db->replace('rapor_kikd', $kik);
             }
-            $this->db->replace('rapor_kikd', $kik);
         }
         $this->db->trans_complete();
         $this->output_json($updated);
@@ -653,8 +677,9 @@ class Rapor extends CI_Controller
         foreach ((array) $posts as $data) {
             $update = $this->db->replace('rapor_nilai_harian', $data);
             if (!$update) {
+            } else {
+                $updated++;
             }
-            $updated++;
         }
         $this->db->trans_complete();
         $data['updated'] = $updated;
@@ -673,24 +698,51 @@ class Rapor extends CI_Controller
         $kelas = [];
         foreach ($mapels as $m) {
             if (!($m->id_mapel === $id_mapel)) {
-            }
-            $mapel = ['id_mapel' => $m->id_mapel, 'nama_mapel' => $m->nama_mapel];
-            foreach ($m->kelas_mapel as $kls) {
-                if (!($kls->kelas === $id_kelas)) {
+                foreach ($m->kelas_mapel as $kls) {
+                    if (!($kls->kelas === $id_kelas)) {
+                    } else {
+                        $kelas = ['id_kelas' => $kls->kelas, 'nama_kelas' => $this->dropdown->getNamaKelasById($tp->id_tp, $smt->id_smt, $kls->kelas)];
+                    }
                 }
-                $kelas = ['id_kelas' => $kls->kelas, 'nama_kelas' => $this->dropdown->getNamaKelasById($tp->id_tp, $smt->id_smt, $kls->kelas)];
+            } else {
+                $mapel = ['id_mapel' => $m->id_mapel, 'nama_mapel' => $m->nama_mapel];
+                foreach ($m->kelas_mapel as $kls) {
+                    if (!($kls->kelas === $id_kelas)) {
+                    } else {
+                        $kelas = ['id_kelas' => $kls->kelas, 'nama_kelas' => $this->dropdown->getNamaKelasById($tp->id_tp, $smt->id_smt, $kls->kelas)];
+                    }
+                }
             }
         }
         $siswas = $this->kelas->getKelasSiswa($id_kelas, $tp->id_tp, $smt->id_smt);
         $nilai = [];
         $i = 0;
         if (!($i < count($siswas))) {
+            $setting = $this->rapor->getRaporSetting($tp->id_tp, $smt->id_smt);
+            $kkm = null;
+            if (!($setting != null)) {
+            }
+            if ($setting->kkm_tunggal == '1') {
+            }
+            $kkm = $this->rapor->getKkm($id_mapel . $id_kelas . $tp->id_tp . $smt->id_smt . '1');
+            $data = ['user' => $user, 'judul' => 'Nilai PTS Kelas ', 'subjudul' => 'Input Nilai PTS Mapel ', 'setting' => $this->dashboard->getSetting(), 'guru' => $guru, 'mapel' => $mapel, 'kelas' => $kelas, 'siswa' => $siswas, 'nilai' => $nilai, 'kkm' => $kkm];
+            $data['tp'] = $this->dashboard->getTahun();
+            $data['tp_active'] = $tp;
+            $data['smt'] = $this->dashboard->getSemester();
+            $data['smt_active'] = $smt;
+            $data['setting_rapor'] = $setting;
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('members/guru/rapor/nilai/pts');
+            $this->load->view('members/guru/templates/footer');
+        } else {
+            $siswa = $siswas[$i];
+            $dummyNilai = ['p1' => '', 'p2' => '', 'p3' => '', 'p4' => '', 'p5' => '', 'p6' => '', 'p7' => '', 'p8' => '', 'p_rata_rata' => '', 'p_predikat' => '=', 'p_deskripsi' => '', 'k1' => '', 'k2' => '', 'k3' => '', 'k4' => '', 'k5' => '', 'k6' => '', 'k7' => '', 'k8' => '', 'k_rata_rata' => '', 'k_predikat' => '', 'k_deskripsi' => ''];
+            $ns = $this->rapor->getNilaiPtsKelas($id_mapel, $id_kelas, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
+            $nilai[$siswa->id_siswa] = $ns == null ? $dummyNilai : $ns;
+            $i++;
+            if (!($i < count($siswas))) {
+            }
         }
-        $siswa = $siswas[$i];
-        $dummyNilai = ['p1' => '', 'p2' => '', 'p3' => '', 'p4' => '', 'p5' => '', 'p6' => '', 'p7' => '', 'p8' => '', 'p_rata_rata' => '', 'p_predikat' => '=', 'p_deskripsi' => '', 'k1' => '', 'k2' => '', 'k3' => '', 'k4' => '', 'k5' => '', 'k6' => '', 'k7' => '', 'k8' => '', 'k_rata_rata' => '', 'k_predikat' => '', 'k_deskripsi' => ''];
-        $ns = $this->rapor->getNilaiPtsKelas($id_mapel, $id_kelas, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
-        $nilai[$siswa->id_siswa] = $ns == null ? $dummyNilai : $ns;
-        $i++;
     }
     public function downloadTemplatePts($id_mapel, $id_kelas)
     {
@@ -732,8 +784,9 @@ class Rapor extends CI_Controller
         foreach ($datas as $data) {
             $update = $this->db->replace('rapor_nilai_pts', $data);
             if (!$update) {
+            } else {
+                $updated++;
             }
-            $updated++;
         }
         $this->output_json($updated);
     }
@@ -745,8 +798,9 @@ class Rapor extends CI_Controller
         foreach ($inputs as $data) {
             $update = $this->db->replace('rapor_nilai_pts', $data);
             if (!$update) {
+            } else {
+                $updated++;
             }
-            $updated++;
         }
         $this->db->trans_complete();
         echo json_encode($updated);
@@ -764,24 +818,50 @@ class Rapor extends CI_Controller
         $kelas = [];
         foreach ($mapels as $m) {
             if (!($m->id_mapel === $id_mapel)) {
-            }
-            $mapel = ['id_mapel' => $m->id_mapel, 'nama_mapel' => $m->nama_mapel];
-            foreach ($m->kelas_mapel as $kls) {
-                if (!($kls->kelas === $id_kelas)) {
+                foreach ($m->kelas_mapel as $kls) {
+                    if (!($kls->kelas === $id_kelas)) {
+                    } else {
+                        $kelas = ['id_kelas' => $kls->kelas, 'nama_kelas' => $this->dropdown->getNamaKelasById($tp->id_tp, $smt->id_smt, $kls->kelas)];
+                    }
                 }
-                $kelas = ['id_kelas' => $kls->kelas, 'nama_kelas' => $this->dropdown->getNamaKelasById($tp->id_tp, $smt->id_smt, $kls->kelas)];
+            } else {
+                $mapel = ['id_mapel' => $m->id_mapel, 'nama_mapel' => $m->nama_mapel];
+                foreach ($m->kelas_mapel as $kls) {
+                    if (!($kls->kelas === $id_kelas)) {
+                    } else {
+                        $kelas = ['id_kelas' => $kls->kelas, 'nama_kelas' => $this->dropdown->getNamaKelasById($tp->id_tp, $smt->id_smt, $kls->kelas)];
+                    }
+                }
             }
         }
         $siswas = $this->kelas->getKelasSiswa($id_kelas, $tp->id_tp, $smt->id_smt);
         $nilai = [];
         $i = 0;
         if (!($i < count($siswas))) {
+            $setting = $this->rapor->getRaporSetting($tp->id_tp, $smt->id_smt);
+            $kkm = null;
+            if (!($setting != null)) {
+            }
+            if ($setting->kkm_tunggal == '1') {
+            }
+            $kkm = $this->rapor->getKkm($id_mapel . $id_kelas . $tp->id_tp . $smt->id_smt . '1');
+            $data = ['user' => $user, 'judul' => 'Nilai Akhir Kelas ', 'subjudul' => 'Input Nilai Akhir Mapel ', 'setting' => $this->dashboard->getSetting(), 'guru' => $guru, 'mapel' => $mapel, 'kelas' => $kelas, 'siswa' => $siswas, 'nilai' => $nilai, 'kkm' => $kkm, 'setting_rapor' => $setting];
+            $data['tp'] = $this->dashboard->getTahun();
+            $data['tp_active'] = $tp;
+            $data['smt'] = $this->dashboard->getSemester();
+            $data['smt_active'] = $smt;
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('members/guru/rapor/nilai/pas');
+            $this->load->view('members/guru/templates/footer');
+        } else {
+            $siswa = $siswas[$i];
+            $dummyNilai = ['nhar' => '', 'npts' => '', 'npas' => ''];
+            $ns = $this->rapor->getNilaiAkhirKelas($id_mapel, $id_kelas, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
+            $nilai[$siswa->id_siswa] = $ns == null ? $dummyNilai : $ns;
+            $i++;
+            if (!($i < count($siswas))) {
+            }
         }
-        $siswa = $siswas[$i];
-        $dummyNilai = ['nhar' => '', 'npts' => '', 'npas' => ''];
-        $ns = $this->rapor->getNilaiAkhirKelas($id_mapel, $id_kelas, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
-        $nilai[$siswa->id_siswa] = $ns == null ? $dummyNilai : $ns;
-        $i++;
     }
     public function downloadTemplatePas($id_mapel, $id_kelas)
     {
@@ -821,8 +901,9 @@ class Rapor extends CI_Controller
         foreach ($datas as $data) {
             $update = $this->db->replace('rapor_nilai_akhir', $data);
             if (!$update) {
+            } else {
+                $updated++;
             }
-            $updated++;
         }
         $this->output_json($updated);
     }
@@ -834,8 +915,9 @@ class Rapor extends CI_Controller
         foreach ($inputs as $data) {
             $update = $this->db->replace('rapor_nilai_akhir', $data);
             if (!$update) {
+            } else {
+                $updated++;
             }
-            $updated++;
         }
         $this->db->trans_complete();
         echo json_encode($updated);
@@ -853,24 +935,47 @@ class Rapor extends CI_Controller
         $kelas = [];
         foreach ($ekstras as $m) {
             if (!($m->id_ekstra === $id_ekstra)) {
-            }
-            $ekstra = ['id_ekstra' => $m->id_ekstra, 'nama_ekstra' => $m->nama_ekstra];
-            foreach ($m->kelas_ekstra as $kls) {
-                if (!($kls->kelas === $id_kelas)) {
+                foreach ($m->kelas_ekstra as $kls) {
+                    if (!($kls->kelas === $id_kelas)) {
+                    } else {
+                        $kelas = ['id_kelas' => $kls->kelas, 'nama_kelas' => $this->dropdown->getNamaKelasById($tp->id_tp, $smt->id_smt, $kls->kelas)];
+                    }
                 }
-                $kelas = ['id_kelas' => $kls->kelas, 'nama_kelas' => $this->dropdown->getNamaKelasById($tp->id_tp, $smt->id_smt, $kls->kelas)];
+            } else {
+                $ekstra = ['id_ekstra' => $m->id_ekstra, 'nama_ekstra' => $m->nama_ekstra];
+                foreach ($m->kelas_ekstra as $kls) {
+                    if (!($kls->kelas === $id_kelas)) {
+                    } else {
+                        $kelas = ['id_kelas' => $kls->kelas, 'nama_kelas' => $this->dropdown->getNamaKelasById($tp->id_tp, $smt->id_smt, $kls->kelas)];
+                    }
+                }
             }
         }
         $siswas = $this->kelas->getKelasSiswa($id_kelas, $tp->id_tp, $smt->id_smt);
         $nilai = [];
         $i = 0;
         if (!($i < count($siswas))) {
+            $setting = $this->rapor->getRaporSetting($tp->id_tp, $smt->id_smt);
+            if ($setting->kkm_tunggal == '1') {
+            }
+            $kkm = $this->rapor->getKkm($id_ekstra . $id_kelas . $tp->id_tp . $smt->id_smt . '2');
+            $data = ['user' => $user, 'judul' => 'Nilai Ekstrakurikuler ', 'subjudul' => 'Input Nilai PTS Ekstra ', 'setting' => $this->dashboard->getSetting(), 'guru' => $guru, 'ekstra' => $ekstra, 'kelas' => $kelas, 'siswa' => $siswas, 'nilai' => $nilai, 'kkm' => $kkm];
+            $data['tp'] = $this->dashboard->getTahun();
+            $data['tp_active'] = $tp;
+            $data['smt'] = $this->dashboard->getSemester();
+            $data['smt_active'] = $smt;
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('members/guru/rapor/nilai/ekstra');
+            $this->load->view('members/guru/templates/footer');
+        } else {
+            $siswa = $siswas[$i];
+            $dummyNilai = ['p1' => '', 'p2' => '', 'p3' => '', 'p4' => '', 'p5' => '', 'p6' => '', 'p7' => '', 'p8' => '', 'p_rata_rata' => '', 'p_predikat' => '=', 'p_deskripsi' => '', 'k1' => '', 'k2' => '', 'k3' => '', 'k4' => '', 'k5' => '', 'k6' => '', 'k7' => '', 'k8' => '', 'k_rata_rata' => '', 'k_predikat' => '', 'k_deskripsi' => ''];
+            $ns = $this->rapor->getNilaiEkstraKelas($id_ekstra, $id_kelas, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
+            $nilai[$siswa->id_siswa] = $ns == null ? $dummyNilai : $ns;
+            $i++;
+            if (!($i < count($siswas))) {
+            }
         }
-        $siswa = $siswas[$i];
-        $dummyNilai = ['p1' => '', 'p2' => '', 'p3' => '', 'p4' => '', 'p5' => '', 'p6' => '', 'p7' => '', 'p8' => '', 'p_rata_rata' => '', 'p_predikat' => '=', 'p_deskripsi' => '', 'k1' => '', 'k2' => '', 'k3' => '', 'k4' => '', 'k5' => '', 'k6' => '', 'k7' => '', 'k8' => '', 'k_rata_rata' => '', 'k_predikat' => '', 'k_deskripsi' => ''];
-        $ns = $this->rapor->getNilaiEkstraKelas($id_ekstra, $id_kelas, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
-        $nilai[$siswa->id_siswa] = $ns == null ? $dummyNilai : $ns;
-        $i++;
     }
     public function downloadTemplateEkstra($id_ekstra, $id_kelas)
     {
@@ -910,8 +1015,9 @@ class Rapor extends CI_Controller
         foreach ($datas as $data) {
             $update = $this->db->replace('rapor_nilai_ekstra', $data);
             if (!$update) {
+            } else {
+                $updated++;
             }
-            $updated++;
         }
         echo json_encode($updated);
     }
@@ -923,8 +1029,9 @@ class Rapor extends CI_Controller
         foreach ($inputs as $data) {
             $update = $this->db->replace('rapor_nilai_ekstra', $data);
             if (!$update) {
+            } else {
+                $updated++;
             }
-            $updated++;
         }
         $this->db->trans_complete();
         echo json_encode($updated);
@@ -1002,15 +1109,17 @@ class Rapor extends CI_Controller
         foreach ($input as $in) {
             $id_siswa = $in[11];
             if (!($id_siswa != 'id')) {
+            } else {
+                $datas[] = ['id_nilai_sikap' => $id_kelas . $id_siswa . $tp->id_tp . $smt->id_smt . '1', 'id_siswa' => $id_siswa, 'id_kelas' => $id_kelas, 'jenis' => 1, 'nilai' => serialize(['predikat' => $in[3], 'sl1' => $in[4], 'sl2' => $in[5], 'sl3' => $in[6], 'mb1' => $in[7], 'mb2' => $in[8], 'mb3' => $in[9]]), 'deskripsi' => $in[10], 'id_tp' => $tp->id_tp, 'id_smt' => $smt->id_smt];
             }
-            $datas[] = ['id_nilai_sikap' => $id_kelas . $id_siswa . $tp->id_tp . $smt->id_smt . '1', 'id_siswa' => $id_siswa, 'id_kelas' => $id_kelas, 'jenis' => 1, 'nilai' => serialize(['predikat' => $in[3], 'sl1' => $in[4], 'sl2' => $in[5], 'sl3' => $in[6], 'mb1' => $in[7], 'mb2' => $in[8], 'mb3' => $in[9]]), 'deskripsi' => $in[10], 'id_tp' => $tp->id_tp, 'id_smt' => $smt->id_smt];
         }
         $updated = 0;
         foreach ($datas as $data) {
             $update = $this->db->replace('rapor_nilai_sikap', $data);
             if (!$update) {
+            } else {
+                $updated++;
             }
-            $updated++;
         }
         echo json_encode($updated);
     }
@@ -1042,15 +1151,17 @@ class Rapor extends CI_Controller
         foreach ($input as $in) {
             $id_siswa = $in[13];
             if (!($id_siswa != 'id')) {
+            } else {
+                $datas[] = ['id_nilai_sikap' => $id_kelas . $id_siswa . $tp->id_tp . $smt->id_smt . '2', 'id_siswa' => $id_siswa, 'id_kelas' => $id_kelas, 'jenis' => 2, 'nilai' => serialize(['predikat' => $in[3], 'a1' => $in[4], 'a2' => $in[5], 'a3' => $in[6], 'b1' => $in[7], 'b2' => $in[8], 'b3' => $in[9], 'c1' => $in[10], 'c2' => $in[11]]), 'deskripsi' => $in[12], 'id_tp' => $tp->id_tp, 'id_smt' => $smt->id_smt];
             }
-            $datas[] = ['id_nilai_sikap' => $id_kelas . $id_siswa . $tp->id_tp . $smt->id_smt . '2', 'id_siswa' => $id_siswa, 'id_kelas' => $id_kelas, 'jenis' => 2, 'nilai' => serialize(['predikat' => $in[3], 'a1' => $in[4], 'a2' => $in[5], 'a3' => $in[6], 'b1' => $in[7], 'b2' => $in[8], 'b3' => $in[9], 'c1' => $in[10], 'c2' => $in[11]]), 'deskripsi' => $in[12], 'id_tp' => $tp->id_tp, 'id_smt' => $smt->id_smt];
         }
         $updated = 0;
         foreach ($datas as $data) {
             $update = $this->db->replace('rapor_nilai_sikap', $data);
             if (!$update) {
+            } else {
+                $updated++;
             }
-            $updated++;
         }
         echo json_encode($updated);
     }
@@ -1104,8 +1215,9 @@ class Rapor extends CI_Controller
         foreach ($datas as $data) {
             $update = $this->db->replace('rapor_prestasi', $data);
             if (!$update) {
+            } else {
+                $updated++;
             }
-            $updated++;
         }
         echo json_encode($updated);
     }
@@ -1152,15 +1264,17 @@ class Rapor extends CI_Controller
         foreach ($input as $in) {
             $id_siswa = $in[10];
             if (!($id_siswa != 'id')) {
+            } else {
+                $datas[] = ['id_catatan_wali' => $id_kelas . $id_siswa . $tp->id_tp . $smt->id_smt, 'id_siswa' => $id_siswa, 'id_kelas' => $id_kelas, 'nilai' => serialize(['op1' => $in[3], 'op2' => $in[4], 'op3' => $in[5], 's' => $in[6], 'i' => $in[7], 'a' => $in[8]]), 'deskripsi' => $in[9], 'id_tp' => $tp->id_tp, 'id_smt' => $smt->id_smt];
             }
-            $datas[] = ['id_catatan_wali' => $id_kelas . $id_siswa . $tp->id_tp . $smt->id_smt, 'id_siswa' => $id_siswa, 'id_kelas' => $id_kelas, 'nilai' => serialize(['op1' => $in[3], 'op2' => $in[4], 'op3' => $in[5], 's' => $in[6], 'i' => $in[7], 'a' => $in[8]]), 'deskripsi' => $in[9], 'id_tp' => $tp->id_tp, 'id_smt' => $smt->id_smt];
         }
         $updated = 0;
         foreach ($datas as $data) {
             $update = $this->db->replace('rapor_catatan_wali', $data);
             if (!$update) {
+            } else {
+                $updated++;
             }
-            $updated++;
         }
         echo json_encode($updated);
     }
@@ -1214,15 +1328,17 @@ class Rapor extends CI_Controller
             $tinggi = $smt->id_smt == 1 ? $in[3] : $in[4];
             $berat = $smt->id_smt == 1 ? $in[5] : $in[6];
             if (!($id_siswa != 'id')) {
+            } else {
+                $datas[] = ['id_fisik' => $id_kelas . $id_siswa . $tp->id_tp . $smt->id_smt, 'id_kelas' => $id_kelas, 'id_siswa' => $id_siswa, 'id_tp' => $tp->id_tp, 'id_smt' => $smt->id_smt, 'tinggi' => $tinggi, 'berat' => $berat, 'kondisi' => serialize(['telinga' => $in[7], 'mata' => $in[8], 'gigi' => $in[9], 'lain' => $in[10]])];
             }
-            $datas[] = ['id_fisik' => $id_kelas . $id_siswa . $tp->id_tp . $smt->id_smt, 'id_kelas' => $id_kelas, 'id_siswa' => $id_siswa, 'id_tp' => $tp->id_tp, 'id_smt' => $smt->id_smt, 'tinggi' => $tinggi, 'berat' => $berat, 'kondisi' => serialize(['telinga' => $in[7], 'mata' => $in[8], 'gigi' => $in[9], 'lain' => $in[10]])];
         }
         $updated = 0;
         foreach ($datas as $data) {
             $update = $this->db->replace('rapor_fisik', $data);
             if (!$update) {
+            } else {
+                $updated++;
             }
-            $updated++;
         }
         echo json_encode($updated);
     }
@@ -1256,8 +1372,9 @@ class Rapor extends CI_Controller
             $data = ['id_naik' => $d->id_siswa . $tp->id_tp . $smt->id_smt, 'id_siswa' => $d->id_siswa, 'id_tp' => $tp->id_tp, 'id_smt' => $smt->id_smt, 'naik' => $d->naik];
             $update = $this->db->replace('rapor_naik', $data);
             if (!$update) {
+            } else {
+                $updated++;
             }
-            $updated++;
         }
         echo json_encode($updated);
     }
@@ -1279,8 +1396,9 @@ class Rapor extends CI_Controller
         $arrk = [];
         foreach ($kategori_mapel as $kk => $km) {
             if (in_array($km, $arrk)) {
+            } else {
+                array_push($arrk, $km->kode_kel_mapel);
             }
-            array_push($arrk, $km->kode_kel_mapel);
         }
         $mapels = $this->master->getAllMapel(empty($arrk) ? null : $arrk, isset($jurusan->mapel_peminatan) ? $jurusan->mapel_peminatan : null);
         $nilaiHarian = [];
@@ -1295,16 +1413,41 @@ class Rapor extends CI_Controller
         }
         $i = 0;
         if (!($i < count($siswas))) {
-        }
-        $siswa = $siswas[$i];
-        $id_siswa = $siswa->id_siswa;
-        $arr_siswas[] = $id_siswa;
-        foreach ($mapels as $mapel) {
-            if (isset($settingRapor) && $settingRapor->kkm_tunggal == '1') {
+            $nilaiPts = $this->rapor->getArrNilaiMapelPtsSiswa($arr_mapels, $arr_siswas, $tp->id_tp, $smt->id_smt);
+            $nilaiHarian = $this->rapor->getArrNilaiMapelHarianSiswa($arr_mapels, $arr_siswas, $tp->id_tp, $smt->id_smt);
+            $data = ['user' => $user, 'judul' => 'Rapor PTS', 'subjudul' => 'Cetak Rapor PTS', 'setting' => $setting];
+            $data['tp'] = $this->dashboard->getTahun();
+            $data['tp_active'] = $tp;
+            $data['smt'] = $this->dashboard->getSemester();
+            $data['smt_active'] = $smt;
+            $data['guru'] = $guru;
+            $data['siswas'] = $siswas;
+            $data['kelas'] = $kelas->nama_kelas;
+            $data['mapels'] = $mapels;
+            $data['kelompoks'] = $kelompoks;
+            $data['nilai_pts'] = $nilaiPts;
+            $data['nilai_harian'] = $nilaiHarian;
+            $data['kkm'] = $kkm;
+            $data['rapor'] = $this->rapor->getRaporSetting($tp->id_tp, $smt->id_smt);
+            $this->db->trans_complete();
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('members/guru/rapor/cetak/pts');
+            $this->load->view('members/guru/templates/footer');
+        } else {
+            $siswa = $siswas[$i];
+            $id_siswa = $siswa->id_siswa;
+            $arr_siswas[] = $id_siswa;
+            foreach ($mapels as $mapel) {
+                if (isset($settingRapor) && $settingRapor->kkm_tunggal == '1') {
+                    $kkm[$mapel->id_mapel] = $settingRapor;
+                } else {
+                    $kkm[$mapel->id_mapel] = $this->rapor->getKkm($mapel->id_mapel . $id_kelas . $tp->id_tp . $smt->id_smt . '1');
+                }
             }
-            $kkm[$mapel->id_mapel] = $this->rapor->getKkm($mapel->id_mapel . $id_kelas . $tp->id_tp . $smt->id_smt . '1');
+            $i++;
+            if (!($i < count($siswas))) {
+            }
         }
-        $i++;
     }
     public function cetakAkhir()
     {
@@ -1323,8 +1466,9 @@ class Rapor extends CI_Controller
         $arrk = [];
         foreach ($kategori_mapel as $kk => $km) {
             if (in_array($km, $arrk)) {
+            } else {
+                array_push($arrk, $km->kode_kel_mapel);
             }
-            array_push($arrk, $km->kode_kel_mapel);
         }
         $mapels = $this->master->getAllMapel(empty($arrk) ? null : $arrk, isset($jurusan->mapel_peminatan) ? $jurusan->mapel_peminatan : null);
         $ekstras = $this->kelas->getKelasEkskul($id_kelas, $tp->id_tp, $smt->id_smt);
@@ -1339,101 +1483,57 @@ class Rapor extends CI_Controller
         $nilaiEkstra = [];
         if ($smt->id_smt === '1') {
             $other = '2';
-            $nilai_sikap = $this->rapor->getNilaiSikapByKelas($id_kelas, $tp->id_tp, $smt->id_smt);
-            $nilai_rapor = $this->rapor->getNilaiRaporByKelas($id_kelas, $tp->id_tp, $smt->id_smt);
-            $prestasis = $this->rapor->getPrestasiByKelas($id_kelas, $tp->id_tp, $smt->id_smt);
-            $catatans = $this->rapor->getCatatanWaliByKelas($id_kelas, $tp->id_tp, $smt->id_smt);
-            foreach ($catatans as $catatan) {
-                $catatan->nilai = unserialize($catatan->nilai);
-            }
-            $i = 0;
-            if (!($i < count($siswas))) {
-            }
-            $siswa = $siswas[$i];
-            $id_siswa = $siswa->id_siswa;
-            $dummySikap = ['predikat' => ''];
-            if (count($nilai_sikap) > 0) {
-            }
-            $sikap[$id_siswa][1] = ['deskripsi' => '', 'predikat' => $dummySikap];
-            $sikap[$id_siswa][2] = ['deskripsi' => '', 'predikat' => $dummySikap];
-            foreach ($mapels as $mapel) {
-                $dummyNilai = ['p_deskripsi' => '', 'k_rata_rata' => '', 'k_deskripsi' => '', 'k_predikat' => '', 'nilai' => '', 'predikat' => ''];
-                $key_mapel = array_search($mapel->id_mapel . $id_kelas . $id_siswa . $tp->id_tp . $smt->id_smt, array_column($nilai_rapor, 'id_nilai_harian'));
-                if (!($key_mapel !== false)) {
-                }
-                $nr = $nilai_rapor[$key_mapel];
-                $nilai[$id_siswa][$mapel->id_mapel] = $nr;
-            }
-            $dummyDesks = ['ranking' => '', 'rank_deskripsi' => '', 'p1' => '', 'p1_desk' => '', 'p2' => '', 'p2_desk' => '', 'p3' => '', 'p3_desk' => ''];
-            $dummyAbsen = ['s' => ' - ', 'i' => ' - ', 'a' => ' - ', 'saran' => ''];
-            $desks[$id_siswa] = isset($prestasis[$id_siswa]) ? $prestasis[$id_siswa] : $dummyDesks;
-            $absensi[$id_siswa] = isset($catatans[$id_siswa]) ? $catatans[$id_siswa] : ['nilai' => $dummyAbsen];
-            $dummyFisik = ['kondisi' => ['telinga' => '', 'mata' => '', 'gigi' => '', 'lain' => ''], 'smt' . $smt->id_smt => ['tinggi' => '', 'berat' => '', 'tp' => $tp->id_tp], 'smt' . $other => ['tinggi' => '', 'berat' => '', 'tp' => $tp->id_tp]];
-            $nf = $this->rapor->getFisikKelas($id_kelas, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
-            $nf2 = $this->rapor->getFisikKelas($id_kelas, $siswa->id_siswa, $tp->id_tp, $other);
-            $fisik[$siswa->id_siswa] = $nf != null ? ['kondisi' => unserialize($nf->kondisi), 'smt' . $nf->id_smt => ['tinggi' => $nf->tinggi, 'berat' => $nf->berat], 'smt' . $other => ['tinggi' => $nf2 != null ? $nf2->tinggi : '', 'berat' => $nf2 != null ? $nf2->berat : '']] : $dummyFisik;
-            foreach ($ekstras as $ext) {
-                $dummyEkstra = ['deskripsi' => '', 'nilai' => '', 'predikat' => ''];
-                $arrEkstra = json_decode(json_encode(unserialize($ext->ekstra)));
-                foreach ($arrEkstra as $ar) {
-                    $id_ekstra = $ar->ekstra;
-                    $mapelEkstra[$id_ekstra] = $this->kelas->getEkskulById($id_ekstra);
-                    if (!($id_ekstra != null)) {
-                    }
-                    $ne = $this->rapor->getEkstraKelas($id_ekstra, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
-                    $nilaiEkstra[$id_siswa][$id_ekstra] = $ne == null ? $dummyEkstra : $ne;
-                }
-            }
-            $i++;
         } else {
             $other = '1';
-            $nilai_sikap = $this->rapor->getNilaiSikapByKelas($id_kelas, $tp->id_tp, $smt->id_smt);
-            $nilai_rapor = $this->rapor->getNilaiRaporByKelas($id_kelas, $tp->id_tp, $smt->id_smt);
-            $prestasis = $this->rapor->getPrestasiByKelas($id_kelas, $tp->id_tp, $smt->id_smt);
-            $catatans = $this->rapor->getCatatanWaliByKelas($id_kelas, $tp->id_tp, $smt->id_smt);
-            foreach ($catatans as $catatan) {
-                $catatan->nilai = unserialize($catatan->nilai);
-            }
-            $i = 0;
-            if (!($i < count($siswas))) {
-            }
-            $siswa = $siswas[$i];
-            $id_siswa = $siswa->id_siswa;
-            $dummySikap = ['predikat' => ''];
-            if (count($nilai_sikap) > 0) {
-            }
-            $sikap[$id_siswa][1] = ['deskripsi' => '', 'predikat' => $dummySikap];
-            $sikap[$id_siswa][2] = ['deskripsi' => '', 'predikat' => $dummySikap];
-            foreach ($mapels as $mapel) {
-                $dummyNilai = ['p_deskripsi' => '', 'k_rata_rata' => '', 'k_deskripsi' => '', 'k_predikat' => '', 'nilai' => '', 'predikat' => ''];
-                $key_mapel = array_search($mapel->id_mapel . $id_kelas . $id_siswa . $tp->id_tp . $smt->id_smt, array_column($nilai_rapor, 'id_nilai_harian'));
-                if (!($key_mapel !== false)) {
-                }
+        }
+        $nilai_sikap = $this->rapor->getNilaiSikapByKelas($id_kelas, $tp->id_tp, $smt->id_smt);
+        $nilai_rapor = $this->rapor->getNilaiRaporByKelas($id_kelas, $tp->id_tp, $smt->id_smt);
+        $prestasis = $this->rapor->getPrestasiByKelas($id_kelas, $tp->id_tp, $smt->id_smt);
+        $catatans = $this->rapor->getCatatanWaliByKelas($id_kelas, $tp->id_tp, $smt->id_smt);
+        foreach ($catatans as $catatan) {
+            $catatan->nilai = unserialize($catatan->nilai);
+        }
+        $i = 0;
+        if (!($i < count($siswas))) {
+        }
+        $siswa = $siswas[$i];
+        $id_siswa = $siswa->id_siswa;
+        $dummySikap = ['predikat' => ''];
+        if (count($nilai_sikap) > 0) {
+        }
+        $sikap[$id_siswa][1] = ['deskripsi' => '', 'predikat' => $dummySikap];
+        $sikap[$id_siswa][2] = ['deskripsi' => '', 'predikat' => $dummySikap];
+        foreach ($mapels as $mapel) {
+            $dummyNilai = ['p_deskripsi' => '', 'k_rata_rata' => '', 'k_deskripsi' => '', 'k_predikat' => '', 'nilai' => '', 'predikat' => ''];
+            $key_mapel = array_search($mapel->id_mapel . $id_kelas . $id_siswa . $tp->id_tp . $smt->id_smt, array_column($nilai_rapor, 'id_nilai_harian'));
+            if (!($key_mapel !== false)) {
+            } else {
                 $nr = $nilai_rapor[$key_mapel];
                 $nilai[$id_siswa][$mapel->id_mapel] = $nr;
             }
-            $dummyDesks = ['ranking' => '', 'rank_deskripsi' => '', 'p1' => '', 'p1_desk' => '', 'p2' => '', 'p2_desk' => '', 'p3' => '', 'p3_desk' => ''];
-            $dummyAbsen = ['s' => ' - ', 'i' => ' - ', 'a' => ' - ', 'saran' => ''];
-            $desks[$id_siswa] = isset($prestasis[$id_siswa]) ? $prestasis[$id_siswa] : $dummyDesks;
-            $absensi[$id_siswa] = isset($catatans[$id_siswa]) ? $catatans[$id_siswa] : ['nilai' => $dummyAbsen];
-            $dummyFisik = ['kondisi' => ['telinga' => '', 'mata' => '', 'gigi' => '', 'lain' => ''], 'smt' . $smt->id_smt => ['tinggi' => '', 'berat' => '', 'tp' => $tp->id_tp], 'smt' . $other => ['tinggi' => '', 'berat' => '', 'tp' => $tp->id_tp]];
-            $nf = $this->rapor->getFisikKelas($id_kelas, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
-            $nf2 = $this->rapor->getFisikKelas($id_kelas, $siswa->id_siswa, $tp->id_tp, $other);
-            $fisik[$siswa->id_siswa] = $nf != null ? ['kondisi' => unserialize($nf->kondisi), 'smt' . $nf->id_smt => ['tinggi' => $nf->tinggi, 'berat' => $nf->berat], 'smt' . $other => ['tinggi' => $nf2 != null ? $nf2->tinggi : '', 'berat' => $nf2 != null ? $nf2->berat : '']] : $dummyFisik;
-            foreach ($ekstras as $ext) {
-                $dummyEkstra = ['deskripsi' => '', 'nilai' => '', 'predikat' => ''];
-                $arrEkstra = json_decode(json_encode(unserialize($ext->ekstra)));
-                foreach ($arrEkstra as $ar) {
-                    $id_ekstra = $ar->ekstra;
-                    $mapelEkstra[$id_ekstra] = $this->kelas->getEkskulById($id_ekstra);
-                    if (!($id_ekstra != null)) {
-                    }
+        }
+        $dummyDesks = ['ranking' => '', 'rank_deskripsi' => '', 'p1' => '', 'p1_desk' => '', 'p2' => '', 'p2_desk' => '', 'p3' => '', 'p3_desk' => ''];
+        $dummyAbsen = ['s' => ' - ', 'i' => ' - ', 'a' => ' - ', 'saran' => ''];
+        $desks[$id_siswa] = isset($prestasis[$id_siswa]) ? $prestasis[$id_siswa] : $dummyDesks;
+        $absensi[$id_siswa] = isset($catatans[$id_siswa]) ? $catatans[$id_siswa] : ['nilai' => $dummyAbsen];
+        $dummyFisik = ['kondisi' => ['telinga' => '', 'mata' => '', 'gigi' => '', 'lain' => ''], 'smt' . $smt->id_smt => ['tinggi' => '', 'berat' => '', 'tp' => $tp->id_tp], 'smt' . $other => ['tinggi' => '', 'berat' => '', 'tp' => $tp->id_tp]];
+        $nf = $this->rapor->getFisikKelas($id_kelas, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
+        $nf2 = $this->rapor->getFisikKelas($id_kelas, $siswa->id_siswa, $tp->id_tp, $other);
+        $fisik[$siswa->id_siswa] = $nf != null ? ['kondisi' => unserialize($nf->kondisi), 'smt' . $nf->id_smt => ['tinggi' => $nf->tinggi, 'berat' => $nf->berat], 'smt' . $other => ['tinggi' => $nf2 != null ? $nf2->tinggi : '', 'berat' => $nf2 != null ? $nf2->berat : '']] : $dummyFisik;
+        foreach ($ekstras as $ext) {
+            $dummyEkstra = ['deskripsi' => '', 'nilai' => '', 'predikat' => ''];
+            $arrEkstra = json_decode(json_encode(unserialize($ext->ekstra)));
+            foreach ($arrEkstra as $ar) {
+                $id_ekstra = $ar->ekstra;
+                $mapelEkstra[$id_ekstra] = $this->kelas->getEkskulById($id_ekstra);
+                if (!($id_ekstra != null)) {
+                } else {
                     $ne = $this->rapor->getEkstraKelas($id_ekstra, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
                     $nilaiEkstra[$id_siswa][$id_ekstra] = $ne == null ? $dummyEkstra : $ne;
                 }
             }
-            $i++;
         }
+        $i++;
     }
     public function cetakLeger()
     {
@@ -1465,39 +1565,67 @@ class Rapor extends CI_Controller
         $nilaiEkstra = [];
         $i = 0;
         if (!($i < count($siswas))) {
-        }
-        $siswa = $siswas[$i];
-        $id_siswa = $siswa->id_siswa;
-        foreach ($mapels as $mapel) {
-            $dummySikap = ['predikat' => ''];
-            $ns1 = $this->rapor->getNilaiSikapKelas($id_kelas, $siswa->id_siswa, $tp->id_tp, $smt->id_smt, '1');
-            $sikap[$siswa->id_siswa][1] = ['deskripsi' => $ns1 == null ? '' : $ns1->deskripsi, 'predikat' => $ns1 == null ? $dummySikap : unserialize($ns1->nilai)];
-            $ns2 = $this->rapor->getNilaiSikapKelas($id_kelas, $siswa->id_siswa, $tp->id_tp, $smt->id_smt, '2');
-            $sikap[$siswa->id_siswa][2] = ['deskripsi' => $ns2 == null ? '' : $ns2->deskripsi, 'predikat' => $ns2 == null ? $dummySikap : unserialize($ns2->nilai)];
-            $dummyNilai = ['k_rata_rata' => '', 'k_predikat' => '', 'p_rata_rata' => '', 'nilai_pas' => '', 'nilai' => '', 'predikat' => ''];
-            $nr = $this->rapor->getNilaiRapor($mapel->id_mapel, $id_kelas, $id_siswa, $tp->id_tp, $smt->id_smt);
-            $nilai[$id_siswa][$mapel->id_mapel] = $nr == null ? $dummyNilai : $nr;
-            $pts = $this->rapor->getNilaiMapelPtsSiswa($mapel->id_mapel, $id_siswa, $tp->id_tp, $smt->id_smt);
-            $nilaiPts[$id_siswa][$mapel->id_mapel] = $pts == null ? 0 : $pts->nilai;
-            $dummyAbsen = ['s' => '', 'i' => '', 'a' => ''];
-            $absensi[$id_siswa] = isset($catatans[$id_siswa]) ? $catatans[$id_siswa]->nilai : $dummyAbsen;
-            if (isset($setting_rapor->kkm_tunggal) && $setting_rapor->kkm_tunggal == '1') {
-            }
-            $kkm[$mapel->id_mapel] = $this->rapor->getKkm($mapel->id_mapel . $id_kelas . $tp->id_tp . $smt->id_smt . '1');
-            foreach ($ekstras as $ext) {
-                $dummyEkstra = ['deskripsi' => '', 'nilai' => '', 'predikat' => ''];
-                $arrEkstra = json_decode(json_encode(unserialize($ext->ekstra)));
-                foreach ($arrEkstra as $ar) {
-                    $id_ekstra = $ar->ekstra;
-                    $mapelEkstra[$id_ekstra] = $this->kelas->getEkskulById($id_ekstra);
-                    if (!($id_ekstra != null)) {
+            $data['tp'] = $this->dashboard->getTahun();
+            $data['tp_active'] = $tp;
+            $data['smt'] = $this->dashboard->getSemester();
+            $data['smt_active'] = $smt;
+            $data['guru'] = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
+            $data['kelases'] = $kelases;
+            $data['mapels'] = $mapels;
+            $data['siswas'] = $siswas;
+            $data['ekstras'] = $ekstras;
+            $data['nilai'] = (array) json_decode(json_encode($nilai));
+            $data['nilai_pts'] = (array) json_decode(json_encode($nilaiPts));
+            $data['sikap'] = $sikap;
+            $data['deskripsi'] = $desks;
+            $data['absensi'] = $absensi;
+            $data['nilai_ekstra'] = $nilaiEkstra;
+            $data['mapel_ekstra'] = $mapelEkstra;
+            $data['kkm'] = $kkm;
+            $data['rapor'] = $setting_rapor;
+            $data['naik'] = $this->rapor->getKenaikanRapor($id_kelas, $tp->id_tp, $smt->id_smt);
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('members/guru/rapor/leger/data');
+            $this->load->view('members/guru/templates/footer');
+        } else {
+            $siswa = $siswas[$i];
+            $id_siswa = $siswa->id_siswa;
+            foreach ($mapels as $mapel) {
+                $dummySikap = ['predikat' => ''];
+                $ns1 = $this->rapor->getNilaiSikapKelas($id_kelas, $siswa->id_siswa, $tp->id_tp, $smt->id_smt, '1');
+                $sikap[$siswa->id_siswa][1] = ['deskripsi' => $ns1 == null ? '' : $ns1->deskripsi, 'predikat' => $ns1 == null ? $dummySikap : unserialize($ns1->nilai)];
+                $ns2 = $this->rapor->getNilaiSikapKelas($id_kelas, $siswa->id_siswa, $tp->id_tp, $smt->id_smt, '2');
+                $sikap[$siswa->id_siswa][2] = ['deskripsi' => $ns2 == null ? '' : $ns2->deskripsi, 'predikat' => $ns2 == null ? $dummySikap : unserialize($ns2->nilai)];
+                $dummyNilai = ['k_rata_rata' => '', 'k_predikat' => '', 'p_rata_rata' => '', 'nilai_pas' => '', 'nilai' => '', 'predikat' => ''];
+                $nr = $this->rapor->getNilaiRapor($mapel->id_mapel, $id_kelas, $id_siswa, $tp->id_tp, $smt->id_smt);
+                $nilai[$id_siswa][$mapel->id_mapel] = $nr == null ? $dummyNilai : $nr;
+                $pts = $this->rapor->getNilaiMapelPtsSiswa($mapel->id_mapel, $id_siswa, $tp->id_tp, $smt->id_smt);
+                $nilaiPts[$id_siswa][$mapel->id_mapel] = $pts == null ? 0 : $pts->nilai;
+                $dummyAbsen = ['s' => '', 'i' => '', 'a' => ''];
+                $absensi[$id_siswa] = isset($catatans[$id_siswa]) ? $catatans[$id_siswa]->nilai : $dummyAbsen;
+                if (isset($setting_rapor->kkm_tunggal) && $setting_rapor->kkm_tunggal == '1') {
+                    $kkm[$mapel->id_mapel] = $setting_rapor;
+                } else {
+                    $kkm[$mapel->id_mapel] = $this->rapor->getKkm($mapel->id_mapel . $id_kelas . $tp->id_tp . $smt->id_smt . '1');
+                }
+                foreach ($ekstras as $ext) {
+                    $dummyEkstra = ['deskripsi' => '', 'nilai' => '', 'predikat' => ''];
+                    $arrEkstra = json_decode(json_encode(unserialize($ext->ekstra)));
+                    foreach ($arrEkstra as $ar) {
+                        $id_ekstra = $ar->ekstra;
+                        $mapelEkstra[$id_ekstra] = $this->kelas->getEkskulById($id_ekstra);
+                        if (!($id_ekstra != null)) {
+                        } else {
+                            $ne = $this->rapor->getEkstraKelas($id_ekstra, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
+                            $nilaiEkstra[$id_siswa][$id_ekstra] = $ne == null ? json_decode(json_encode($dummyEkstra)) : $ne;
+                        }
                     }
-                    $ne = $this->rapor->getEkstraKelas($id_ekstra, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
-                    $nilaiEkstra[$id_siswa][$id_ekstra] = $ne == null ? json_decode(json_encode($dummyEkstra)) : $ne;
                 }
             }
+            $i++;
+            if (!($i < count($siswas))) {
+            }
         }
-        $i++;
     }
     public function downloadLeger()
     {
@@ -1546,8 +1674,10 @@ class Rapor extends CI_Controller
             $dummyAbsen = ['s' => '', 'i' => '', 'a' => ''];
             $absensi[$id_siswa] = isset($catatans[$id_siswa]) ? $catatans[$id_siswa]->nilai : ['nilai' => $dummyAbsen];
             if ($setting_rapor->kkm_tunggal == '1') {
+                $kkm[$mapel->id_mapel] = $setting_rapor;
+            } else {
+                $kkm[$mapel->id_mapel] = $this->rapor->getKkm($mapel->id_mapel . $id_kelas . $tp->id_tp . $smt->id_smt . '1');
             }
-            $kkm[$mapel->id_mapel] = $this->rapor->getKkm($mapel->id_mapel . $id_kelas . $tp->id_tp . $smt->id_smt . '1');
             foreach ($ekstras as $ext) {
                 $dummyEkstra = ['deskripsi' => '', 'nilai' => '', 'predikat' => ''];
                 $arrEkstra = json_decode(json_encode(unserialize($ext->ekstra)));
@@ -1555,9 +1685,10 @@ class Rapor extends CI_Controller
                     $id_ekstra = $ar->ekstra;
                     $mapelEkstra[$id_ekstra] = $this->kelas->getEkskulById($id_ekstra);
                     if (!($id_ekstra != null)) {
+                    } else {
+                        $ne = $this->rapor->getEkstraKelas($id_ekstra, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
+                        $nilaiEkstra[$id_siswa][$id_ekstra] = $ne == null ? json_decode(json_encode($dummyEkstra)) : $ne;
                     }
-                    $ne = $this->rapor->getEkstraKelas($id_ekstra, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
-                    $nilaiEkstra[$id_siswa][$id_ekstra] = $ne == null ? json_decode(json_encode($dummyEkstra)) : $ne;
                 }
             }
         }
@@ -1593,42 +1724,70 @@ class Rapor extends CI_Controller
         $nilaiEkstra = [];
         $i = 0;
         if (!($i < count($siswas))) {
-        }
-        $siswa = $siswas[$i];
-        $id_siswa = $siswa->id_siswa;
-        foreach ($mapels as $mapel) {
-            $dummySikap = ['predikat' => ''];
-            $ns1 = $this->rapor->getNilaiSikapKelas($id_kelas, $siswa->id_siswa, $tp->id_tp, $smt->id_smt, '1');
-            $sikap[$siswa->id_siswa][1] = ['deskripsi' => $ns1 == null ? '' : $ns1->deskripsi, 'predikat' => $ns1 == null ? $dummySikap : unserialize($ns1->nilai)];
-            $ns2 = $this->rapor->getNilaiSikapKelas($id_kelas, $siswa->id_siswa, $tp->id_tp, $smt->id_smt, '2');
-            $sikap[$siswa->id_siswa][2] = ['deskripsi' => $ns2 == null ? '' : $ns2->deskripsi, 'predikat' => $ns2 == null ? $dummySikap : unserialize($ns2->nilai)];
-            $dummyNilai = ['mapel' => $mapel->nama_mapel, 'k_rata_rata' => '', 'k_predikat' => '', 'p_rata_rata' => '', 'nilai_pas' => '', 'nilai' => '', 'predikat' => ''];
-            $nr = $this->rapor->getNilaiRapor($mapel->id_mapel, $id_kelas, $id_siswa, $tp->id_tp, $smt->id_smt);
-            $nr['mapel'] = $mapel->nama_mapel;
-            $nilai[$id_siswa][$mapel->id_mapel] = $nr == null ? $dummyNilai : $nr;
-            $pts = $this->rapor->getNilaiMapelPtsSiswa($mapel->id_mapel, $id_siswa, $tp->id_tp, $smt->id_smt);
-            $nilaiPts[$id_siswa][$mapel->id_mapel] = $pts == null ? 0 : $pts->nilai;
-            $dummyDesks = ['ranking' => '', 'rank_deskripsi' => '', 'p1' => '', 'p1_desk' => '', 'p2' => '', 'p2_desk' => '', 'p3' => '', 'p3_desk' => '', 'saran' => ''];
-            $dummyAbsen = ['s' => '', 'i' => '', 'a' => ''];
-            $nd = $this->rapor->getRaporDeskripsi($id_kelas, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
-            $desks[$id_siswa] = $nd == null ? json_decode(json_encode($dummyDesks)) : $nd;
-            $absensi[$id_siswa] = $nd == null ? $dummyAbsen : unserialize($nd->nilai);
-            if (isset($setting_rapor->kkm_tunggal) && $setting_rapor->kkm_tunggal == '1') {
-            }
-            $kkm[$mapel->id_mapel] = $this->rapor->getKkm($mapel->id_mapel . $id_kelas . $tp->id_tp . $smt->id_smt . '1');
-            foreach ($ekstras as $ext) {
-                $dummyEkstra = ['deskripsi' => '', 'nilai' => '', 'predikat' => ''];
-                $arrEkstra = json_decode(json_encode(unserialize($ext->ekstra)));
-                foreach ($arrEkstra as $ar) {
-                    $id_ekstra = $ar->ekstra;
-                    $mapelEkstra[$id_ekstra] = $this->kelas->getEkskulById($id_ekstra);
-                    if (!($id_ekstra != null)) {
+            $data['tp'] = $this->dashboard->getTahun();
+            $data['tp_active'] = $tp;
+            $data['smt'] = $this->dashboard->getSemester();
+            $data['smt_active'] = $smt;
+            $data['guru'] = $this->dashboard->getDataGuruByUserId($user->id, $tp->id_tp, $smt->id_smt);
+            $data['kelases'] = $kelases;
+            $data['mapels'] = $mapels;
+            $data['siswas'] = $siswas;
+            $data['ekstras'] = $ekstras;
+            $data['nilai'] = $nilai;
+            $data['nilai_pts'] = $nilaiPts;
+            $data['sikap'] = $sikap;
+            $data['deskripsi'] = $desks;
+            $data['absensi'] = $absensi;
+            $data['nilai_ekstra'] = $nilaiEkstra;
+            $data['mapel_ekstra'] = $mapelEkstra;
+            $data['kkm'] = $kkm;
+            $data['rapor'] = $setting_rapor;
+            $data['naik'] = $this->rapor->getKenaikanRapor($id_kelas, $tp->id_tp, $smt->id_smt);
+            $this->load->view('members/guru/templates/header', $data);
+            $this->load->view('members/guru/rapor/dkn/data');
+            $this->load->view('members/guru/templates/footer');
+        } else {
+            $siswa = $siswas[$i];
+            $id_siswa = $siswa->id_siswa;
+            foreach ($mapels as $mapel) {
+                $dummySikap = ['predikat' => ''];
+                $ns1 = $this->rapor->getNilaiSikapKelas($id_kelas, $siswa->id_siswa, $tp->id_tp, $smt->id_smt, '1');
+                $sikap[$siswa->id_siswa][1] = ['deskripsi' => $ns1 == null ? '' : $ns1->deskripsi, 'predikat' => $ns1 == null ? $dummySikap : unserialize($ns1->nilai)];
+                $ns2 = $this->rapor->getNilaiSikapKelas($id_kelas, $siswa->id_siswa, $tp->id_tp, $smt->id_smt, '2');
+                $sikap[$siswa->id_siswa][2] = ['deskripsi' => $ns2 == null ? '' : $ns2->deskripsi, 'predikat' => $ns2 == null ? $dummySikap : unserialize($ns2->nilai)];
+                $dummyNilai = ['mapel' => $mapel->nama_mapel, 'k_rata_rata' => '', 'k_predikat' => '', 'p_rata_rata' => '', 'nilai_pas' => '', 'nilai' => '', 'predikat' => ''];
+                $nr = $this->rapor->getNilaiRapor($mapel->id_mapel, $id_kelas, $id_siswa, $tp->id_tp, $smt->id_smt);
+                $nr['mapel'] = $mapel->nama_mapel;
+                $nilai[$id_siswa][$mapel->id_mapel] = $nr == null ? $dummyNilai : $nr;
+                $pts = $this->rapor->getNilaiMapelPtsSiswa($mapel->id_mapel, $id_siswa, $tp->id_tp, $smt->id_smt);
+                $nilaiPts[$id_siswa][$mapel->id_mapel] = $pts == null ? 0 : $pts->nilai;
+                $dummyDesks = ['ranking' => '', 'rank_deskripsi' => '', 'p1' => '', 'p1_desk' => '', 'p2' => '', 'p2_desk' => '', 'p3' => '', 'p3_desk' => '', 'saran' => ''];
+                $dummyAbsen = ['s' => '', 'i' => '', 'a' => ''];
+                $nd = $this->rapor->getRaporDeskripsi($id_kelas, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
+                $desks[$id_siswa] = $nd == null ? json_decode(json_encode($dummyDesks)) : $nd;
+                $absensi[$id_siswa] = $nd == null ? $dummyAbsen : unserialize($nd->nilai);
+                if (isset($setting_rapor->kkm_tunggal) && $setting_rapor->kkm_tunggal == '1') {
+                    $kkm[$mapel->id_mapel] = $setting_rapor;
+                } else {
+                    $kkm[$mapel->id_mapel] = $this->rapor->getKkm($mapel->id_mapel . $id_kelas . $tp->id_tp . $smt->id_smt . '1');
+                }
+                foreach ($ekstras as $ext) {
+                    $dummyEkstra = ['deskripsi' => '', 'nilai' => '', 'predikat' => ''];
+                    $arrEkstra = json_decode(json_encode(unserialize($ext->ekstra)));
+                    foreach ($arrEkstra as $ar) {
+                        $id_ekstra = $ar->ekstra;
+                        $mapelEkstra[$id_ekstra] = $this->kelas->getEkskulById($id_ekstra);
+                        if (!($id_ekstra != null)) {
+                        } else {
+                            $ne = $this->rapor->getEkstraKelas($id_ekstra, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
+                            $nilaiEkstra[$id_siswa][$id_ekstra] = $ne == null ? json_decode(json_encode($dummyEkstra)) : $ne;
+                        }
                     }
-                    $ne = $this->rapor->getEkstraKelas($id_ekstra, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
-                    $nilaiEkstra[$id_siswa][$id_ekstra] = $ne == null ? json_decode(json_encode($dummyEkstra)) : $ne;
                 }
             }
+            $i++;
+            if (!($i < count($siswas))) {
+            }
         }
-        $i++;
     }
 }

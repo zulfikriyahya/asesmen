@@ -6,19 +6,23 @@ class Cbtjadwal extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
+            }
+            show_error('Hanya Administrator dan guru yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         }
-        if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
-        }
-        show_error('Hanya Administrator dan guru yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         $this->load->library(['datatables', 'form_validation']);
         $this->form_validation->set_error_delimiters('', '');
     }
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -48,14 +52,16 @@ class Cbtjadwal extends CI_Controller
         $data['jmlMapel'] = [];
         $data['level'] = $level;
         if (!$mode) {
+            $data['ada_ujian'] = $this->cbt->getDataJadwalByTgl(date('Y-m-d'));
+        } else {
+            $terpakai = $this->cbt->getJadwalTerpakai();
+            $jadwal_terpakai = [];
+            foreach ($terpakai as $idj => $rows) {
+                $jadwal_terpakai[$idj] = count($rows);
+            }
+            $data['total_siswa'] = $jadwal_terpakai;
+            $data['ada_ujian'] = $this->cbt->getDataJadwalByTgl(date('Y-m-d'));
         }
-        $terpakai = $this->cbt->getJadwalTerpakai();
-        $jadwal_terpakai = [];
-        foreach ($terpakai as $idj => $rows) {
-            $jadwal_terpakai[$idj] = count($rows);
-        }
-        $data['total_siswa'] = $jadwal_terpakai;
-        $data['ada_ujian'] = $this->cbt->getDataJadwalByTgl(date('Y-m-d'));
         $data['levels'] = $this->dropdown->getAllLevel($setting->jenjang);
         $data['kelas'] = $this->cbt->getKelas($tp->id_tp, $smt->id_smt);
         if ($this->ion_auth->is_admin()) {
@@ -102,8 +108,10 @@ class Cbtjadwal extends CI_Controller
         $data['smt'] = $this->dashboard->getSemester();
         $data['smt_active'] = $smt;
         if ($id_jadwal == 0) {
+            $data['jadwal'] = json_decode(json_encode($this->cbt->dummyJadwal()));
+        } else {
+            $data['jadwal'] = $this->cbt->getJadwalById($id_jadwal);
         }
-        $data['jadwal'] = $this->cbt->getJadwalById($id_jadwal);
         $gurus = $this->dropdown->getAllGuru();
         $data['ruangs'] = $this->cbt->getAllRuang();
         $data['sesis'] = $this->dropdown->getAllSesi();
@@ -146,8 +154,9 @@ class Cbtjadwal extends CI_Controller
             $ada4 = $num4 == (int) $bank->tampil_isian;
             $ada5 = $num5 == (int) $bank->tampil_esai;
             if (!($ada1 && $ada2 && $ada3 && $ada4 && $ada5)) {
+            } else {
+                $filtered[$key] = $bank->bank_kode;
             }
-            $filtered[$key] = $bank->bank_kode;
         }
         $this->output_json($filtered);
     }
@@ -159,9 +168,13 @@ class Cbtjadwal extends CI_Controller
         $tp = $this->dashboard->getTahunActive();
         $smt = $this->dashboard->getSemesterActive();
         if ($this->input->post()) {
+            $res = $this->cbt->saveJadwalUjian($tp->id_tp, $smt->id_smt);
+            $data['message'] = $res ? 'Jadwal berhasil disimpan' : 'Jadwal sudah ada';
+            $status = $res;
+        } else {
+            $data['message'] = 'Kesalahan 404';
+            $status = FALSE;
         }
-        $data['message'] = 'Kesalahan 404';
-        $status = FALSE;
         $data['success'] = $status;
         $id = $this->input->post('id_jadwal', true);
         if (!$id) {
@@ -180,11 +193,14 @@ class Cbtjadwal extends CI_Controller
         $data['status'] = false;
         $jadwal = $this->cbt->getJadwalById($id);
         if ($terpakai && $jadwal->rekap == 0) {
+            $data['status'] = false;
+            $data['message'] = 'Hasil Ujian belum direkap';
+        } else {
+            if ($this->master->delete('cbt_jadwal', $id, 'id_jadwal')) {
+            }
+            $data['status'] = false;
+            $data['message'] = 'Jadwal Ujian sedang digunakan';
         }
-        if ($this->master->delete('cbt_jadwal', $id, 'id_jadwal')) {
-        }
-        $data['status'] = false;
-        $data['message'] = 'Jadwal Ujian sedang digunakan';
         $this->output_json($data);
     }
     public function deleteAllJadwal()
@@ -206,12 +222,16 @@ class Cbtjadwal extends CI_Controller
         $count_terpakai = array_count_values($digunakan);
         $counts = array_count_values($backuped);
         if ($count_terpakai[1] > 0 && $counts[0] > 0) {
+            ob_end_clean();
+            $data['status'] = false;
+            $data['message'] = 'Hasil Ujian belum direkap';
+        } else {
+            if ($this->master->delete('cbt_jadwal', $arrId, 'id_jadwal')) {
+            }
+            ob_end_clean();
+            $data['status'] = false;
+            $data['message'] = 'Jadwal Ujian sedang digunakan';
         }
-        if ($this->master->delete('cbt_jadwal', $arrId, 'id_jadwal')) {
-        }
-        ob_end_clean();
-        $data['status'] = false;
-        $data['message'] = 'Jadwal Ujian sedang digunakan';
         $data['digunakan'] = $count_terpakai;
         $data['backup'] = $counts;
         $this->output_json($data);

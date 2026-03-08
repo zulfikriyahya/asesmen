@@ -7,10 +7,12 @@ class Datajurusan extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if ($this->ion_auth->is_admin()) {
+            }
+            show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         }
-        if ($this->ion_auth->is_admin()) {
-        }
-        show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         $this->load->library(['datatables', 'form_validation']);
         $this->load->model('Master_model', 'master');
         $this->load->model('Dashboard_model', 'dashboard');
@@ -20,9 +22,11 @@ class Datajurusan extends CI_Controller
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     public function index()
     {
@@ -55,13 +59,18 @@ class Datajurusan extends CI_Controller
         $mapels = [];
         $check_mapel = $this->input->post('mapel', true);
         if (!$check_mapel) {
+            $insert = ['nama_jurusan' => $this->input->post('nama_jurusan', true), 'kode_jurusan' => $this->input->post('kode_jurusan', true), 'mapel_peminatan' => implode(',', $mapels)];
+            $this->master->create('master_jurusan', $insert, false);
+            $data['status'] = $insert;
+            $this->output_json($data);
+        } else {
+            $row_mapels = count($this->input->post('mapel', true));
+            $i = 0;
+            if (!($i <= $row_mapels)) {
+            }
+            array_push($mapels, $this->input->post('mapel[' . $i . ']', true));
+            $i++;
         }
-        $row_mapels = count($this->input->post('mapel', true));
-        $i = 0;
-        if (!($i <= $row_mapels)) {
-        }
-        array_push($mapels, $this->input->post('mapel[' . $i . ']', true));
-        $i++;
     }
     public function data()
     {
@@ -73,19 +82,29 @@ class Datajurusan extends CI_Controller
         $mode = $this->input->post('mode', true);
         $i = 1;
         if (!($i <= $rows)) {
+            if ($status) {
+            }
+            if (!isset($error)) {
+            }
+            $data['errors'] = $error;
+            $data['status'] = $status;
+            $this->output_json($data);
+        } else {
+            $nama_jurusan = 'nama_jurusan[' . $i . ']';
+            $this->form_validation->set_rules($nama_jurusan, 'Jurusan', 'required');
+            $this->form_validation->set_message('required', '{field} Wajib diisi');
+            if ($this->form_validation->run() === FALSE) {
+            }
+            if ($mode == 'add') {
+            }
+            if (!($mode == 'edit')) {
+            }
+            $update[] = array('id_jurusan' => $this->input->post('id_jurusan[' . $i . ']', true), 'nama_jurusan' => $this->input->post($nama_jurusan, true));
+            $status = TRUE;
+            $i++;
+            if (!($i <= $rows)) {
+            }
         }
-        $nama_jurusan = 'nama_jurusan[' . $i . ']';
-        $this->form_validation->set_rules($nama_jurusan, 'Jurusan', 'required');
-        $this->form_validation->set_message('required', '{field} Wajib diisi');
-        if ($this->form_validation->run() === FALSE) {
-        }
-        if ($mode == 'add') {
-        }
-        if (!($mode == 'edit')) {
-        }
-        $update[] = array('id_jurusan' => $this->input->post('id_jurusan[' . $i . ']', true), 'nama_jurusan' => $this->input->post($nama_jurusan, true));
-        $status = TRUE;
-        $i++;
     }
     public function update()
     {
@@ -96,34 +115,38 @@ class Datajurusan extends CI_Controller
     {
         $chk = $this->input->post('checked', true);
         if (!$chk) {
-        }
-        $messages = [];
-        $tables = [];
-        $tabless = $this->db->list_tables();
-        foreach ($tabless as $table) {
-            $fields = $this->db->field_data($table);
-            foreach ($fields as $field) {
-                if (!($field->name == 'id_jurusan' || $field->name == 'jurusan_id')) {
+            $this->output_json(['status' => false, 'total' => 'Tidak ada data yang dipilih!']);
+        } else {
+            $messages = [];
+            $tables = [];
+            $tabless = $this->db->list_tables();
+            foreach ($tabless as $table) {
+                $fields = $this->db->field_data($table);
+                foreach ($fields as $field) {
+                    if (!($field->name == 'id_jurusan' || $field->name == 'jurusan_id')) {
+                    } else {
+                        array_push($tables, $table);
+                    }
                 }
-                array_push($tables, $table);
             }
-        }
-        foreach ($tables as $table) {
-            if (!($table != 'master_jurusan')) {
+            foreach ($tables as $table) {
+                if (!($table != 'master_jurusan')) {
+                } else {
+                    if ($table == 'master_kelas') {
+                    }
+                    $this->db->where_in('id_jurusan', $chk);
+                    $num = $this->db->count_all_results($table);
+                    if (!($num > 0)) {
+                    }
+                    array_push($messages, $table);
+                }
             }
-            if ($table == 'master_kelas') {
+            if (count($messages) > 0) {
             }
-            $this->db->where_in('id_jurusan', $chk);
-            $num = $this->db->count_all_results($table);
-            if (!($num > 0)) {
+            if (!$this->master->delete('master_jurusan', $chk, 'id_jurusan')) {
             }
-            array_push($messages, $table);
+            $this->output_json(['status' => true, 'total' => count($chk)]);
         }
-        if (count($messages) > 0) {
-        }
-        if (!$this->master->delete('master_jurusan', $chk, 'id_jurusan')) {
-        }
-        $this->output_json(['status' => true, 'total' => count($chk)]);
     }
     public function load_jurusan()
     {
@@ -135,9 +158,11 @@ class Datajurusan extends CI_Controller
         $user = $this->ion_auth->user()->row();
         $data = ['user' => $user, 'judul' => 'Import Jurusan', 'subjudul' => 'Import Jurusan', 'profile' => $this->dashboard->getProfileAdmin($user->id), 'setting' => $this->dashboard->getSetting()];
         if (!($import_data != null)) {
+            $data['tp'] = $this->dashboard->getTahun();
+        } else {
+            $data['import'] = $import_data;
+            $data['tp'] = $this->dashboard->getTahun();
         }
-        $data['import'] = $import_data;
-        $data['tp'] = $this->dashboard->getTahun();
         $data['tp_active'] = $this->dashboard->getTahunActive();
         $data['smt'] = $this->dashboard->getSemester();
         $data['smt_active'] = $this->dashboard->getSemesterActive();

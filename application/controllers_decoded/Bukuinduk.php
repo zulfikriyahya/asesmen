@@ -6,19 +6,23 @@ class Bukuinduk extends CI_Controller
     {
         parent::__construct();
         if (!$this->ion_auth->logged_in()) {
+            redirect('auth');
+        } else {
+            if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
+            }
+            show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         }
-        if (!(!$this->ion_auth->is_admin() && !$this->ion_auth->in_group('guru'))) {
-        }
-        show_error('Hanya Administrator yang diberi hak untuk mengakses halaman ini, <a href="' . base_url('dashboard') . '">Kembali ke menu awal</a>', 403, 'Akses Terlarang');
         $this->load->library(['datatables', 'form_validation']);
         $this->form_validation->set_error_delimiters('', '');
     }
     public function output_json($data, $encode = true)
     {
         if (!$encode) {
+            $this->output->set_content_type('application/json')->set_output($data);
+        } else {
+            $data = json_encode($data);
+            $this->output->set_content_type('application/json')->set_output($data);
         }
-        $data = json_encode($data);
-        $this->output->set_content_type('application/json')->set_output($data);
     }
     function generateTahunMasuk($tp, $level)
     {
@@ -55,15 +59,18 @@ class Bukuinduk extends CI_Controller
         $count_siswa = $this->db->count_all('master_siswa');
         $count_induk = $this->db->count_all('buku_induk');
         if (!($count_siswa > $count_induk)) {
-        }
-        $uids = $this->db->select('id_siswa, uid')->from('master_siswa')->get()->result();
-        foreach ($uids as $uid) {
-            $check = $this->db->select('id_siswa')->from('buku_induk')->where('id_siswa', $uid->id_siswa);
-            if (!($check->get()->num_rows() == 0)) {
+            $siswas = $this->master->getDataInduk();
+        } else {
+            $uids = $this->db->select('id_siswa, uid')->from('master_siswa')->get()->result();
+            foreach ($uids as $uid) {
+                $check = $this->db->select('id_siswa')->from('buku_induk')->where('id_siswa', $uid->id_siswa);
+                if (!($check->get()->num_rows() == 0)) {
+                } else {
+                    $this->db->insert('buku_induk', $uid);
+                }
             }
-            $this->db->insert('buku_induk', $uid);
+            $siswas = $this->master->getDataInduk();
         }
-        $siswas = $this->master->getDataInduk();
         $deskFisik = $this->rapor->getAllDeskripsiFisikKelas();
         $fisik_siswa = $this->rapor->getAllRaporFisik();
         $data_siswa = [];
@@ -77,8 +84,10 @@ class Bukuinduk extends CI_Controller
                 }
             }
             if ($siswa->tahun_masuk != null) {
+                $tahunMasuk = explode('-', $siswa->tahun_masuk)[0];
+            } else {
+                $tahunMasuk = '';
             }
-            $tahunMasuk = '';
             if ($setting->jenjang == '1') {
             }
             $data_tahun = [intval($tahunMasuk) . '/' . (intval($tahunMasuk) + 1), intval($tahunMasuk) + 1 . '/' . (intval($tahunMasuk) + 2), intval($tahunMasuk) + 2 . '/' . (intval($tahunMasuk) + 3)];
@@ -96,10 +105,11 @@ class Bukuinduk extends CI_Controller
                 $kelainan[$dtp][1] = '';
                 $kelainan[$dtp][2] = '';
                 if (!isset($rapor_fisik[$dtp])) {
-                }
-                foreach ($rapor_fisik[$dtp]->fisik as $rf) {
-                    $berat[$dtp][$rf->id_smt] = $rf->berat;
-                    $tinggi[$dtp][$rf->id_smt] = $rf->tinggi;
+                } else {
+                    foreach ($rapor_fisik[$dtp]->fisik as $rf) {
+                        $berat[$dtp][$rf->id_smt] = $rf->berat;
+                        $tinggi[$dtp][$rf->id_smt] = $rf->tinggi;
+                    }
                 }
             }
             $noinduk[$siswa->id_siswa] = ['nis' => $siswa->nis, 'nisn' => $siswa->nisn];
