@@ -39,7 +39,8 @@
             min-height: 100vh;
         }
 
-        * {
+        body,
+        body *:not(i):not([class*="fa"]):not([class*="ion"]):not([class*="bi"]) {
             font-family: 'Lexend', sans-serif !important;
         }
     </style>

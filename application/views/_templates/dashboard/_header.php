@@ -77,7 +77,7 @@
         }
 
         body,
-        * {
+        body *:not(i):not([class*="fa"]):not([class*="ion"]):not([class*="bi"]):not(.pace) {
             font-family: 'Lexend', sans-serif !important;
         }
 
