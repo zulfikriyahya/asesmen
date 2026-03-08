@@ -32,34 +32,36 @@
                         <div class="alert alert-default-info">
                             <ul class="mb-0"><?= $keterangan ?></ul>
                         </div>
-                        <table class="table table-striped table-bordered table-hover mb-5">
-                            <thead class="bg-maroon">
-                                <tr>
-                                    <th width="50" class="text-center align-middle">No.</th>
-                                    <th class="text-center align-middle">Tabel</th>
-                                    <th class="text-center align-middle">Total Data</th>
-                                    <th class="text-center align-middle">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php $no = 1;
-                                foreach ($table as $info) : ?>
+                        <div class="table-responsive-wrapper">
+                            <table class="table table-striped table-bordered table-hover mb-5">
+                                <thead class="bg-maroon">
                                     <tr>
-                                        <td class="text-center align-middle"><?= $no ?></td>
-                                        <td class="align-middle"><?= $info['name'] ?></td>
-                                        <td class="align-middle text-center"><?= $info['size'] ?></td>
-                                        <td class="text-center align-middle">
-                                            <?php $disable = $info['size'] == 0 ? 'disabled' : ''; ?>
-                                            <button class="btn btn-sm btn-warning"
-                                                onclick="hapus('<?= $info['table'] ?>')" <?= $disable ?>>
-                                                <i class="fa fa-trash mr-1"></i>Kosongkan
-                                            </button>
-                                        </td>
+                                        <th width="50" class="text-center align-middle">No.</th>
+                                        <th class="text-center align-middle">Tabel</th>
+                                        <th class="text-center align-middle">Total Data</th>
+                                        <th class="text-center align-middle">Aksi</th>
                                     </tr>
-                                <?php $no++;
-                                endforeach; ?>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <?php $no = 1;
+                                    foreach ($table as $info) : ?>
+                                        <tr>
+                                            <td class="text-center align-middle"><?= $no ?></td>
+                                            <td class="align-middle"><?= $info['name'] ?></td>
+                                            <td class="align-middle text-center"><?= $info['size'] ?></td>
+                                            <td class="text-center align-middle">
+                                                <?php $disable = $info['size'] == 0 ? 'disabled' : ''; ?>
+                                                <button class="btn btn-sm btn-warning"
+                                                    onclick="hapus('<?= $info['table'] ?>')" <?= $disable ?>>
+                                                    <i class="fa fa-trash mr-1"></i>Kosongkan
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    <?php $no++;
+                                    endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
                     <?php endforeach; ?>
                 </div>
             </div>

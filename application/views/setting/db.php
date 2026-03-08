@@ -42,38 +42,40 @@
                     <p class="setting-section-title">Riwayat Backup</p>
 
                     <?= form_open('', array('id' => 'edittp')) ?>
-                    <table id="database" class="table table-striped table-bordered table-hover">
-                        <thead class="bg-maroon">
-                            <tr>
-                                <th width="50" class="text-center align-middle">No.</th>
-                                <th class="text-center align-middle">Database / File</th>
-                                <th class="text-center align-middle">Ukuran</th>
-                                <th class="text-center align-middle">Tanggal Backup</th>
-                                <th class="text-center align-middle">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            usort($list, function ($a, $b) {
-                                return $b['tgl'] <=> $a['tgl'];
-                            });
-                            foreach ($list as $key => $value) : ?>
+                    <div class="table-responsive-wrapper">
+                        <table id="database" class="table table-striped table-bordered table-hover">
+                            <thead class="bg-maroon">
                                 <tr>
-                                    <td class="text-center"><?= ($key + 1) ?></td>
-                                    <td class="text-center"><?= $value['nama'] . '.' . $value['type'] ?></td>
-                                    <td class="text-center"><?= $value['size'] ?></td>
-                                    <td class="text-center"><?= buat_tanggal(date('D, d M Y H:i', $value['tgl'])) ?></td>
-                                    <td class="text-center">
-                                        <a href="<?= base_url('./backups/' . $value['src']) ?>"
-                                            download="<?= $value['src'] ?>"
-                                            class="btn btn-xs btn-warning">Download</a>
-                                        <button onclick="hapus('<?= $value['src'] ?>')"
-                                            class="btn btn-xs btn-danger">Hapus</button>
-                                    </td>
+                                    <th width="50" class="text-center align-middle">No.</th>
+                                    <th class="text-center align-middle">Database / File</th>
+                                    <th class="text-center align-middle">Ukuran</th>
+                                    <th class="text-center align-middle">Tanggal Backup</th>
+                                    <th class="text-center align-middle">Aksi</th>
                                 </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <?php
+                                usort($list, function ($a, $b) {
+                                    return $b['tgl'] <=> $a['tgl'];
+                                });
+                                foreach ($list as $key => $value) : ?>
+                                    <tr>
+                                        <td class="text-center"><?= ($key + 1) ?></td>
+                                        <td class="text-center"><?= $value['nama'] . '.' . $value['type'] ?></td>
+                                        <td class="text-center"><?= $value['size'] ?></td>
+                                        <td class="text-center"><?= buat_tanggal(date('D, d M Y H:i', $value['tgl'])) ?></td>
+                                        <td class="text-center">
+                                            <a href="<?= base_url('./backups/' . $value['src']) ?>"
+                                                download="<?= $value['src'] ?>"
+                                                class="btn btn-xs btn-warning">Download</a>
+                                            <button onclick="hapus('<?= $value['src'] ?>')"
+                                                class="btn btn-xs btn-danger">Hapus</button>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
                     <?= form_close() ?>
                 </div>
             </div>
