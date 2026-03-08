@@ -1,120 +1,131 @@
-<div class="content-wrapper bg-dark pt-4">
+<link rel="stylesheet" href="<?= base_url() ?>assets/app/css/siswa.css">
+
+<div class="content-wrapper pt-4">
     <section class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1><b><?= $judul ?></b></h1>
-                </div>
-            </div>
+            <h1><?= $judul ?></h1>
         </div>
     </section>
 
     <section class="content">
         <div class="container-fluid">
-            <div class="card card-default my-shadow mb-4">
-                <div class="card-header bg-orange">
-                    <div class="card-title"><b><?= $subjudul ?></b></div>
+            <div class="glass-card mb-4">
+                <div class="card-header">
+                    <h6 class="card-title"><?= $subjudul ?></h6>
                     <div class="card-tools">
-                        <button type="button" onclick="reload_ajax()" class="btn btn-sm btn-default">
-                            <i class="fa fa-sync"></i> <span class="d-none d-sm-inline-block ml-1">Reload</span>
+                        <button type="button" onclick="reload_ajax()" class="btn btn-glass btn-sm">
+                            <i class="fa fa-sync mr-1"></i>Reload
                         </button>
                         <button type="button" data-from="add" data-toggle="modal" data-target="#createTahunModal"
-                                class="btn btn-sm bg-primary"><i
-                                    class="fas fa-plus"></i><span class="d-none d-sm-inline-block ml-1">Tambah Tahun Pelajaran</span>
+                            class="btn btn-cyan btn-sm">
+                            <i class="fas fa-plus mr-1"></i>Tambah Tahun Pelajaran
                         </button>
                     </div>
                 </div>
-                <div class="card-body text-dark">
+                <div class="card-body" style="padding:1.5rem">
                     <div class="row">
-                        <div class="col-md-7 mb-4 table-responsive">
-                            <label>Tahun Pelajaran</label>
+                        <!-- Tabel Tahun Pelajaran -->
+                        <div class="col-md-7 mb-4">
+                            <p style="font-family:'Lexend',sans-serif;font-size:0.82rem;font-weight:600;color:#67e8f9;margin-bottom:0.6rem">
+                                Tahun Pelajaran
+                            </p>
                             <?= form_open('', array('id' => 'edittp')) ?>
-                            <table id="tahun" class="table table-sm table-striped table-bordered table-hover">
-                                <thead>
-                                <tr class="bg-maroon">
-                                    <th class="d-none">id</th>
-                                    <th height="50" class="text-center p-0 align-middle">No.</th>
-                                    <th class="text-center p-0 align-middle">Tahun Pelajaran</th>
-                                    <th class="text-center p-0 align-middle p-0">Status</th>
-                                    <th class="text-center p-0 align-middle">Aksi</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <?php foreach ($tp as $key => $value) : ?>
-                                    <tr>
-                                        <td class="d-none">
-                                            <?= $value->id_tp ?>
-                                        </td>
-                                        <td class="text-center">
-                                            <?= ($key + 1) ?>
-                                        </td>
-                                        <td class="text-center align-middle">
-                                            <?= $value->tahun ?>
-                                        </td>
-                                        <td class="text-center align-middle">
-                                            <?php if ($value->active) : ?>
-                                                <span class="text-success"><i class="fa fa-check mr-2"></i>AKTIF</span>
-                                            <?php else : ?>
-                                                <button type="button" data-id="<?= $value->id_tp ?>"
-                                                        class="btn btn-xs btn-primary btn-aktif">AKTIFKAN
-                                                </button>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="btn-group btn-group-sm">
-                                                <button type="button" data-id="<?= $value->id_tp ?>"
-                                                        data-tahun="<?= $value->tahun ?>" data-from="edit"
-                                                        data-toggle="modal" data-target="#createTahunModal"
-                                                        class="btn btn-xs btn-warning btn-edit">Edit
-                                                </button>
-                                                <button type="button" data-id="<?= $value->id_tp ?>"
-                                                        class="btn btn-xs btn-danger btn-hapus">Hapus
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table id="tahun" class="table-glass w-100">
+                                    <thead>
+                                        <tr>
+                                            <th class="d-none">id</th>
+                                            <th style="width:50px">No.</th>
+                                            <th>Tahun Pelajaran</th>
+                                            <th style="width:120px">Status</th>
+                                            <th style="width:120px">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($tp as $key => $value): ?>
+                                            <tr>
+                                                <td class="d-none"><?= $value->id_tp ?></td>
+                                                <td class="text-center"><?= ($key + 1) ?></td>
+                                                <td class="text-center"><?= $value->tahun ?></td>
+                                                <td class="text-center">
+                                                    <?php if ($value->active): ?>
+                                                        <span style="font-family:'Lexend',sans-serif;font-size:0.78rem;color:#6ee7b7">
+                                                            <i class="fa fa-check mr-1"></i>AKTIF
+                                                        </span>
+                                                    <?php else: ?>
+                                                        <button type="button" data-id="<?= $value->id_tp ?>"
+                                                            class="btn btn-cyan btn-sm btn-aktif" style="font-size:0.72rem;padding:0.2rem 0.6rem">
+                                                            AKTIFKAN
+                                                        </button>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div style="display:flex;gap:4px;justify-content:center">
+                                                        <button type="button"
+                                                            data-id="<?= $value->id_tp ?>"
+                                                            data-tahun="<?= $value->tahun ?>"
+                                                            data-from="edit"
+                                                            data-toggle="modal"
+                                                            data-target="#createTahunModal"
+                                                            class="btn btn-warning-glass btn-sm btn-edit"
+                                                            style="font-size:0.72rem;padding:0.2rem 0.6rem">
+                                                            <i class="fa fa-pencil-alt mr-1"></i>Edit
+                                                        </button>
+                                                        <button type="button"
+                                                            data-id="<?= $value->id_tp ?>"
+                                                            class="btn btn-danger-glass btn-sm btn-hapus"
+                                                            style="font-size:0.72rem;padding:0.2rem 0.6rem">
+                                                            <i class="fa fa-trash mr-1"></i>Hapus
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
                             <?= form_close() ?>
                         </div>
-                        <div class="col-md-5">
-                            <label>Semester</label>
+
+                        <!-- Tabel Semester -->
+                        <div class="col-md-5 mb-4">
+                            <p style="font-family:'Lexend',sans-serif;font-size:0.82rem;font-weight:600;color:#67e8f9;margin-bottom:0.6rem">
+                                Semester
+                            </p>
                             <?= form_open('', array('id' => 'editsmt')) ?>
-                            <table id="semester" class="table table-sm table-striped table-bordered table-hover">
-                                <thead>
-                                <tr class="bg-maroon">
-                                    <th class="d-none">id</th>
-                                    <th height="50" class="text-center p-0 align-middle">No.</th>
-                                    <th class="text-center p-0 align-middle">Semester</th>
-                                    <th class="text-center p-0 align-middle p-0">Status</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <?php foreach ($smt as $key => $value) : ?>
-                                    <tr>
-                                        <td class="d-none">
-                                            <?= $value->id_smt ?>
-                                        </td>
-                                        <td class="text-center">
-                                            <?= ($key + 1) ?>
-                                        </td>
-                                        <td class="text-center">
-                                            <?= $value->smt ?>
-                                        </td>
-                                        <td class="text-center">
-                                            <?php if ($value->active) : ?>
-                                                <span class="text-success"><i class="fa fa-check mr-2"></i>AKTIF</span>
-                                            <?php else : ?>
-                                                <button type="button" data-id="<?= $value->id_smt ?>"
-                                                        class="btn btn-xs btn-primary btn-aktif">AKTIFKAN
-                                                </button>
-                                            <?php endif; ?>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table id="semester" class="table-glass w-100">
+                                    <thead>
+                                        <tr>
+                                            <th class="d-none">id</th>
+                                            <th style="width:50px">No.</th>
+                                            <th>Semester</th>
+                                            <th style="width:120px">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($smt as $key => $value): ?>
+                                            <tr>
+                                                <td class="d-none"><?= $value->id_smt ?></td>
+                                                <td class="text-center"><?= ($key + 1) ?></td>
+                                                <td class="text-center"><?= $value->smt ?></td>
+                                                <td class="text-center">
+                                                    <?php if ($value->active): ?>
+                                                        <span style="font-family:'Lexend',sans-serif;font-size:0.78rem;color:#6ee7b7">
+                                                            <i class="fa fa-check mr-1"></i>AKTIF
+                                                        </span>
+                                                    <?php else: ?>
+                                                        <button type="button" data-id="<?= $value->id_smt ?>"
+                                                            class="btn btn-cyan btn-sm btn-aktif" style="font-size:0.72rem;padding:0.2rem 0.6rem">
+                                                            AKTIFKAN
+                                                        </button>
+                                                    <?php endif; ?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
                             <?= form_close() ?>
                         </div>
                     </div>
@@ -124,31 +135,31 @@
     </section>
 </div>
 
+<!-- Modal Tambah/Edit Tahun -->
 <?= form_open('', array('id' => 'create')) ?>
-<div class="modal fade" id="createTahunModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="createTahunModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-glass" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="createModalLabel">Tambah Tahun</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group row">
-                    <label class="col-md-2 col-form-label">Tahun*</label>
-                    <div class="col-md-10">
-                        <input type="text" id="createtahun" name="tahun" class="form-control" required>
+                    <label class="col-md-3 col-form-label">Tahun <span style="color:#f87171">*</span></label>
+                    <div class="col-md-9">
+                        <input type="text" id="createtahun" name="tahun" class="form-control form-control-glass" required placeholder="contoh: 2024/2025">
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <input type="hidden" id="editIdTahun" class="form-control">
                 <input type="hidden" id="method" name="method" class="form-control">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                <button type="submit" class="btn btn-primary" id="submit-tp">
-                    <i class="fa fa-plus"></i> Simpan
+                <button type="button" class="btn btn-glass btn-sm" data-dismiss="modal">Batal</button>
+                <button type="submit" class="btn btn-cyan btn-sm" id="submit-tp">
+                    <i class="fa fa-save mr-1"></i>Simpan
                 </button>
             </div>
         </div>
@@ -156,118 +167,92 @@
 </div>
 <?= form_close() ?>
 
-<script type="text/javascript"
-        src="<?= base_url() ?>/assets/plugins/jquery-table2json/src/tabletojson-cell.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>/assets/plugins/jquery-table2json/src/tabletojson-cell.js"></script>
 <script type="text/javascript" src="<?= base_url() ?>/assets/plugins/jquery-table2json/src/tabletojson-row.js"></script>
 <script type="text/javascript" src="<?= base_url() ?>/assets/plugins/jquery-table2json/src/tabletojson.js"></script>
 <script>
-    $(document).ready(function () {
-        $("#tahun").on("click", ".btn-aktif", function () {
+    $(document).ready(function() {
+
+        $("#tahun").on("click", ".btn-aktif", function() {
             let id = $(this).data("id");
             var dataTahun = JSON.stringify($('#tahun').tableToJSON());
             var replaced = dataTahun.replace(/Tahun Pelajaran/g, "tp");
 
-            //console.log($('#edittp').serialize() + "&active=" + id + "&tahun=" + replaced);
             swal.fire({
                 text: "Silahkan tunggu....",
-                button: false,
-                closeOnClickOutside: false,
-                closeOnEsc: false,
                 allowEscapeKey: false,
                 allowOutsideClick: false,
-                onOpen: () => {
-                    swal.showLoading();
-                }
+                onOpen: () => swal.showLoading()
             });
             $.ajax({
                 url: base_url + "datatahun/gantitahun",
                 data: $('#edittp').serialize() + "&active=" + id + "&tahun=" + replaced,
                 type: "POST",
-                success: function (response) {
-                    var title = response.status ? "Berhasil" : "Gagal";
-                    var type = response.status ? "success" : "error";
-
+                success: function(response) {
                     swal.fire({
-                        title: title,
+                        title: response.status ? "Berhasil" : "Gagal",
                         text: response.msg,
-                        icon: type
-                    }).then((result) => {
-                        if (result.value) {
-                            if (response.status) {
-                                window.location.href = base_url + 'datatahun';
-                            }
-                        }
+                        icon: response.status ? "success" : "error"
+                    }).then(result => {
+                        if (result.value && response.status) window.location.href = base_url + 'datatahun';
                     });
-                }, error: function (xhr, status, error) {
-                    console.log("error", xhr.responseText);
-                    const err = JSON.parse(xhr.responseText)
+                },
+                error: function(xhr) {
                     swal.fire({
                         title: "Error",
-                        text: err.Message,
+                        text: JSON.parse(xhr.responseText).Message,
                         icon: "error"
                     });
                 }
             });
         });
 
-        $('#createTahunModal').on('show.bs.modal', function (e) {
+        $('#createTahunModal').on('show.bs.modal', function(e) {
             var method = $(e.relatedTarget).data('from');
-            $(e.currentTarget).find('input[id="method"]').val(method);
+            $(e.currentTarget).find('#method').val(method);
 
             if (method === 'edit') {
                 $('#createModalLabel').text('Edit Tahun');
                 var id = $(e.relatedTarget).data('id');
                 var tahun = $(e.relatedTarget).data('tahun');
-
-                $(e.currentTarget).find('input[id="editIdTahun"]').val(id);
-                $(e.currentTarget).find('input[id="createtahun"]').val(tahun);
-
-                var attrId = document.getElementById("editIdTahun");
-                attrId.setAttribute("name", "id_tahun");
+                $(e.currentTarget).find('#editIdTahun').val(id).attr('name', 'id_tahun');
+                $(e.currentTarget).find('#createtahun').val(tahun);
             } else {
                 $('#createModalLabel').text('Tambah Tahun');
-                $(e.currentTarget).find('input[id="editIdTahun"]').val('');
-                $(e.currentTarget).find('input[id="createtahun"]').val('');
+                $(e.currentTarget).find('#editIdTahun').val('');
+                $(e.currentTarget).find('#createtahun').val('');
             }
         });
 
-        $("#tahun").on("click", ".btn-hapus", function () {
+        $("#tahun").on("click", ".btn-hapus", function() {
             let id = $(this).data("id");
             swal.fire({
                 title: 'Hapus Tahun',
-                text: 'Anda yakin akan menghapus Tahun Pelajaran? tindakan ini akan membuat data yang berhubungan tidak aktif',
+                text: 'Anda yakin akan menghapus Tahun Pelajaran? Tindakan ini akan membuat data yang berhubungan tidak aktif.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: "#d33",
                 cancelButtonColor: "#3085d6",
                 confirmButtonText: "Hapus"
-            }).then((result) => {
+            }).then(result => {
                 if (result.value) {
                     $.ajax({
                         url: base_url + "datatahun/hapustahun",
                         data: $('#edittp').serialize() + "&hapus=" + id,
                         type: "POST",
-                        success: function (response) {
-                            var title = response.status ? "Berhasil" : "Gagal";
-                            var type = response.status ? "success" : "error";
-
+                        success: function(response) {
                             swal.fire({
-                                title: title,
+                                title: response.status ? "Berhasil" : "Gagal",
                                 text: response.msg,
-                                icon: type
-                            }).then((result) => {
-                                if (result.value) {
-                                    if (response.status) {
-                                        window.location.href = base_url + 'datatahun';
-                                    }
-                                }
+                                icon: response.status ? "success" : "error"
+                            }).then(r => {
+                                if (r.value && response.status) window.location.href = base_url + 'datatahun';
                             });
-                        }, error: function (xhr, status, error) {
-                            console.log("error", xhr.responseText);
-                            const err = JSON.parse(xhr.responseText)
+                        },
+                        error: function(xhr) {
                             swal.fire({
                                 title: "Error",
-                                text: err.Message,
+                                text: JSON.parse(xhr.responseText).Message,
                                 icon: "error"
                             });
                         }
@@ -276,47 +261,36 @@
             });
         });
 
-        $("#semester").on("click", ".btn-aktif", function () {
+        $("#semester").on("click", ".btn-aktif", function() {
             let id = $(this).data("id");
             var dataSmt = JSON.stringify($('#semester').tableToJSON());
-            //console.log($('#edittp').serialize() + "&active=" + id + "&tahun=" + replaced);
             $.ajax({
                 url: base_url + "datatahun/gantisemester",
                 data: $('#edittp').serialize() + "&active=" + id + "&semester=" + dataSmt,
                 type: "POST",
-                success: function (response) {
-                    var title = response.status ? "Berhasil" : "Gagal";
-                    var type = response.status ? "success" : "error";
-
+                success: function(response) {
                     swal.fire({
-                        title: title,
+                        title: response.status ? "Berhasil" : "Gagal",
                         text: response.msg,
-                        icon: type
-                    }).then((result) => {
-                        if (result.value) {
-                            if (response.status) {
-                                window.location.href = base_url + 'datatahun';
-                            }
-                        }
+                        icon: response.status ? "success" : "error"
+                    }).then(r => {
+                        if (r.value && response.status) window.location.href = base_url + 'datatahun';
                     });
-                }, error: function (xhr, status, error) {
-                    console.log("error", xhr.responseText);
-                    const err = JSON.parse(xhr.responseText)
+                },
+                error: function(xhr) {
                     swal.fire({
                         title: "Error",
-                        text: err.Message,
+                        text: JSON.parse(xhr.responseText).Message,
                         icon: "error"
                     });
                 }
             });
         });
 
-        $('#create').on('submit', function (e) {
+        $('#create').on('submit', function(e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            var form = new FormData($('#create')[0])
-            console.log("data:", Object.fromEntries(form));
-
+            var form = new FormData($('#create')[0]);
             $.ajax({
                 url: base_url + "datatahun/add",
                 type: "POST",
@@ -324,61 +298,15 @@
                 processData: false,
                 contentType: false,
                 cache: false,
-                success: function (data) {
+                success: function() {
                     location.href = base_url + 'datatahun';
-                }, error: function (xhr, status, error) {
+                },
+                error: function() {
                     $('#createTahunModal').modal('hide').data('bs.modal', null);
-                    $('#createTahunModal').on('hidden', function () {
-                        $(this).data('modal', null);  // destroys modal
-                    });
                     showDangerToast('Gagal menambah tahun pelajaran');
                 }
             });
             return false;
         });
-
-        /*
-        $('#hariefektif').submit('click', function (e) {
-            e.stopPropagation();
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            console.log("data:", $(this).serialize());
-
-            $.ajax({
-                url: base_url + "datatahun/savehariefektif",
-                type: "POST",
-                dataType: "JSON",
-                data: $(this).serialize(),
-                success: function (data) {
-                    if (data.status) {
-                        swal.fire({
-                            title: "Sukses",
-                            text: "Jumlah Hari Efektif berhasi disimpan",
-                            icon: "success"
-                        }).then((result) => {
-                            if (result.value) {
-                                if (data.status) {
-                                    window.location.href = base_url + 'datatahun';
-                                }
-                            }
-                        });
-                    } else {
-                        swal.fire({
-                            title: "Gagal",
-                            text: 'Gagal menyimpan jumlah hari efektif',
-                            icon: "error",
-                        });
-                    }
-                }, error: function (xhr, status, error) {
-                    const err = JSON.parse(xhr.responseText)
-                    swal.fire({
-                        title: "Error",
-                        text: err.Message,
-                        icon: "error"
-                    });
-                }
-            });
-        });
-         */
-    })
+    });
 </script>
