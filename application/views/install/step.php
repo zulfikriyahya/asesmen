@@ -22,7 +22,7 @@ $cp = $data->current_page;
         <!-- Brand -->
         <div class="install-brand">
             <img src="<?= base_url() ?>assets/img/favicon.png" alt="Logo">
-            <h1><b>ZEDAPPS</b> CBT</h1>
+            <h1><b>ASESMEN MADRASAH</b> CBT</h1>
             <p>Ikuti langkah instalasi di sebelah kanan untuk menyelesaikan pengaturan aplikasi.</p>
         </div>
 

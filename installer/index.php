@@ -11,7 +11,7 @@ $base_url  = str_replace('installer/', '', $base_url);
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>ZEDAPPS CBT Installer</title>
+    <title>ASESMEN MADRASAH CBT Installer</title>
 
     <link rel="shortcut icon" href="<?= $base_url ?>assets/img/favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="<?= $base_url ?>assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
@@ -209,8 +209,8 @@ $base_url  = str_replace('installer/', '', $base_url);
         <!-- Brand -->
         <div class="inst-brand">
             <img src="<?= $base_url ?>assets/img/favicon.png" alt="Logo">
-            <h1><b>ZEDAPPS</b> CBT</h1>
-            <p>Selamat datang di installer ZEDAPPS CBT.<br>Isi konfigurasi database untuk memulai instalasi.</p>
+            <h1><b>ASESMEN MADRASAH</b> CBT</h1>
+            <p>Selamat datang di installer ASESMEN MADRASAH CBT.<br>Isi konfigurasi database untuk memulai instalasi.</p>
         </div>
 
         <!-- Card -->
