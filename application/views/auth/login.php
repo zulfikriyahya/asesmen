@@ -16,20 +16,20 @@ $logo_app = $setting->logo_kanan == null
     .auth-card {
         width: 100%;
         max-width: 400px;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        background: rgba(15, 17, 24, 0.75);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(32px);
+        -webkit-backdrop-filter: blur(32px);
         border-radius: 18px;
         overflow: hidden;
-        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.03);
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04);
     }
 
     .auth-header {
-        background: rgba(255, 255, 255, 0.03);
+        background: rgba(255, 255, 255, 0.04);
         padding: 2rem 2rem 1.5rem;
         text-align: center;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .auth-header img {
@@ -80,10 +80,10 @@ $logo_app = $setting->logo_kanan == null
 
     .auth-input-group input {
         width: 100%;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
         border-radius: 10px;
-        color: rgba(255, 255, 255, 0.85);
+        color: rgba(255, 255, 255, 0.9);
         padding: .72rem 2.5rem .72rem 2.5rem;
         font-size: .88rem;
         font-family: 'Lexend', sans-serif;
@@ -92,9 +92,9 @@ $logo_app = $setting->logo_kanan == null
     }
 
     .auth-input-group input:focus {
-        background: rgba(99, 102, 241, 0.07);
-        border-color: rgba(99, 102, 241, 0.5);
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+        background: rgba(99, 102, 241, 0.12);
+        border-color: rgba(99, 102, 241, 0.55);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
     }
 
     .auth-input-group input::placeholder {
