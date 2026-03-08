@@ -1,5 +1,7 @@
 <?php
 
+defined('BASEPATH') or exit('No direct script access allowed');
+
 class Bukuinduk extends CI_Controller
 {
     public function __construct()
@@ -22,29 +24,19 @@ class Bukuinduk extends CI_Controller
         $this->form_validation->set_error_delimiters('', '');
     }
 
-    public function output_json($data, $encode = true)
+    public function output_json($data, bool $encode = true): void
     {
-        if (!$encode) {
-            $this->output->set_content_type('application/json')->set_output($data);
-        } else {
-            $this->output->set_content_type('application/json')->set_output(json_encode($data));
-        }
+        $output = $encode ? json_encode($data) : $data;
+        $this->output->set_content_type('application/json')->set_output($output);
     }
 
-    public function generateTahunMasuk($tp, $level)
+    public function generateTahunMasuk(string $tp, int $level): int
     {
-        $tahun = explode('/', $tp ?? '')[0];
-        $thn   = $tahun;
+        $tahun = (int) explode('/', $tp)[0];
 
-        if ($level == 9) {
-            $thn = $tahun - 2;
-        } elseif ($level == 8) {
-            $thn = $tahun - 1;
-        } elseif ($level == 7) {
-            $thn = $tahun;
-        }
-
-        return $thn;
+        if ($level == 9) return $tahun - 2;
+        if ($level == 8) return $tahun - 1;
+        return $tahun;
     }
 
     public function index()
@@ -55,24 +47,20 @@ class Bukuinduk extends CI_Controller
 
         $user    = $this->ion_auth->user()->row();
         $setting = $this->dashboard->getSetting();
+        $tp      = $this->dashboard->getTahunActive();
+        $smt     = $this->dashboard->getSemesterActive();
 
         $data = [
-            'user'    => $user,
-            'judul'   => 'Buku Induk',
-            'subjudul' => 'Buku Induk',
-            'setting' => $setting,
+            'user'       => $user,
+            'judul'      => 'Buku Induk',
+            'subjudul'   => 'Buku Induk',
+            'setting'    => $setting,
+            'tp'         => $this->dashboard->getTahun(),
+            'tp_active'  => $tp,
+            'smt'        => $this->dashboard->getSemester(),
+            'smt_active' => $smt,
+            'profile'    => $this->dashboard->getProfileAdmin($user->id),
         ];
-
-        $arrTp  = $this->dashboard->getTahun();
-        $arrSmt = $this->dashboard->getSemester();
-        $tp     = $this->dashboard->getTahunActive();
-        $smt    = $this->dashboard->getSemesterActive();
-
-        $data['tp']        = $arrTp;
-        $data['tp_active'] = $tp;
-        $data['smt']       = $arrSmt;
-        $data['smt_active'] = $smt;
-        $data['profile']   = $this->dashboard->getProfileAdmin($user->id);
 
         // Sinkronisasi buku_induk dengan master_siswa
         $count_siswa = $this->db->count_all('master_siswa');
@@ -81,8 +69,8 @@ class Bukuinduk extends CI_Controller
         if ($count_siswa > $count_induk) {
             $uids = $this->db->select('id_siswa, uid')->from('master_siswa')->get()->result();
             foreach ($uids as $uid) {
-                $check = $this->db->select('id_siswa')->from('buku_induk')->where('id_siswa', $uid->id_siswa);
-                if ($check->get()->num_rows() == 0) {
+                $exists = $this->db->select('id_siswa')->from('buku_induk')->where('id_siswa', $uid->id_siswa)->get()->num_rows();
+                if ($exists === 0) {
                     $this->db->insert('buku_induk', $uid);
                 }
             }
@@ -91,11 +79,10 @@ class Bukuinduk extends CI_Controller
         $siswas      = $this->master->getDataInduk();
         $fisik_siswa = $this->rapor->getAllRaporFisik();
         $data_siswa  = [];
-        $thn_siswa   = [];
         $noinduk     = [];
 
         foreach ($siswas as $id_siswa => $siswa) {
-            $rapor_fisik = isset($fisik_siswa[$id_siswa]) ? $fisik_siswa[$id_siswa] : [];
+            $rapor_fisik = $fisik_siswa[$id_siswa] ?? [];
 
             foreach ($rapor_fisik as $rf) {
                 $rf->fisik = unserialize($rf->fisik);
@@ -104,29 +91,11 @@ class Bukuinduk extends CI_Controller
                 }
             }
 
-            $tahunMasuk = ($siswa->tahun_masuk != null)
-                ? explode('-', $siswa->tahun_masuk)[0]
-                : '';
+            $tahunMasuk = $siswa->tahun_masuk !== null
+                ? (int) explode('-', $siswa->tahun_masuk)[0]
+                : 0;
 
-            // Tentukan rentang tahun berdasarkan jenjang
-            if ($setting->jenjang == '1') {
-                // SD: 6 tahun
-                $data_tahun = [
-                    intval($tahunMasuk)     . '/' . (intval($tahunMasuk) + 1),
-                    intval($tahunMasuk) + 1 . '/' . (intval($tahunMasuk) + 2),
-                    intval($tahunMasuk) + 2 . '/' . (intval($tahunMasuk) + 3),
-                    intval($tahunMasuk) + 3 . '/' . (intval($tahunMasuk) + 4),
-                    intval($tahunMasuk) + 4 . '/' . (intval($tahunMasuk) + 5),
-                    intval($tahunMasuk) + 5 . '/' . (intval($tahunMasuk) + 6),
-                ];
-            } else {
-                // SMP/SMA: 3 tahun
-                $data_tahun = [
-                    intval($tahunMasuk)     . '/' . (intval($tahunMasuk) + 1),
-                    intval($tahunMasuk) + 1 . '/' . (intval($tahunMasuk) + 2),
-                    intval($tahunMasuk) + 2 . '/' . (intval($tahunMasuk) + 3),
-                ];
-            }
+            $data_tahun = $this->buildDataTahun($tahunMasuk, $setting->jenjang);
 
             $berat    = [];
             $tinggi   = [];
@@ -163,24 +132,24 @@ class Bukuinduk extends CI_Controller
                     'A' => [
                         'title' => 'KETERANGAN TENTANG DIRI SISWA',
                         'value' => [
-                            'Nama Siswa'         => ['Nama Lengkap' => $siswa->nama, 'Nama Panggilan' => ''],
-                            'Jenis Kelamin'      => $siswa->jenis_kelamin,
-                            'Tempat dan Tgl Lahir' => $siswa->tempat_lahir,
-                            'Agama'              => $siswa->agama,
-                            'Kewarganegaraan'    => $siswa->warga_negara,
-                            'Anak ke'            => $siswa->anak_ke,
-                            'Jumlah Sdr. Kandung' => '',
-                            'Jumlah Sdr. Tiri'   => '',
-                            'Jumlah Sdr. Angkat' => '',
-                            'Anak Yatim/Yatim Piatu' => '',
-                            'Bahasa Sehari-hari' => '',
+                            'Nama Siswa'              => ['Nama Lengkap' => $siswa->nama, 'Nama Panggilan' => ''],
+                            'Jenis Kelamin'           => $siswa->jenis_kelamin,
+                            'Tempat dan Tgl Lahir'    => $siswa->tempat_lahir,
+                            'Agama'                   => $siswa->agama,
+                            'Kewarganegaraan'         => $siswa->warga_negara,
+                            'Anak ke'                 => $siswa->anak_ke,
+                            'Jumlah Sdr. Kandung'     => '',
+                            'Jumlah Sdr. Tiri'        => '',
+                            'Jumlah Sdr. Angkat'      => '',
+                            'Anak Yatim/Yatim Piatu'  => '',
+                            'Bahasa Sehari-hari'      => '',
                         ],
                     ],
                     'B' => [
                         'title' => 'KETERANGAN TEMPAT TINGGAL',
                         'value' => [
-                            'Alamat'         => $siswa->alamat,
-                            'Nomor Telepon'  => $siswa->hp,
+                            'Alamat'          => $siswa->alamat,
+                            'Nomor Telepon'   => $siswa->hp,
                             'Tinggal Bersama' => '',
                             'Jarak ke Sekolah' => '',
                         ],
@@ -202,20 +171,9 @@ class Bukuinduk extends CI_Controller
                     'D' => [
                         'title' => 'KETERANGAN PENDIDIKAN',
                         'value' => [
-                            'Pendidikan Sebelumnya' => [
-                                'Lulusan Dari' => $siswa->sekolah_asal,
-                                'Nomor Ijazah' => '',
-                            ],
-                            'Pindahan' => [
-                                'Dari Sekolah' => '',
-                                'Alasan'       => '',
-                            ],
-                            'Diterima Disekolah Ini' => [
-                                'Di Tingkat' => $siswa->kelas_awal,
-                                'Kelompok'   => '',
-                                'Jurusan'    => '',
-                                'Tanggal'    => $siswa->tahun_masuk,
-                            ],
+                            'Pendidikan Sebelumnya'  => ['Lulusan Dari' => $siswa->sekolah_asal, 'Nomor Ijazah' => ''],
+                            'Pindahan'               => ['Dari Sekolah' => '', 'Alasan' => ''],
+                            'Diterima Disekolah Ini' => ['Di Tingkat' => $siswa->kelas_awal, 'Kelompok' => '', 'Jurusan' => '', 'Tanggal' => $siswa->tahun_masuk],
                         ],
                     ],
                 ],
@@ -267,7 +225,7 @@ class Bukuinduk extends CI_Controller
                             'Kesenian'   => '',
                             'Olah Raga'  => '',
                             'Organisasi' => '',
-                            'Lain–lain'  => '',
+                            'Lain-lain'  => '',
                         ],
                     ],
                 ],
@@ -275,12 +233,9 @@ class Bukuinduk extends CI_Controller
                     'I' => [
                         'title' => 'KETERANGAN PERKEMBANGAN SISWA',
                         'value' => [
-                            'Menerima Bea Siswa'  => '[tahun]',
+                            'Menerima Bea Siswa'   => '[tahun]',
                             'Meninggalkan Sekolah' => ['Tanggal' => '', 'Alasan' => ''],
-                            'Akhir Pendidikan'    => [
-                                'Tamat Belajar' => $siswa->tahun_lulus,
-                                'Nomor Ijazah'  => $siswa->no_ijazah,
-                            ],
+                            'Akhir Pendidikan'     => ['Tamat Belajar' => $siswa->tahun_lulus, 'Nomor Ijazah' => $siswa->no_ijazah],
                         ],
                         'tahun' => [
                             'Tahun ............/ TK ……………………..dari……………………...',
@@ -292,35 +247,37 @@ class Bukuinduk extends CI_Controller
                         'title' => 'KETERANGAN SETELAH SELESAI PENDIDIKAN',
                         'value' => [
                             'Melanjutkan di' => '',
-                            'Bekerja'        => [
-                                'Tanggal Mulai Bekerja' => '',
-                                'Nama Tempat Bekerja'   => '',
-                                'Penghasilan'           => '',
-                            ],
+                            'Bekerja'        => ['Tanggal Mulai Bekerja' => '', 'Nama Tempat Bekerja' => '', 'Penghasilan' => ''],
                         ],
                     ],
                     'K' => [
-                        'title' => 'LAIN – LAIN',
+                        'title' => 'LAIN - LAIN',
                         'value' => ['Catatan Yang Penting' => ''],
                     ],
                 ],
             ];
         }
 
-        $data['rapor_fisik'] = $rapor_fisik ?? [];
-        $data['noinduk']     = $noinduk;
-        $data['siswas']      = $siswas;
-        $data['detail']      = $data_siswa;
-        $data['arr_test']    = $thn_siswa;
+        $level = $setting->jenjang == '1' ? '6' : ($setting->jenjang == '2' ? '9' : '12');
 
-        $level = $setting->jenjang == '1'
-            ? '6'
-            : ($setting->jenjang == '2' ? '9' : '12');
-
+        $data['rapor_fisik']  = $rapor_fisik ?? [];
+        $data['noinduk']      = $noinduk;
+        $data['siswas']       = $siswas;
+        $data['detail']       = $data_siswa;
         $data['jumlah_lulus'] = $this->rapor->getJumlahLulus($tp->id_tp - 1, '2', $level);
 
         $this->load->view('_templates/dashboard/_header', $data);
         $this->load->view('setting/induk');
         $this->load->view('_templates/dashboard/_footer');
+    }
+
+    private function buildDataTahun(int $tahun, string $jenjang): array
+    {
+        $count = $jenjang == '1' ? 6 : 3;
+        $result = [];
+        for ($i = 0; $i < $count; $i++) {
+            $result[] = ($tahun + $i) . '/' . ($tahun + $i + 1);
+        }
+        return $result;
     }
 }
