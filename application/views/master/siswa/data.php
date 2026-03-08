@@ -113,36 +113,55 @@
                 </button>
             </div>
             <div class="modal-body">
-                <?php
-                $fields = [
-                    ['id' => 'nama_siswa',   'label' => 'Nama Siswa',       'type' => 'text',   'icon' => 'fas fa-user',          'name' => 'nama_siswa'],
-                    ['id' => 'nis',          'label' => 'NIS',              'type' => 'number', 'icon' => 'fas fa-id-card',       'name' => 'nis'],
-                    ['id' => 'nisn',         'label' => 'NISN',             'type' => 'number', 'icon' => 'fas fa-id-card',       'name' => 'nisn'],
-                    ['id' => 'username',     'label' => 'Username',         'type' => 'text',   'icon' => 'fas fa-user',          'name' => 'username'],
-                    ['id' => 'password',     'label' => 'Password',         'type' => 'text',   'icon' => 'fas fa-lock',          'name' => 'password'],
-                ];
-                foreach ($fields as $f): ?>
-                    <div class="form-group row mb-3">
-                        <label class="col-md-4 col-form-label"><?= $f['label'] ?></label>
-                        <div class="col-md-8">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text input-group-text-glass"><i class="<?= $f['icon'] ?>"></i></span>
-                                </div>
-                                <input id="<?= $f['id'] ?>" type="<?= $f['type'] ?>" class="form-control form-control-glass" name="<?= $f['name'] ?>" placeholder="<?= $f['label'] ?>" required>
+                <div class="row mb-3">
+                    <div class="col-md-4 col-sm-offset-4">
+                        <label for="nama_siswa">Nama Siswa :</label>
+                    </div>
+                    <div class="col-md-8 col-sm-offset-8">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text input-group-text-glass"><i class="fas fa-user"></i></span>
                             </div>
+                            <input id="nama_siswa" type="text" class="form-control form-control-glass" name="nama_siswa" placeholder="Nama Siswa" required>
                         </div>
                     </div>
-                <?php endforeach; ?>
-
-                <div class="form-group row mb-3">
-                    <label class="col-md-4 col-form-label">Jenis Kelamin</label>
-                    <div class="col-md-8">
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4 col-sm-offset-4">
+                        <label for="nis">NIS :</label>
+                    </div>
+                    <div class="col-md-8 col-sm-offset-8">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text input-group-text-glass"><i class="fas fa-id-card"></i></span>
+                            </div>
+                            <input type="number" id="nis" class="form-control form-control-glass" name="nis" placeholder="NIS" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4 col-sm-offset-4">
+                        <label for="nisn">NISN :</label>
+                    </div>
+                    <div class="col-md-8 col-sm-offset-8">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text input-group-text-glass"><i class="fas fa-id-card"></i></span>
+                            </div>
+                            <input type="number" id="nisn" class="form-control form-control-glass" name="nisn" placeholder="NISN" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4 col-sm-offset-4">
+                        <label for="jenis_kelamin">Jenis Kelamin :</label>
+                    </div>
+                    <div class="col-md-8 col-sm-offset-8">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text input-group-text-glass"><i class="fas fa-venus-mars"></i></span>
                             </div>
-                            <select class="form-control form-control-glass" id="jenis_kelamin" name="jenis_kelamin" required>
+                            <select class="form-control form-control-glass" id="jenis_kelamin" name="jenis_kelamin">
                                 <option value="">Pilih Jenis Kelamin</option>
                                 <option value="L">Laki-laki</option>
                                 <option value="P">Perempuan</option>
@@ -150,20 +169,34 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="form-group row mb-3">
-                    <label class="col-md-4 col-form-label">Kelas Awal</label>
-                    <div class="col-md-8">
+                <div class="row mb-3">
+                    <div class="col-md-4 col-sm-offset-4">
+                        <label for="kelas_awal">Kelas Awal :</label>
+                    </div>
+                    <div class="col-md-8 col-sm-offset-8">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text input-group-text-glass"><i class="fas fa-graduation-cap"></i></span>
                             </div>
                             <?php
-                            if ($setting->jenjang == 1)       $opsis = ['1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', '6' => '6'];
-                            elseif ($setting->jenjang == 2)   $opsis = ['7' => '7', '8' => '8', '9' => '9'];
-                            else                              $opsis = ['10' => '10', '11' => '11', '12' => '12'];
+                            if ($setting->jenjang == 1) {
+                                $opsis['1'] = '1';
+                                $opsis['2'] = '2';
+                                $opsis['3'] = '3';
+                                $opsis['4'] = '4';
+                                $opsis['5'] = '5';
+                                $opsis['6'] = '6';
+                            } elseif ($setting->jenjang == 2) {
+                                $opsis['7'] = '7';
+                                $opsis['8'] = '8';
+                                $opsis['9'] = '9';
+                            } else {
+                                $opsis['10'] = '10';
+                                $opsis['11'] = '11';
+                                $opsis['12'] = '12';
+                            };
                             ?>
-                            <select class="form-control form-control-glass" id="kelas_awal" name="kelas_awal" required>
+                            <select class="form-control form-control-glass" id="kelas_awal" name="kelas_awal">
                                 <option value="">Pilih Kelas Awal</option>
                                 <?php foreach ($opsis as $kelas): ?>
                                     <option value="<?= $kelas ?>"><?= $kelas ?></option>
@@ -172,15 +205,42 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="form-group row mb-3">
-                    <label class="col-md-4 col-form-label">Tanggal Diterima</label>
-                    <div class="col-md-8">
+                <div class="row mb-3">
+                    <div class="col-md-4 col-sm-offset-4">
+                        <label for="tahun_masuk">Tanggal Diterima :</label>
+                    </div>
+                    <div class="col-md-8 col-sm-offset-8">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text input-group-text-glass"><i class="fas fa-calendar-alt"></i></span>
                             </div>
                             <input type="text" name="tahun_masuk" id="tahunmasuk" class="form-control form-control-glass" autocomplete="off" placeholder="Tgl/Tahun Masuk" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4 col-sm-offset-4">
+                        <label for="username">Username :</label>
+                    </div>
+                    <div class="col-md-8 col-sm-offset-8">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text input-group-text-glass"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input id="username" type="text" class="form-control form-control-glass" name="username" placeholder="Username" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 col-sm-offset-4">
+                        <label for="password">Password :</label>
+                    </div>
+                    <div class="col-md-8 col-sm-offset-8">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text input-group-text-glass"><i class="fas fa-id-card"></i></span>
+                            </div>
+                            <input id="password" class="form-control form-control-glass" name="password" placeholder="Password" required>
                         </div>
                     </div>
                 </div>
