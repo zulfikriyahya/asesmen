@@ -16,26 +16,15 @@
     --shadow:         0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
-*, *::before, *::after {
+/* ── Font: hanya teks, jangan sentuh icon pseudo-element ── */
+body *:not(i):not([class*="fa"]):not([class*="ion"]):not([class*="bi"]):not([class*="glyphicon"]) {
     font-family: 'Lexend', sans-serif !important;
-    box-sizing: border-box;
 }
 
-/* ── Layout ── */
+/* ── Layout: biarkan AdminLTE atur margin sidebar, hanya override background ── */
 .content-wrapper {
     background: linear-gradient(140deg, var(--bg-base) 0%, var(--bg-mid) 55%, var(--bg-top) 100%) !important;
     min-height: 100vh !important;
-    margin-left: 250px !important;
-}
-
-body.sidebar-collapse .content-wrapper {
-    margin-left: 0 !important;
-}
-
-@media (max-width: 991.98px) {
-    .content-wrapper {
-        margin-left: 0 !important;
-    }
 }
 
 .content-header {

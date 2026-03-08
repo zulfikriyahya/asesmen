@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="<?= base_url() ?>assets/app/css/users.css">
-
 <div class="content-wrapper">
     <section class="content-header">
         <div class="container-fluid">

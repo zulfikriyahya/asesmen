@@ -117,6 +117,7 @@
     <script src="<?= base_url() ?>/assets/plugins/DualSelectList/js/bala.DualSelectList.jquery.js"></script>
     <script defer src="<?= base_url() ?>/assets/plugins/katex/contrib/auto-render.min.js"
         onload="renderMathInElement(document.body);"></script>
+
 </head>
 
 <script>
