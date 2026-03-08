@@ -448,7 +448,7 @@
 }
 
 .user-profile-inner {
-    padding: 1.5rem 1rem;
+    padding: 2rem 1.5rem;
     text-align: center;
 }
 
@@ -457,7 +457,22 @@
     font-weight: 600;
     font-size: 1rem;
     color: #e2e8f0;
-    margin: 0.75rem 0 1.25rem;
+    margin: 1rem 0 1.5rem;
+}
+
+/* Form group spacing di edit page */
+.tab-pane .form-group.row {
+    margin-bottom: 1.1rem;
+    align-items: center;
+}
+
+.tab-pane .form-group.row label.col-form-label {
+    font-family: 'Lexend', sans-serif;
+    font-size: 0.83rem;
+    font-weight: 500;
+    color: #94a3b8;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 /* =============================================

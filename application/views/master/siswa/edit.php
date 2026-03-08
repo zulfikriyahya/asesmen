@@ -70,23 +70,25 @@ if (!file_exists(FCPATH . $siswa->foto)) {
                 <div class="col-md-8 mb-4">
                     <?= form_open('datasiswa/updatedata', array('id' => 'siswa'), array('method' => 'edit', 'id_siswa' => $siswa->id_siswa)) ?>
                     <div class="glass-card">
-                        <div class="card-header">
-                            <ul class="nav nav-pills nav-pills-glass flex-wrap" style="gap:0.25rem">
-                                <li class="nav-item"><a class="nav-link active" href="#datasiswa" data-toggle="tab">Siswa</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#biosiswa" data-toggle="tab">Detail</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#ortusiswa" data-toggle="tab">Keluarga</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#walisiswa" data-toggle="tab">Wali</a></li>
-                            </ul>
-                            <div class="d-flex" style="gap:0.4rem">
-                                <button type="reset" class="btn btn-warning-glass btn-sm">
-                                    <i class="fa fa-sync mr-1"></i>Reset
-                                </button>
-                                <button type="submit" id="submit" class="btn btn-success-glass btn-sm">
-                                    <i class="fas fa-save mr-1"></i>Simpan
-                                </button>
+                        <div class="card-header" style="flex-direction:column;align-items:flex-start;gap:0.75rem">
+                            <div class="d-flex align-items-center justify-content-between w-100" style="gap:0.5rem">
+                                <ul class="nav nav-pills nav-pills-glass flex-wrap mb-0" style="gap:0.35rem">
+                                    <li class="nav-item"><a class="nav-link active" href="#datasiswa" data-toggle="tab">Siswa</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#biosiswa" data-toggle="tab">Detail</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#ortusiswa" data-toggle="tab">Keluarga</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#walisiswa" data-toggle="tab">Wali</a></li>
+                                </ul>
+                                <div class="d-flex flex-shrink-0" style="gap:0.4rem">
+                                    <button type="reset" class="btn btn-warning-glass btn-sm">
+                                        <i class="fa fa-sync mr-1"></i>Reset
+                                    </button>
+                                    <button type="submit" id="submit" class="btn btn-success-glass btn-sm">
+                                        <i class="fas fa-save mr-1"></i>Simpan
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" style="padding:1.75rem">
                             <div class="tab-content">
 
                                 <!-- Tab: Siswa -->
