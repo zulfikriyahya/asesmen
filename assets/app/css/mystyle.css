@@ -102,6 +102,37 @@
     outline: none !important;
 }
 
+/* ── Table row text fix ── */
+.glass-table tbody tr td,
+.glass-table tbody tr td a,
+.glass-table tbody tr td span,
+.table-striped tbody tr:nth-of-type(odd) td,
+.table-striped tbody tr:nth-of-type(even) td,
+.table-hover tbody tr:hover td,
+table.dataTable tbody tr td,
+table.dataTable tbody tr.odd td,
+table.dataTable tbody tr.even td,
+table.dataTable tbody tr.odd > .sorting_1,
+table.dataTable tbody tr.even > .sorting_1 {
+    color: rgba(255,255,255,0.78) !important;
+    background-color: transparent !important;
+}
+
+table.dataTable tbody tr.odd,
+table.dataTable tbody tr.even {
+    background-color: transparent !important;
+}
+
+table.dataTable tbody tr:hover,
+table.dataTable tbody tr.odd:hover,
+table.dataTable tbody tr.even:hover {
+    background-color: rgba(255,255,255,0.03) !important;
+}
+
+table.dataTable tbody tr:hover td {
+    color: rgba(255,255,255,0.92) !important;
+}
+
 /* ── Modal backdrop ── */
 .modal-backdrop {
     background: rgba(0,0,0,0.7) !important;
