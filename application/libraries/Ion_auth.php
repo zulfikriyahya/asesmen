@@ -229,26 +229,43 @@ class Ion_auth
 
 	protected function check_compatibility()
 	{
-		// PHP password_* function sanity check
+		// 1. PHP password_* function sanity check (Tetap ada)
 		if (!function_exists('password_hash') || !function_exists('password_verify')) {
-			show_error("PHP function password_hash or password_verify not found. " .
-				"Are you using CI 2 and PHP < 5.5? " .
-				"Please upgrade to CI 3, or PHP >= 5.5 " .
-				"or use password_compat (https://github.com/ircmaxell/password_compat).");
+			show_error("PHP function password_hash or password_verify not found.");
 		}
 
-		// Sanity check for CI2
-		if (substr(CI_VERSION, 0, 1) === '2') {
-			show_error("Ion Auth 3 requires CodeIgniter 3. Update to CI 3 or downgrade to Ion Auth 2.");
+		// 2. PERBAIKAN: Gunakan defined() agar tidak error jika konstanta belum ada
+		if (defined('CI_VERSION') && substr(CI_VERSION, 0, 1) === '2') {
+			show_error("Ion Auth 3 requires CodeIgniter 3.");
 		}
 
-		// Compatibility check for CSPRNG
-		// See functions used in Ion_auth_model::_random_token()
+		// 3. Compatibility check for CSPRNG (Tetap ada)
 		if (!function_exists('random_bytes') && !function_exists('mcrypt_create_iv') && !function_exists('openssl_random_pseudo_bytes')) {
-			show_error("No CSPRNG functions to generate random enough token. " .
-				"Please update to PHP 7 or use random_compat (https://github.com/paragonie/random_compat).");
+			show_error("No CSPRNG functions available.");
 		}
 	}
+	// protected function check_compatibility()
+	// {
+	// 	// PHP password_* function sanity check
+	// 	if (!function_exists('password_hash') || !function_exists('password_verify')) {
+	// 		show_error("PHP function password_hash or password_verify not found. " .
+	// 			"Are you using CI 2 and PHP < 5.5? " .
+	// 			"Please upgrade to CI 3, or PHP >= 5.5 " .
+	// 			"or use password_compat (https://github.com/ircmaxell/password_compat).");
+	// 	}
+
+	// 	// Sanity check for CI2
+	// 	if (substr(CI_VERSION, 0, 1) === '2') {
+	// 		show_error("Ion Auth 3 requires CodeIgniter 3. Update to CI 3 or downgrade to Ion Auth 2.");
+	// 	}
+
+	// 	// Compatibility check for CSPRNG
+	// 	// See functions used in Ion_auth_model::_random_token()
+	// 	if (!function_exists('random_bytes') && !function_exists('mcrypt_create_iv') && !function_exists('openssl_random_pseudo_bytes')) {
+	// 		show_error("No CSPRNG functions to generate random enough token. " .
+	// 			"Please update to PHP 7 or use random_compat (https://github.com/paragonie/random_compat).");
+	// 	}
+	// }
 
 	public function deactivate($id = NULL)
 	{
