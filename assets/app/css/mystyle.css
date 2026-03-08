@@ -293,7 +293,166 @@ body .select2-results__option[aria-selected="true"] {
     backdrop-filter: blur(4px);
 }
 
-/* ── Page title ── */
+/* ── Stat box (info box dashboard) ── */
+.info-box-link { text-decoration: none; }
+.info-box-link:hover { text-decoration: none; }
+
+.glass-stat-box {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+    padding: .75rem 1rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    transition: background .2s, border-color .2s, transform .15s;
+    cursor: pointer;
+}
+
+.glass-stat-box:hover {
+    background: rgba(99,102,241,0.1);
+    border-color: rgba(99,102,241,0.25);
+    transform: translateY(-2px);
+}
+
+.glass-stat-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(99,102,241,0.15);
+    border-radius: 9px;
+    color: #a5b4fc;
+    font-size: .9rem;
+    flex-shrink: 0;
+}
+
+.glass-stat-body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.glass-stat-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.9);
+    line-height: 1.2;
+}
+
+.glass-stat-label {
+    font-size: .7rem;
+    font-weight: 400;
+    color: rgba(255,255,255,0.4);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ── Info box (ujian/token) ── */
+.glass-info-box {
+    padding: .65rem .9rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: background .2s, border-color .2s;
+}
+
+.glass-info-box:hover {
+    background: rgba(99,102,241,0.08);
+    border-color: rgba(99,102,241,0.2);
+}
+
+.glass-info-box--token {
+    border-color: rgba(6,182,212,0.2);
+}
+
+.glass-info-box--token:hover {
+    background: rgba(6,182,212,0.07);
+    border-color: rgba(6,182,212,0.35);
+}
+
+.glass-info-label {
+    font-size: .72rem;
+    color: rgba(255,255,255,0.4);
+    display: block;
+    margin-bottom: .15rem;
+}
+
+.glass-info-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+    display: block;
+    letter-spacing: .03em;
+}
+
+/* ── Divider ── */
+.glass-divider {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    margin: 1rem 0;
+}
+
+/* ── Section title ── */
+.glass-section-title {
+    font-size: .72rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    text-align: center;
+    margin: 0;
+}
+
+/* ── Empty state ── */
+.glass-empty-state {
+    padding: 1.5rem;
+    text-align: center;
+    font-size: .82rem;
+    color: rgba(255,255,255,0.3);
+}
+
+/* ── Compact table ── */
+.glass-table--compact td,
+.glass-table--compact th {
+    padding: .4rem .75rem !important;
+    font-size: .8rem !important;
+}
+
+/* ── Tab pills ── */
+.glass-tab-header {
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.glass-nav-link {
+    font-size: .75rem !important;
+    font-weight: 500 !important;
+    color: rgba(255,255,255,0.45) !important;
+    border-radius: 7px !important;
+    padding: .3rem .7rem !important;
+    transition: background .2s, color .2s !important;
+}
+
+.glass-nav-link:hover {
+    background: rgba(255,255,255,0.07) !important;
+    color: rgba(255,255,255,0.8) !important;
+}
+
+.glass-nav-link.active {
+    background: rgba(99,102,241,0.25) !important;
+    color: #a5b4fc !important;
+}
+
+/* ── Istirahat row ── */
+.glass-row-break td {
+    background: rgba(255,255,255,0.02) !important;
+}
 .page-title {
     font-size: 1.3rem;
     font-weight: 600;
