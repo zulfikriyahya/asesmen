@@ -1,6 +1,7 @@
 <?php
 
 defined('BASEPATH') or exit('No direct script access allowed');
+
 class Settings_model extends CI_Model
 {
     public function not_admin()
@@ -11,6 +12,7 @@ class Settings_model extends CI_Model
         $this->db->where_not_in('b.group_id', ['1']);
         return $this->db->get()->result();
     }
+
     public function truncate($table)
     {
         $this->load->helper('file');
@@ -20,24 +22,24 @@ class Settings_model extends CI_Model
         }
         $this->db->query('SET FOREIGN_KEY_CHECKS = 1');
         delete_files('./uploads/bank_soal/');
-        $users = $this->not_admin();
-        foreach ($users as $user) {
-            $this->db->delete('users', array('id' => $user->id));
+
+        foreach ($this->not_admin() as $user) {
+            $this->db->delete('users', ['id' => $user->id]);
         }
-        return;
     }
+
     public function getSetting()
     {
         return $this->db->get('setting')->row();
     }
-    function toJSON($table)
+
+    public function toJSON($table)
     {
-        $query = $this->db->get($table);
-        return json_encode($query->result(), JSON_PRETTY_PRINT);
+        return json_encode($this->db->get($table)->result(), JSON_PRETTY_PRINT);
     }
-    function rowSize($table)
+
+    public function rowSize($table)
     {
-        $query = $this->db->get($table);
-        return $query->num_rows();
+        return $this->db->get($table)->num_rows();
     }
 }
