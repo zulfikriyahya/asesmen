@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # =============================================================
-# generate-models.sh
-# Dump seluruh isi file models ke satu file markdown
-# Usage: bash generate-models.sh [output_file]
+# generate-controllers.sh
+# Dump seluruh isi file controllers ke satu file markdown
+# Usage: bash generate-controllers.sh [output_file]
 # =============================================================
 
-BASE_DIR="application/models_progress"
-OUTPUT="${1:-draft-models.md}"
+BASE_DIR="application/controllers_progress"
+OUTPUT="${1:-draft-controllers.md}"
 
 # Pastikan BASE_DIR ada
 if [ ! -d "$BASE_DIR" ]; then

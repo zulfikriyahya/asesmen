@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # =============================================================
-# generate-models.sh
-# Dump seluruh isi file models ke satu file markdown
-# Usage: bash generate-models.sh [output_file]
+# generate-views.sh
+# Dump seluruh isi file views ke satu file markdown
+# Usage: bash generate-views.sh [output_file]
 # =============================================================
 
-BASE_DIR="application/models_progress"
-OUTPUT="${1:-draft-models.md}"
+BASE_DIR="application/views"
+OUTPUT="${1:-draft-views.md}"
 
 # Pastikan BASE_DIR ada
 if [ ! -d "$BASE_DIR" ]; then
