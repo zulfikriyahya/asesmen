@@ -1,3 +1,757 @@
+## File: application/views/auth/change_password.php
+
+```php
+{{FILE: change_password.php}}
+<?php /* ============================================================
+   auth/change_password.php
+   ============================================================ */ ?>
+
+<div class="auth-page-wrapper">
+    <div class="auth-page-card">
+        <div class="auth-page-header">
+            <h4><?= lang('change_password_heading') ?></h4>
+        </div>
+        <div class="auth-page-body">
+
+            <?php if ($message): ?>
+                <div class="auth-alert"><?= $message ?></div>
+            <?php endif ?>
+
+            <?= form_open("auth/change_password") ?>
+
+            <div class="form-field">
+                <?= lang('change_password_old_password_label', 'old_password') ?>
+                <?= form_input($old_password) ?>
+            </div>
+
+            <div class="form-field">
+                <label for="new_password">
+                    <?= sprintf(lang('change_password_new_password_label'), $min_password_length) ?>
+                </label>
+                <?= form_input($new_password) ?>
+            </div>
+
+            <div class="form-field">
+                <?= lang('change_password_new_password_confirm_label', 'new_password_confirm') ?>
+                <?= form_input($new_password_confirm) ?>
+            </div>
+
+            <?= form_input($user_id) ?>
+
+            <div class="form-actions">
+                <?= form_submit('submit', lang('change_password_submit_btn'), ['class' => 'btn-dark-primary']) ?>
+            </div>
+
+            <?= form_close() ?>
+
+        </div>
+    </div>
+</div>
+
+
+```
+
+---
+
+## File: application/views/auth/create_group.php
+
+```php
+{{FILE: create_group.php}}
+<?php /* ============================================================
+   auth/create_group.php
+   ============================================================ */ ?>
+
+<div class="auth-page-wrapper">
+    <div class="auth-page-card">
+        <div class="auth-page-header">
+            <h4><?= lang('create_group_heading') ?></h4>
+            <p><?= lang('create_group_subheading') ?></p>
+        </div>
+        <div class="auth-page-body">
+
+            <?php if ($message): ?>
+                <div class="auth-alert"><?= $message ?></div>
+            <?php endif ?>
+
+            <?= form_open("auth/create_group") ?>
+
+            <div class="form-field">
+                <?= lang('create_group_name_label', 'group_name') ?>
+                <?= form_input($group_name) ?>
+            </div>
+
+            <div class="form-field">
+                <?= lang('create_group_desc_label', 'description') ?>
+                <?= form_input($description) ?>
+            </div>
+
+            <div class="form-actions">
+                <?= form_submit('submit', lang('create_group_submit_btn'), ['class' => 'btn-dark-primary']) ?>
+            </div>
+
+            <?= form_close() ?>
+
+        </div>
+    </div>
+</div>
+
+
+```
+
+---
+
+## File: application/views/auth/create_user.php
+
+```php
+{{FILE: create_user.php}}
+<?php /* ============================================================
+   auth/create_user.php
+   ============================================================ */ ?>
+
+<div class="auth-page-wrapper">
+    <div class="auth-page-card auth-page-card--wide">
+        <div class="auth-page-header">
+            <h4><?= lang('create_user_heading') ?></h4>
+            <p><?= lang('create_user_subheading') ?></p>
+        </div>
+        <div class="auth-page-body">
+
+            <?php if ($message): ?>
+                <div class="auth-alert"><?= $message ?></div>
+            <?php endif ?>
+
+            <?= form_open("auth/create_user") ?>
+
+            <div class="form-grid">
+
+                <div class="form-field">
+                    <?= lang('create_user_fname_label', 'first_name') ?>
+                    <?= form_input($first_name) ?>
+                </div>
+
+                <div class="form-field">
+                    <?= lang('create_user_lname_label', 'last_name') ?>
+                    <?= form_input($last_name) ?>
+                </div>
+
+                <?php if ($identity_column !== 'email'): ?>
+                    <div class="form-field">
+                        <?= lang('create_user_identity_label', 'identity') ?>
+                        <?= form_error('identity') ?>
+                        <?= form_input($identity) ?>
+                    </div>
+                <?php endif ?>
+
+                <div class="form-field">
+                    <?= lang('create_user_company_label', 'company') ?>
+                    <?= form_input($company) ?>
+                </div>
+
+                <div class="form-field">
+                    <?= lang('create_user_email_label', 'email') ?>
+                    <?= form_input($email) ?>
+                </div>
+
+                <div class="form-field">
+                    <?= lang('create_user_phone_label', 'phone') ?>
+                    <?= form_input($phone) ?>
+                </div>
+
+                <div class="form-field">
+                    <?= lang('create_user_password_label', 'password') ?>
+                    <?= form_input($password) ?>
+                </div>
+
+                <div class="form-field">
+                    <?= lang('create_user_password_confirm_label', 'password_confirm') ?>
+                    <?= form_input($password_confirm) ?>
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <?= form_submit('submit', lang('create_user_submit_btn'), ['class' => 'btn-dark-primary']) ?>
+            </div>
+
+            <?= form_close() ?>
+
+        </div>
+    </div>
+</div>
+
+
+```
+
+---
+
+## File: application/views/auth/deactivate_user.php
+
+```php
+{{FILE: deactivate_user.php}}
+<?php /* ============================================================
+   auth/deactivate_user.php
+   ============================================================ */ ?>
+
+<div class="auth-page-wrapper">
+    <div class="auth-page-card">
+        <div class="auth-page-header">
+            <h4><?= lang('deactivate_heading') ?></h4>
+            <p><?= sprintf(lang('deactivate_subheading'), $user->username) ?></p>
+        </div>
+        <div class="auth-page-body">
+
+            <?= form_open("auth/deactivate/" . $user->id) ?>
+
+            <div class="form-field">
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="confirm" value="yes" checked="checked">
+                        <span><?= lang('deactivate_confirm_y_label') ?></span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="confirm" value="no">
+                        <span><?= lang('deactivate_confirm_n_label') ?></span>
+                    </label>
+                </div>
+            </div>
+
+            <?= form_hidden($csrf) ?>
+            <?= form_hidden(['id' => $user->id]) ?>
+
+            <div class="form-actions">
+                <?= form_submit('submit', lang('deactivate_submit_btn'), ['class' => 'btn-dark-danger']) ?>
+            </div>
+
+            <?= form_close() ?>
+
+        </div>
+    </div>
+</div>
+
+
+```
+
+---
+
+## File: application/views/auth/edit_group.php
+
+```php
+{{FILE: edit_group.php}}
+<?php /* ============================================================
+   auth/edit_group.php
+   ============================================================ */ ?>
+
+<div class="auth-page-wrapper">
+    <div class="auth-page-card">
+        <div class="auth-page-header">
+            <h4><?= lang('edit_group_heading') ?></h4>
+            <p><?= lang('edit_group_subheading') ?></p>
+        </div>
+        <div class="auth-page-body">
+
+            <?php if ($message): ?>
+                <div class="auth-alert"><?= $message ?></div>
+            <?php endif ?>
+
+            <?= form_open(current_url()) ?>
+
+            <div class="form-field">
+                <?= lang('edit_group_name_label', 'group_name') ?>
+                <?= form_input($group_name) ?>
+            </div>
+
+            <div class="form-field">
+                <?= lang('edit_group_desc_label', 'description') ?>
+                <?= form_input($group_description) ?>
+            </div>
+
+            <div class="form-actions">
+                <?= form_submit('submit', lang('edit_group_submit_btn'), ['class' => 'btn-dark-primary']) ?>
+            </div>
+
+            <?= form_close() ?>
+
+        </div>
+    </div>
+</div>
+
+
+```
+
+---
+
+## File: application/views/auth/edit_user.php
+
+```php
+{{FILE: edit_user.php}}
+<?php /* ============================================================
+   auth/edit_user.php
+   ============================================================ */ ?>
+
+<div class="auth-page-wrapper">
+    <div class="auth-page-card auth-page-card--wide">
+        <div class="auth-page-header">
+            <h4><?= lang('edit_user_heading') ?></h4>
+            <p><?= lang('edit_user_subheading') ?></p>
+        </div>
+        <div class="auth-page-body">
+
+            <?php if ($message): ?>
+                <div class="auth-alert"><?= $message ?></div>
+            <?php endif ?>
+
+            <?= form_open(uri_string()) ?>
+
+            <div class="form-grid">
+
+                <div class="form-field">
+                    <?= lang('edit_user_fname_label', 'first_name') ?>
+                    <?= form_input($first_name) ?>
+                </div>
+
+                <div class="form-field">
+                    <?= lang('edit_user_lname_label', 'last_name') ?>
+                    <?= form_input($last_name) ?>
+                </div>
+
+                <div class="form-field">
+                    <?= lang('edit_user_company_label', 'company') ?>
+                    <?= form_input($company) ?>
+                </div>
+
+                <div class="form-field">
+                    <?= lang('edit_user_phone_label', 'phone') ?>
+                    <?= form_input($phone) ?>
+                </div>
+
+                <div class="form-field">
+                    <?= lang('edit_user_password_label', 'password') ?>
+                    <?= form_input($password) ?>
+                </div>
+
+                <div class="form-field">
+                    <?= lang('edit_user_password_confirm_label', 'password_confirm') ?>
+                    <?= form_input($password_confirm) ?>
+                </div>
+
+            </div>
+
+            <?php if ($this->ion_auth->is_admin()): ?>
+                <div class="form-section-divider">
+                    <h5><?= lang('edit_user_groups_heading') ?></h5>
+                    <div class="checkbox-group">
+                        <?php foreach ($groups as $group):
+                            $checked = null;
+                            foreach ($currentGroups as $grp) {
+                                if ($group['id'] == $grp->id) {
+                                    $checked = 'checked';
+                                    break;
+                                }
+                            }
+                        ?>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="groups[]" value="<?= $group['id'] ?>" <?= $checked ?>>
+                                <span><?= htmlspecialchars($group['name'], ENT_QUOTES, 'UTF-8') ?></span>
+                            </label>
+                        <?php endforeach ?>
+                    </div>
+                </div>
+            <?php endif ?>
+
+            <?= form_hidden('id', $user->id) ?>
+            <?= form_hidden($csrf) ?>
+
+            <div class="form-actions">
+                <?= form_submit('submit', lang('edit_user_submit_btn'), ['class' => 'btn-dark-primary']) ?>
+            </div>
+
+            <?= form_close() ?>
+
+        </div>
+    </div>
+</div>
+
+
+```
+
+---
+
+## File: application/views/auth/index.php
+
+```php
+{{FILE: index.php}}
+<?php /* ============================================================
+   auth/index.php
+   ============================================================ */ ?>
+
+<div class="auth-page-wrapper">
+    <div class="auth-page-card auth-page-card--full">
+        <div class="auth-page-header d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div>
+                <h4><?= lang('index_heading') ?></h4>
+                <p class="mb-0"><?= lang('index_subheading') ?></p>
+            </div>
+            <div class="d-flex gap-2">
+                <?= anchor('auth/create_user',  lang('index_create_user_link'),  'class="btn-dark-primary btn-sm"') ?>
+                <?= anchor('auth/create_group', lang('index_create_group_link'), 'class="btn-dark-secondary btn-sm"') ?>
+            </div>
+        </div>
+
+        <?php if ($message): ?>
+            <div class="auth-alert mx-3"><?= $message ?></div>
+        <?php endif ?>
+
+        <div class="auth-page-body p-0">
+            <div class="table-responsive">
+                <table class="auth-table">
+                    <thead>
+                        <tr>
+                            <th><?= lang('index_fname_th') ?></th>
+                            <th><?= lang('index_lname_th') ?></th>
+                            <th><?= lang('index_email_th') ?></th>
+                            <th><?= lang('index_groups_th') ?></th>
+                            <th><?= lang('index_status_th') ?></th>
+                            <th><?= lang('index_action_th') ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($users as $user): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($user->first_name, ENT_QUOTES, 'UTF-8') ?></td>
+                                <td><?= htmlspecialchars($user->last_name, ENT_QUOTES, 'UTF-8') ?></td>
+                                <td><?= htmlspecialchars($user->email, ENT_QUOTES, 'UTF-8') ?></td>
+                                <td>
+                                    <?php foreach ($user->groups as $group): ?>
+                                        <?= anchor("auth/edit_group/{$group->id}", htmlspecialchars($group->name, ENT_QUOTES, 'UTF-8'), 'class="badge-group"') ?>
+                                    <?php endforeach ?>
+                                </td>
+                                <td>
+                                    <?php if ($user->active): ?>
+                                        <?= anchor("auth/deactivate/{$user->id}", lang('index_active_link'), 'class="badge-status badge-active"') ?>
+                                    <?php else: ?>
+                                        <?= anchor("auth/activate/{$user->id}", lang('index_inactive_link'), 'class="badge-status badge-inactive"') ?>
+                                    <?php endif ?>
+                                </td>
+                                <td>
+                                    <?= anchor("auth/edit_user/{$user->id}", 'Edit', 'class="btn-dark-primary btn-xs"') ?>
+                                </td>
+                            </tr>
+                        <?php endforeach ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+```
+
+---
+
+## File: application/views/auth/login.php
+
+```php
+<?php
+$logo_app = $setting->logo_kanan == null
+    ? base_url() . 'assets/img/favicon.png'
+    : base_url() . $setting->logo_kiri;
+?>
+
+<style>
+    .auth-wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 400px;
+        background: #1a1d23;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+    }
+
+    .auth-header {
+        background: #111318;
+        padding: 2rem 2rem 1.5rem;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .auth-header img {
+        width: 72px;
+        height: 72px;
+        object-fit: contain;
+        margin-bottom: .75rem;
+        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+    }
+
+    .auth-header h2 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #e0e0e0;
+        margin: 0;
+        letter-spacing: .5px;
+    }
+
+    .auth-body {
+        padding: 2rem;
+    }
+
+    .auth-title {
+        text-align: center;
+        font-size: .8rem;
+        font-weight: 700;
+        letter-spacing: 4px;
+        color: #6c757d;
+        text-transform: uppercase;
+        margin-bottom: 1.75rem;
+    }
+
+    .auth-input-group {
+        position: relative;
+        margin-bottom: 1.25rem;
+    }
+
+    .auth-input-group .input-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #555;
+        font-size: .85rem;
+        z-index: 2;
+    }
+
+    .auth-input-group input {
+        width: 100%;
+        background: #111318;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        color: #e0e0e0;
+        padding: .7rem 2.5rem .7rem 2.5rem;
+        font-size: .9rem;
+        transition: border-color .2s, box-shadow .2s;
+        outline: none;
+    }
+
+    .auth-input-group input:focus {
+        border-color: #3d8bfd;
+        box-shadow: 0 0 0 3px rgba(61, 139, 253, 0.15);
+    }
+
+    .auth-input-group input::placeholder {
+        color: #444;
+    }
+
+    .auth-input-group .toggle-pw {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #555;
+        cursor: pointer;
+        font-size: .85rem;
+        z-index: 2;
+        transition: color .2s;
+    }
+
+    .auth-input-group .toggle-pw:hover {
+        color: #aaa;
+    }
+
+    .auth-error {
+        font-size: .75rem;
+        color: #f87171;
+        margin-top: .3rem;
+        display: none;
+    }
+
+    .auth-input-group.has-error input {
+        border-color: #f87171;
+    }
+
+    .auth-input-group.has-error .auth-error {
+        display: block;
+    }
+
+    .auth-footer-row {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin-top: .25rem;
+    }
+
+    .btn-auth {
+        width: 100%;
+        padding: .75rem;
+        background: #3d8bfd;
+        border: none;
+        border-radius: 8px;
+        color: #fff;
+        font-weight: 600;
+        font-size: .9rem;
+        letter-spacing: .5px;
+        cursor: pointer;
+        transition: background .2s, transform .1s;
+        margin-top: 1.25rem;
+    }
+
+    .btn-auth:hover {
+        background: #2b7ae0;
+    }
+
+    .btn-auth:active {
+        transform: scale(.98);
+    }
+
+    .btn-auth:disabled {
+        opacity: .6;
+        cursor: not-allowed;
+    }
+
+    #infoMessage {
+        font-size: .82rem;
+        text-align: center;
+        border-radius: 8px;
+        padding: .5rem .75rem;
+        margin-bottom: 1rem;
+        min-height: 0;
+        transition: all .2s;
+    }
+
+    #infoMessage:empty {
+        display: none;
+    }
+</style>
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+
+        <div class="auth-header">
+            <img src="<?= $logo_app ?>" alt="Logo">
+            <h2><?= $setting->nama_aplikasi ?></h2>
+        </div>
+
+        <div class="auth-body">
+            <p class="auth-title">Login</p>
+
+            <div id="infoMessage"><?= $message ?></div>
+
+            <?= form_open("auth/cek_login", ['id' => 'login']) ?>
+
+            <div class="auth-input-group" id="wrap-identity">
+                <span class="input-icon fas fa-user"></span>
+                <?= form_input($identity, '', 'required autocomplete="username"') ?>
+                <div class="auth-error" id="err-identity"></div>
+            </div>
+
+            <div class="auth-input-group" id="wrap-password">
+                <span class="input-icon fas fa-lock"></span>
+                <?= form_input($password, '', 'required autocomplete="current-password"') ?>
+                <span id="toggle-password" class="toggle-pw fas fa-eye-slash"></span>
+                <div class="auth-error" id="err-password"></div>
+            </div>
+
+            <input type="hidden" name="cbt-only" id="cbt-only-hidden" value="1">
+
+            <?= form_submit('submit', lang('login_submit_btn'), [
+                'id'    => 'submit',
+                'class' => 'btn-auth',
+            ]) ?>
+
+            <?= form_close() ?>
+        </div>
+
+    </div>
+</div>
+
+<script src="<?= base_url() ?>/assets/app/js/jquery.backstretch.js"></script>
+<script>
+    $(function() {
+        const base_url = '<?= base_url() ?>';
+        const imgs = ['wall1.jpg', 'wall2.png', 'wall3.jpg'];
+
+        $.backstretch(imgs.map(i => base_url + 'assets/img/' + i), {
+            fade: 1000,
+            duration: 10000
+        });
+
+        // Toggle password visibility
+        $('#toggle-password').on('click', function() {
+            const input = $('#password');
+            input.attr('type', input.attr('type') === 'password' ? 'text' : 'password');
+            $(this).toggleClass('fa-eye-slash fa-eye');
+        });
+
+        // Clear error on input change
+        $('form#login input').on('input', function() {
+            const wrap = $(this).closest('.auth-input-group');
+            wrap.removeClass('has-error');
+            wrap.find('.auth-error').text('');
+        });
+
+        $('form#login').on('submit', function(e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            const infobox = $('#infoMessage');
+            const btnSubmit = $('#submit');
+
+            infobox
+                .removeAttr('class')
+                .addClass('bg-gradient-info text-white')
+                .text('Checking...');
+            btnSubmit.attr('disabled', true).val('Wait...');
+
+            // Preserve CBT-only flag in localStorage
+            const cbtOnly = $('[name="cbt-only"]').val();
+            localStorage.setItem('garudaCBT.login', cbtOnly === '1' ? '1' : '0');
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function(data) {
+                    infobox.removeAttr('class').text('');
+                    btnSubmit.removeAttr('disabled').val('<?= lang('login_submit_btn') ?>');
+
+                    if (data.status) {
+                        infobox.addClass('bg-gradient-success text-white').text('Login Sukses');
+                        const isCbt = localStorage.getItem('garudaCBT.login') === '1';
+                        let go = base_url + data.url;
+                        if (isCbt && data.role === 'siswa') go = 'siswa/cbt';
+                        window.location.href = go;
+                    } else {
+                        if (data.invalid) {
+                            $.each(data.invalid, function(key, val) {
+                                const input = $('[name="' + key + '"]');
+                                const wrap = input.closest('.auth-input-group');
+                                if (val) {
+                                    wrap.addClass('has-error');
+                                    wrap.find('.auth-error').text(val);
+                                }
+                            });
+                        }
+                        if (data.failed) {
+                            infobox.addClass('bg-gradient-danger text-white').text(data.failed);
+                        }
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+```
+
+---
+
 ## File: application/views/cbt/alokasi/data.php
 
 ```php
@@ -18473,6 +19227,402 @@ $jenjang = $setting->jenjang;
 
 ---
 
+## File: application/views/dashboard.php
+
+```php
+<div class="content-wrapper bg-dark">
+
+    <!-- ═══════════════════════════════════════════
+       INFO BOX
+  ════════════════════════════════════════════ -->
+    <section class="content-header p-0">
+        <div class="container-fluid px-0 pt-4 pb-0 bg-dark">
+            <div class="row mx-2">
+                <?php foreach ($info_box as $info): ?>
+                    <div class="col-md-2 col-4 mb-2">
+                        <div class="small-box bg-maroon shadow">
+                            <div class="inner">
+                                <h5 class="mb-2"><b><?= $info->total ?></b></h5>
+                                <span><?= $info->title ?></span>
+                            </div>
+                            <div class="icon">
+                                <i class="fa fa-<?= $info->icon ?>" style="top:5px"></i>
+                            </div>
+                            <a href="<?= base_url() . $info->url ?>" class="small-box-footer">
+                                Lihat <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                <?php endforeach ?>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+       MAIN CONTENT
+  ════════════════════════════════════════════ -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+
+                <!-- ── LEFT COLUMN ── -->
+                <div class="col-md-8">
+
+                    <!-- PENILAIAN -->
+                    <div class="card card-orange my-shadow">
+                        <div class="card-header">
+                            <h4 class="card-title"><b>PENILAIAN</b></h4>
+                        </div>
+                        <div class="card-body">
+
+                            <!-- Ujian box + Token -->
+                            <div class="row">
+                                <?php foreach ($ujian_box as $info): ?>
+                                    <div class="col-md-4 col-6 mb-2">
+                                        <a href="<?= base_url() . $info->url ?>">
+                                            <div class="info-box border p-1" style="min-height:60px">
+                                                <div class="info-box-content p-1 text-info">
+                                                    <span class="info-box-text"><?= $info->title ?></span>
+                                                    <h5 class="info-box-number m-0"><?= $info->total ?></h5>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                <?php endforeach ?>
+
+                                <div class="col-md-8 col-12 mb-2">
+                                    <a href="<?= base_url('cbttoken') ?>">
+                                        <div class="info-box border p-1" style="min-height:60px">
+                                            <div class="info-box-content p-1 text-maroon">
+                                                <span class="info-box-text">
+                                                    Token
+                                                    <small class="float-right d-none" id="interval">-- : -- : --</small>
+                                                </span>
+                                                <h5 class="info-box-number m-0" id="token-view">
+                                                    <?= $token->token ?? '- - - - - -' ?>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <!-- Jadwal penilaian hari ini -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <h6 class="text-center text-dark mb-2"><b>PENILAIAN HARI INI</b></h6>
+                                </div>
+                                <div class="col-12 table-responsive text-dark">
+                                    <?php
+                                    $no = 1;
+                                    $jadwal_ujian = $jadwals_ujian[date('Y-m-d')] ?? [];
+                                    if (count($jadwal_ujian) > 0): ?>
+
+                                        <table id="tbl-penilaian" class="table table-bordered table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center align-middle">NO</th>
+                                                    <th class="text-center align-middle">RUANG</th>
+                                                    <th class="text-center align-middle">SESI</th>
+                                                    <th class="text-center align-middle">MATA PELAJARAN</th>
+                                                    <th class="text-center align-middle">PENGAWAS</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($ruangs as $ruang => $sesis):
+                                                    foreach ($sesis as $sesi):
+                                                        foreach ($jadwal_ujian as $jadwal):
+
+                                                            $id_guru = isset($pengawas[$jadwal[0]->id_jadwal][$ruang][$sesi->sesi_id])
+                                                                ? explode(',', $pengawas[$jadwal[0]->id_jadwal][$ruang][$sesi->sesi_id]->id_guru ?? '')
+                                                                : [];
+
+                                                            $badge_kelas   = '';
+                                                            $total_peserta = 0;
+
+                                                            foreach ($jadwal as $jdw) {
+                                                                foreach ($jdw->bank_kelas as $bank_kelas) {
+                                                                    foreach ($jdw->peserta as $peserta) {
+                                                                        $cnt = isset($peserta[$ruang][$sesi->sesi_id])
+                                                                            ? count($peserta[$ruang][$sesi->sesi_id]) : 0;
+                                                                        if ($bank_kelas['kelas_id'] != null && $cnt > 0) {
+                                                                            $total_peserta += $cnt;
+                                                                            $nama_kls = $kelases[$bank_kelas['kelas_id']] ?? '- -';
+                                                                            $badge_kelas .= ' <span class="badge badge-info">' . $nama_kls . ' ' . $cnt . ' siswa</span>';
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            if ($total_peserta > 0): ?>
+                                                                <tr>
+                                                                    <td class="text-center align-middle"><?= $no ?></td>
+                                                                    <td class="text-center align-middle"><?= $sesi->nama_ruang ?></td>
+                                                                    <td class="text-center align-middle"><?= $sesi->nama_sesi ?></td>
+                                                                    <td class="text-center align-middle"><?= $jadwal[0]->kode ?></td>
+                                                                    <td class="align-middle crop-text-table">
+                                                                        <?php foreach ($id_guru as $ig):
+                                                                            echo isset($gurus[$ig]) ? '<p class="p-0 m-0">' . $gurus[$ig] . '</p>' : '';
+                                                                        endforeach ?>
+                                                                    </td>
+                                                                </tr>
+                                                <?php endif;
+                                                        endforeach;
+                                                    endforeach;
+                                                    $no++;
+                                                endforeach ?>
+                                            </tbody>
+                                        </table>
+
+                                    <?php else: ?>
+                                        <table class="w-100 table-bordered">
+                                            <tr>
+                                                <td class="text-center">Tidak ada jadwal penilaian</td>
+                                            </tr>
+                                        </table>
+                                    <?php endif ?>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div><!-- /PENILAIAN -->
+
+                    <!-- INFO / PENGUMUMAN -->
+                    <div class="card card-orange my-shadow mb-3">
+                        <div class="card-header"><b>INFO / PENGUMUMAN</b></div>
+                        <div class="card-body text-dark">
+                            <div class="konten-pengumuman">
+                                <div id="pengumuman"></div>
+                                <p id="loading-post" class="text-center d-none">
+                                    <br><i class="fa fa-spin fa-circle-o-notch"></i> Loading…
+                                </p>
+                                <div id="loadmore-post" onclick="getPosts()"
+                                    class="text-center mt-4 loadmore d-none">
+                                    <div class="btn btn-default">Muat Pengumuman lainnya…</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- /LEFT COLUMN -->
+
+                <!-- ── RIGHT COLUMN ── -->
+                <div class="col-md-4">
+
+                    <!-- JADWAL HARI INI -->
+                    <div class="card card-orange my-shadow">
+                        <div class="card-header">
+                            <div class="card-title"><b>JADWAL HARI INI</b></div>
+                            <div class="card-tools">
+                                <a href="<?= base_url('kelasjadwal') ?>" class="btn btn-sm">
+                                    <i class="fa fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body text-dark p-0">
+                            <div class="card border-0 shadow-none m-0">
+
+                                <!-- Tab pills -->
+                                <div class="card-header d-flex p-0">
+                                    <ul class="nav nav-pills p-2">
+                                        <?php $no = 1;
+                                        foreach ($kelases as $ky => $kelas):
+                                            $active = $no == 1 ? 'active' : ''; ?>
+                                            <li class="nav-item">
+                                                <a class="nav-link <?= $active ?>" href="#tab_<?= $ky ?>" data-toggle="tab">
+                                                    <?= $kelas ?>
+                                                </a>
+                                            </li>
+                                        <?php $no++;
+                                        endforeach ?>
+                                    </ul>
+                                </div>
+
+                                <?php if (count($jadwals) > 0 && count($kbms) > 0): ?>
+                                    <div class="card-body p-0">
+                                        <div class="tab-content">
+                                            <?php $no = 1;
+                                            foreach ($kelases as $ky => $kelas):
+                                                $arrIst = [];
+                                                $arrDur = [];
+                                                if (isset($kbms[$ky]->istirahat)) {
+                                                    foreach ($kbms[$ky]->istirahat as $ist) {
+                                                        $arrIst[]            = $ist['ist'];
+                                                        $arrDur[$ist['ist']] = $ist['dur'];
+                                                    }
+                                                }
+                                                $active = $no == 1 ? 'active' : ''; ?>
+
+                                                <div class="tab-pane <?= $active ?>" id="tab_<?= $ky ?>">
+                                                    <?php if (isset($kbms[$ky])): ?>
+                                                        <div class="table-responsive">
+                                                            <table class="w-100 table">
+                                                                <tbody>
+                                                                    <?php
+                                                                    $jamMulai  = new DateTime($kbms[$ky]->kbm_jam_mulai);
+                                                                    $jamSampai = new DateTime($kbms[$ky]->kbm_jam_mulai);
+
+                                                                    for ($i = 0; $i < $kbms[$ky]->kbm_jml_mapel_hari; $i++):
+                                                                        $jamke = $i + 1;
+
+                                                                        if (in_array($jamke, $arrIst)):
+                                                                            $dur = $arrDur[$jamke];
+                                                                            $jamSampai->add(new DateInterval('PT' . $dur . 'M')); ?>
+                                                                            <tr class="jam" data-jamke="<?= $jamke ?>">
+                                                                                <td class="align-middle" width="150">
+                                                                                    <?= $jamMulai->format('H:i') ?> &ndash; <?= $jamSampai->format('H:i') ?>
+                                                                                </td>
+                                                                                <td class="align-middle text-muted"><i>ISTIRAHAT</i></td>
+                                                                            </tr>
+                                                                        <?php $jamMulai->add(new DateInterval('PT' . $dur . 'M'));
+
+                                                                        else:
+                                                                            $dur = $kbms[$ky]->kbm_jam_pel;
+                                                                            $jamSampai->add(new DateInterval('PT' . $dur . 'M')); ?>
+                                                                            <tr class="jam" data-jamke="<?= $jamke ?>">
+                                                                                <td class="align-middle">
+                                                                                    <?= $jamMulai->format('H:i') ?> &ndash; <?= $jamSampai->format('H:i') ?>
+                                                                                </td>
+                                                                                <td class="align-middle">
+                                                                                    <?= isset($jadwals[$ky][$jamke]) && $jadwals[$ky][$jamke]->kode != null
+                                                                                        ? $jadwals[$ky][$jamke]->kode : '--' ?>
+                                                                                </td>
+                                                                            </tr>
+                                                                    <?php $jamMulai->add(new DateInterval('PT' . $dur . 'M'));
+                                                                        endif;
+                                                                    endfor ?>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    <?php else: ?>
+                                                        <div class="m-4 text-muted">
+                                                            Jadwal untuk kelas <b><?= $kelas ?></b> belum dibuat.
+                                                        </div>
+                                                    <?php endif ?>
+                                                </div>
+
+                                            <?php $no++;
+                                            endforeach ?>
+                                        </div>
+                                    </div>
+
+                                <?php else: ?>
+                                    <div class="card-body text-dark">
+                                        Tidak ada jadwal hari ini.
+                                    </div>
+                                <?php endif ?>
+
+                            </div>
+                        </div>
+                    </div><!-- /JADWAL HARI INI -->
+
+                    <!-- AKTIVITAS -->
+                    <div class="card card-orange my-shadow">
+                        <div class="card-header">
+                            <div class="card-title"><b>AKTIVITAS</b></div>
+                            <div class="card-tools">
+                                <button type="button" onclick="hapusLogAktivitas()" class="btn btn-sm">
+                                    <i class="fa fa-trash text-white"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body text-dark">
+                            <div id="log-list"></div>
+                        </div>
+                    </div>
+
+                </div><!-- /RIGHT COLUMN -->
+
+            </div>
+        </div>
+    </section>
+
+</div><!-- /.content-wrapper -->
+
+
+<!-- ═══════════════════════════════════════════
+     MODAL: KOMENTAR
+════════════════════════════════════════════ -->
+<div class="modal fade" id="komentarModal" tabindex="-1" role="dialog" aria-labelledby="komentarLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="komentarLabel">Tulis Komentar</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img class="img-fluid img-circle img-sm" src="<?= base_url('assets/img/siswa.png') ?>" alt="">
+                <div class="img-push mt-2">
+                    <?= form_open('create', ['id' => 'komentar']) ?>
+                    <input type="hidden" id="id-post" name="id_post" value="">
+                    <div class="input-group">
+                        <input type="text" name="text" placeholder="Tulis komentar…"
+                            class="form-control form-control-sm" required>
+                        <span class="input-group-append">
+                            <button type="submit" class="btn btn-success btn-sm">Komentari</button>
+                        </span>
+                    </div>
+                    <?= form_close() ?>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Batal</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     MODAL: BALASAN
+════════════════════════════════════════════ -->
+<div class="modal fade" id="balasanModal" tabindex="-1" role="dialog" aria-labelledby="balasanLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="balasanLabel">Tulis Balasan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img class="img-fluid img-circle img-sm" src="<?= base_url('assets/img/siswa.png') ?>" alt="">
+                <div class="img-push mt-2">
+                    <?= form_open('create', ['id' => 'balasan']) ?>
+                    <input type="hidden" id="id-comment" name="id_comment" value="">
+                    <div class="input-group">
+                        <input type="text" name="text" placeholder="Tulis balasan…"
+                            class="form-control form-control-sm" required>
+                        <span class="input-group-append">
+                            <button type="submit" class="btn btn-success btn-sm">Balas</button>
+                        </span>
+                    </div>
+                    <?= form_close() ?>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Batal</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    adaJadwalUjian = '<?= count($ada_ujian) ?>';
+    localStorage.setItem('ada_jadwal_ujian', adaJadwalUjian);
+</script>
+<script src="<?= base_url() ?>/assets/app/js/jquery.rowspanizer.js"></script>
+<script src="<?= base_url() ?>/assets/app/js/dashboard.js"></script>
+
+```
+
+---
+
 ## File: application/views/disable_login.php
 
 ```php
@@ -18943,6 +20093,1301 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <?php endif ?>
 
 </div>
+```
+
+---
+
+## File: application/views/install/footer.php
+
+```php
+<script src="<?= base_url() ?>/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="<?= base_url() ?>/assets/plugins/jquery-easing/jquery.easing.min.js"></script>
+<script src="<?= base_url() ?>/assets/plugins/select2/js/select2.min.js"></script>
+<script src="<?= base_url() ?>/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+</body>
+
+</html>
+
+```
+
+---
+
+## File: application/views/install/header.php
+
+```php
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>ZEDAPPS CBT Installer</title>
+
+    <link rel="shortcut icon" href="<?= base_url('assets/img/favicon.png') ?>" type="image/x-icon">
+
+    <link href="<?= base_url() ?>/assets/plugins/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="<?= base_url() ?>/assets/app/css/animate.css" rel="stylesheet">
+    <link rel="stylesheet" href="<?= base_url() ?>/assets/app/css/multi-step.css">
+    <link rel="stylesheet" href="<?= base_url() ?>/assets/app/css/multi-step-theme.css">
+    <link rel="stylesheet" href="<?= base_url() ?>/assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+    <link rel="stylesheet" href="<?= base_url() ?>/assets/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="<?= base_url() ?>/assets/adminlte/dist/css/adminlte.min.css">
+
+    <script src="<?= base_url() ?>/assets/plugins/jquery/jquery.min.js"></script>
+    <script src="<?= base_url() ?>/assets/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+    <style>
+        /* ── Reset & Base ── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #0d0f13;
+            color: #c9cdd4;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: .9rem;
+        }
+
+        /* ── Layout ── */
+        .install-wrap {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .install-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            width: 100%;
+            max-width: 960px;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .install-split {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .install-brand {
+                text-align: center;
+            }
+        }
+
+        /* ── Brand ── */
+        .install-brand img {
+            width: 80px;
+            height: auto;
+            margin-bottom: 1.25rem;
+        }
+
+        .install-brand h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #e0e0e0;
+            margin: 0 0 .75rem;
+            line-height: 1.3;
+        }
+
+        .install-brand h1 b {
+            color: #3d8bfd;
+        }
+
+        .install-brand p {
+            font-size: .95rem;
+            color: #6c757d;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* ── Card ── */
+        .install-card {
+            background: #1a1d23;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+        }
+
+        .install-card-header {
+            background: #111318;
+            padding: 1.25rem 1.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .install-card-header h3 {
+            font-size: .95rem;
+            font-weight: 700;
+            color: #e0e0e0;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .install-card-body {
+            padding: 1.75rem;
+        }
+
+        /* ── Form ── */
+        .install-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .1rem 1.25rem;
+        }
+
+        @media (max-width: 540px) {
+            .install-form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .install-field {
+            display: flex;
+            flex-direction: column;
+            gap: .35rem;
+            margin-bottom: 1.1rem;
+        }
+
+        .install-field label {
+            font-size: .75rem;
+            font-weight: 600;
+            color: #9a9fa8;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .install-field input,
+        .install-field select {
+            background: #111318;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            color: #e0e0e0;
+            padding: .65rem .9rem;
+            font-size: .88rem;
+            width: 100%;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .install-field input:focus,
+        .install-field select:focus {
+            border-color: #3d8bfd;
+            box-shadow: 0 0 0 3px rgba(61, 139, 253, 0.15);
+        }
+
+        .install-field input[readonly] {
+            opacity: .55;
+            cursor: not-allowed;
+        }
+
+        .install-field input::placeholder {
+            color: #3a3f4a;
+        }
+
+        .install-field small {
+            font-size: .75rem;
+            color: #6c757d;
+        }
+
+        .install-field select option {
+            background: #1a1d23;
+        }
+
+        /* ── Step Indicator ── */
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 1.75rem;
+        }
+
+        .step-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: .35rem;
+            flex: 1;
+            position: relative;
+        }
+
+        .step-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 14px;
+            left: calc(50% + 14px);
+            right: calc(-50% + 14px);
+            height: 2px;
+            background: rgba(255, 255, 255, 0.08);
+            z-index: 0;
+        }
+
+        .step-item.completed:not(:last-child)::after {
+            background: #3d8bfd;
+        }
+
+        .step-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #111318;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .7rem;
+            font-weight: 700;
+            color: #6c757d;
+            position: relative;
+            z-index: 1;
+            transition: all .25s;
+        }
+
+        .step-item.completed .step-dot {
+            background: #3d8bfd;
+            border-color: #3d8bfd;
+            color: #fff;
+        }
+
+        .step-item.current .step-dot {
+            border-color: #3d8bfd;
+            color: #3d8bfd;
+            box-shadow: 0 0 0 3px rgba(61, 139, 253, 0.2);
+        }
+
+        .step-label {
+            font-size: .7rem;
+            color: #6c757d;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .step-item.current .step-label,
+        .step-item.completed .step-label {
+            color: #3d8bfd;
+        }
+
+        /* ── Step Content ── */
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        /* ── Divider ── */
+        .install-divider {
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+            margin: 1.5rem 0 1.25rem;
+        }
+
+        /* ── Actions ── */
+        .install-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: .75rem;
+            margin-top: 1.25rem;
+        }
+
+        .install-actions .mr-auto {
+            margin-right: auto !important;
+        }
+
+        /* ── Buttons ── */
+        .btn-install {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            padding: .6rem 1.25rem;
+            border: none;
+            border-radius: 8px;
+            font-size: .85rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background .2s, transform .1s;
+        }
+
+        .btn-install:active {
+            transform: scale(.97);
+        }
+
+        .btn-install:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        .btn-install-primary {
+            background: #3d8bfd;
+            color: #fff;
+        }
+
+        .btn-install-primary:hover {
+            background: #2b7ae0;
+            color: #fff;
+        }
+
+        .btn-install-success {
+            background: #198754;
+            color: #fff;
+        }
+
+        .btn-install-success:hover {
+            background: #146c43;
+            color: #fff;
+        }
+
+        .btn-install-back {
+            background: rgba(255, 255, 255, 0.06);
+            color: #c9cdd4;
+        }
+
+        .btn-install-back:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        /* ── Alert / Info Box ── */
+        .install-info {
+            background: rgba(61, 139, 253, 0.08);
+            border: 1px solid rgba(61, 139, 253, 0.2);
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            margin-top: 1.5rem;
+            color: #c9cdd4;
+            font-size: .85rem;
+            line-height: 1.7;
+        }
+
+        .install-info h5 {
+            font-size: .82rem;
+            font-weight: 700;
+            color: #7eb8ff;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            margin: 0 0 .6rem;
+        }
+
+        .install-info ol,
+        .install-info ul {
+            padding-left: 1.25rem;
+            margin: .4rem 0 .75rem;
+        }
+
+        .install-info li {
+            margin-bottom: .3rem;
+        }
+
+        .install-info pre {
+            background: #111318;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 6px;
+            padding: .75rem 1rem;
+            font-size: .8rem;
+            color: #a8d8a8;
+            margin: .5rem 0;
+            white-space: pre-wrap;
+        }
+
+        /* ── Summary Table ── */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .88rem;
+        }
+
+        .summary-table tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .summary-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .summary-table td {
+            padding: .65rem .5rem;
+            vertical-align: top;
+        }
+
+        .summary-table td:first-child {
+            color: #9a9fa8;
+            font-weight: 500;
+            width: 40%;
+            white-space: nowrap;
+        }
+
+        .summary-table td:last-child {
+            color: #e0e0e0;
+        }
+
+        /* ── Update Page ── */
+        .update-wrap {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 2.5rem 1rem;
+        }
+
+        .update-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .update-brand {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #e0e0e0;
+        }
+
+        .update-brand img {
+            width: 28px;
+            height: 28px;
+        }
+
+        .progress-track {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 6px;
+            height: 36px;
+            overflow: hidden;
+        }
+
+        .progress-bar-custom {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #3d8bfd, #6ea8fe);
+            border-radius: 6px;
+            transition: width .3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .8rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* ── Spinner ── */
+        .install-spinner {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            color: #9a9fa8;
+            font-size: .85rem;
+        }
+
+        .spinner-ring {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #3d8bfd;
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ── Overlay loading ── */
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(13, 15, 19, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            z-index: 10;
+        }
+
+        .overlay.d-none {
+            display: none;
+        }
+    </style>
+</head>
+
+<script>
+    let base_url = '<?= base_url() ?>';
+</script>
+
+<body>
+
+```
+
+---
+
+## File: application/views/install/setup.php
+
+```php
+<div class="install-wrap">
+    <div class="install-split">
+
+        <!-- Brand -->
+        <div class="install-brand">
+            <img src="<?= base_url() ?>/assets/img/garuda_white.svg" alt="Logo">
+            <h1><b>G</b>abungan <b>A</b>plikasi <b>R</b>apor,<br><b>U</b>jian dan e-learning</h1>
+            <p>Selamat datang di installer ZEDAPPS CBT.<br>Isi konfigurasi database untuk memulai.</p>
+        </div>
+
+        <!-- Card -->
+        <div class="install-card">
+            <div class="install-card-header">
+                <h3>Konfigurasi Database</h3>
+            </div>
+            <div class="install-card-body">
+
+                <?= form_open('create', ['id' => 'create']) ?>
+
+                <div class="install-form-grid">
+                    <div class="install-field" style="grid-column: 1 / -1">
+                        <label>Host Name</label>
+                        <input type="text" name="hostname" placeholder="localhost" required>
+                    </div>
+                    <div class="install-field">
+                        <label>Host Username</label>
+                        <input type="text" name="hostuser" placeholder="root" required>
+                    </div>
+                    <div class="install-field">
+                        <label>Host Password</label>
+                        <input type="text" name="hostpass" placeholder="Kosongkan jika tidak ada">
+                        <small>Kosongkan jika tidak menggunakan password.</small>
+                    </div>
+                    <div class="install-field" style="grid-column: 1 / -1">
+                        <label>Nama Database</label>
+                        <input type="text" name="database" placeholder="nama_database" required>
+                        <small>Jangan gunakan spasi.</small>
+                    </div>
+                </div>
+
+                <div class="install-actions">
+                    <button type="submit" id="install-db" class="btn-install btn-install-primary">
+                        <i class="fas fa-database"></i> Install / Update
+                    </button>
+                </div>
+
+                <?= form_close() ?>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Info Panel -->
+    <div style="width:100%; max-width:960px; margin-top:1.5rem;">
+        <div class="install-info">
+            <h5>A. Update Aplikasi</h5>
+            <ul>
+                <li>Isi kolom di atas sesuai pengaturan localhost/MySQL dan nama database yang sudah ada, lalu klik <b>Install / Update</b>.</li>
+            </ul>
+
+            <h5>B. Install Otomatis</h5>
+            <ul>
+                <li>Isi kolom di atas, sesuaikan dengan pengaturan localhost/MySQL, isi nama database, lalu klik <b>Install / Update</b>.</li>
+                <li>Lanjutkan proses instalasi di halaman selanjutnya.</li>
+            </ul>
+
+            <h5>C. Install Manual</h5>
+            <ol>
+                <li>Buat database baru di <b>phpMyAdmin</b>.</li>
+                <li>IMPORT file database di dalam folder <code>/assets/app/db/master.sql</code>.</li>
+                <li>Buka file <b>database.php</b> di dalam folder <code>/application/config/</code>.</li>
+                <li>
+                    Ganti baris berikut:
+                    <pre>'hostname' => '',
+'username' => '',
+'password' => '',
+'database' => '',</pre>
+                    Menjadi:
+                    <pre>'hostname' => 'localhost',
+'username' => '',        // laragon: root | xampp: kosong
+'password' => '',        // default: kosong
+'database' => 'nama_database',</pre>
+                </li>
+                <li>Refresh halaman ini.</li>
+            </ol>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(function() {
+        console.log('<?= $res ?>', '<?= $msg ?>');
+
+        $('#create').on('submit', function(e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            swal.fire({
+                title: 'Checking database',
+                text: 'Silahkan tunggu....',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                onOpen: () => swal.showLoading()
+            });
+
+            $.ajax({
+                url: base_url + 'install/checkdatabase',
+                method: 'POST',
+                data: $(this).serialize() + '&page=0',
+                success: function() {
+                    swal.fire({
+                        title: 'Sukses',
+                        html: 'Database berhasil diinstall',
+                        icon: 'success',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    }).then(r => {
+                        if (r.value) window.location.reload();
+                    });
+                },
+                error: function(xhr) {
+                    swal.fire({
+                        title: 'ERROR',
+                        html: 'Gagal inisialisasi database',
+                        icon: 'error'
+                    });
+                    console.log(xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
+
+```
+
+---
+
+## File: application/views/install/step.php
+
+```php
+<?php
+$readAdminNama  = $data->nama_admin === '' ? '' : 'readonly';
+$readAdminUser  = $data->user_admin  === '' ? '' : 'readonly';
+$readAdminPass  = $data->pass_admin  === '' ? '' : 'readonly';
+$readAppNama    = $data->aplikasi    === '' ? '' : 'readonly';
+$readSklNama    = $data->sekolah     === '' ? '' : 'readonly';
+$readSklKepsek  = $data->kepsek      === '' ? '' : 'readonly';
+$readSklJenjang = $data->jenjang     === '' ? '' : 'readonly';
+$readSklSatuan  = $data->satuan      === '' ? '' : 'readonly';
+$readSklAlamat  = $data->alamat      === '' ? '' : 'readonly';
+$readSklDesa    = $data->desa        === '' ? '' : 'readonly';
+$readSklKec     = $data->kec         === '' ? '' : 'readonly';
+$readSklKota    = $data->kota        === '' ? '' : 'readonly';
+$readSklProv    = $data->prov        === '' ? '' : 'readonly';
+
+$cp = $data->current_page;
+?>
+
+<div class="install-wrap">
+    <div class="install-split">
+
+        <!-- Brand -->
+        <div class="install-brand">
+            <img src="<?= base_url() ?>assets/img/favicon.png" alt="Logo">
+            <h1><b>ZEDAPPS</b> CBT</h1>
+            <p>Ikuti langkah instalasi di sebelah kanan untuk menyelesaikan pengaturan aplikasi.</p>
+        </div>
+
+        <!-- Card -->
+        <div class="install-card" style="position:relative;">
+            <div class="install-card-header">
+                <h3>Langkah Instalasi</h3>
+            </div>
+            <div class="install-card-body">
+
+                <!-- Step Indicator -->
+                <div class="step-indicator">
+                    <?php
+                    $steps = ['Database', 'Administrator', 'Instansi', 'Selesai'];
+                    foreach ($steps as $i => $label):
+                        $n = $i + 1;
+                        $cls = '';
+                        if ($n < $cp)       $cls = 'completed';
+                        elseif ($n === $cp) $cls = 'current';
+                    ?>
+                        <div class="step-item <?= $cls ?>">
+                            <div class="step-dot">
+                                <?= $n < $cp ? '<i class="fas fa-check" style="font-size:.6rem"></i>' : $n ?>
+                            </div>
+                            <span class="step-label"><?= $label ?></span>
+                        </div>
+                    <?php endforeach ?>
+                </div>
+
+                <?= form_open('', ['id' => 'installapp']) ?>
+
+                <!-- Step 1: Database -->
+                <div class="step-content <?= $cp == 1 ? 'active' : '' ?>" data-step="1">
+                    <div class="install-form-grid">
+                        <div class="install-field">
+                            <label>Host Name</label>
+                            <input type="text" name="hostname" value="<?= $data->hostname ?>" placeholder="localhost" readonly>
+                        </div>
+                        <div class="install-field">
+                            <label>Host Username</label>
+                            <input type="text" name="hostuser" value="<?= $data->username ?>" placeholder="Host Username" readonly>
+                        </div>
+                        <div class="install-field">
+                            <label>Host Password</label>
+                            <input type="text" name="hostpass" value="<?= $data->password ?>" placeholder="Kosongkan jika tidak ada" readonly>
+                            <small>Kosongkan jika tidak menggunakan password.</small>
+                        </div>
+                        <div class="install-field">
+                            <label>Nama Database</label>
+                            <input type="text" name="database" value="<?= $data->database ?>" placeholder="Nama Database" readonly>
+                            <small>Jangan gunakan spasi.</small>
+                        </div>
+                    </div>
+                    <hr class="install-divider">
+                    <div class="install-actions">
+                        <button type="button" id="next1" class="btn-install btn-install-primary">
+                            Selanjutnya <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Administrator -->
+                <div class="step-content <?= $cp == 2 ? 'active' : '' ?>" data-step="2">
+                    <p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#9a9fa8;margin-bottom:1rem;">
+                        Registrasi Administrator
+                    </p>
+                    <div class="install-form-grid">
+                        <div class="install-field">
+                            <label>Nama Lengkap</label>
+                            <input type="text" name="nama_lengkap" id="input-nama-adm"
+                                value="<?= $data->nama_admin ?>" class="adm" required <?= $readAdminNama ?>>
+                        </div>
+                        <div class="install-field">
+                            <label>Username</label>
+                            <input type="text" name="username" id="input-user"
+                                class="adm" value="<?= $data->user_admin ?>" required <?= $readAdminUser ?>>
+                        </div>
+                        <div class="install-field">
+                            <label>Password</label>
+                            <input type="text" name="password" id="input-pass"
+                                class="adm" required <?= $readAdminPass ?>>
+                            <small>Minimal 6 karakter.</small>
+                        </div>
+                        <div class="install-field">
+                            <label>Ulangi Password</label>
+                            <input type="text" id="input-rep-pass" class="adm" required <?= $readAdminPass ?>>
+                        </div>
+                    </div>
+                    <hr class="install-divider">
+                    <div class="install-actions">
+                        <button type="button" id="prev2" class="btn-install btn-install-back mr-auto">
+                            <i class="fas fa-arrow-left"></i> Sebelumnya
+                        </button>
+                        <button type="button" id="next2" class="btn-install btn-install-primary">
+                            Selanjutnya <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Instansi -->
+                <div class="step-content <?= $cp == 3 ? 'active' : '' ?>" data-step="3">
+                    <div class="install-form-grid">
+                        <div class="install-field">
+                            <label>Nama Aplikasi</label>
+                            <input type="text" id="input-nama-app" name="nama_aplikasi"
+                                class="app" value="<?= $data->aplikasi ?>" required <?= $readAppNama ?>>
+                        </div>
+                        <div class="install-field">
+                            <label>Nama Sekolah</label>
+                            <input type="text" id="input-nama-skl" name="nama_sekolah"
+                                class="app" value="<?= $data->sekolah ?>" required <?= $readSklNama ?>>
+                        </div>
+                        <div class="install-field">
+                            <label>Kepala Sekolah</label>
+                            <input type="text" id="input-nama-kepsek" name="kepsek"
+                                class="app" value="<?= $data->kepsek ?>" required <?= $readSklKepsek ?>>
+                        </div>
+                        <div class="install-field" style="grid-column: 1 / -1">
+                            <label>Alamat</label>
+                            <input type="text" id="input-alamat" name="alamat"
+                                class="app" value="<?= $data->alamat ?>" required <?= $readSklAlamat ?>>
+                        </div>
+                        <div class="install-field">
+                            <label>Desa / Kelurahan</label>
+                            <input type="text" id="input-desa" name="desa"
+                                class="app" value="<?= $data->desa ?>" required <?= $readSklDesa ?>>
+                        </div>
+                        <div class="install-field">
+                            <label>Kecamatan</label>
+                            <input type="text" id="input-kec" name="kec"
+                                class="app" value="<?= $data->kec ?>" required <?= $readSklKec ?>>
+                        </div>
+                        <div class="install-field">
+                            <label>Kabupaten / Kota</label>
+                            <input type="text" id="input-kota" name="kota"
+                                class="app" value="<?= $data->kota ?>" required <?= $readSklKota ?>>
+                        </div>
+                        <div class="install-field">
+                            <label>Provinsi</label>
+                            <input type="text" id="input-prov" name="prov"
+                                class="app" value="<?= $data->prov ?>" <?= $readSklProv ?>>
+                        </div>
+                        <div class="install-field">
+                            <label>Jenjang</label>
+                            <select id="input-jenjang" name="jenjang" class="app" required <?= $readSklJenjang ?>>
+                                <option value="" disabled selected>Pilih Jenjang</option>
+                                <option value="1">SD / MI</option>
+                                <option value="2">SMP / MTS</option>
+                                <option value="3">SMA / MA / SMK</option>
+                            </select>
+                        </div>
+                        <div class="install-field">
+                            <label>Satuan Pendidikan</label>
+                            <select id="input-satuan" name="satuan" class="app" required <?= $readSklSatuan ?>>
+                                <option value="" disabled>Satuan Pendidikan</option>
+                            </select>
+                        </div>
+                    </div>
+                    <hr class="install-divider">
+                    <div class="install-actions">
+                        <button type="button" id="prev3" class="btn-install btn-install-back mr-auto">
+                            <i class="fas fa-arrow-left"></i> Sebelumnya
+                        </button>
+                        <button type="button" id="next3" class="btn-install btn-install-primary">
+                            Selanjutnya <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Konfirmasi -->
+                <div class="step-content <?= $cp == 4 ? 'active' : '' ?>" data-step="4">
+                    <p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#9a9fa8;margin-bottom:1rem;">
+                        Konfirmasi Data
+                    </p>
+                    <table class="summary-table">
+                        <tbody>
+                            <tr>
+                                <td>Database</td>
+                                <td id="text-db">—</td>
+                            </tr>
+                            <tr>
+                                <td>Nama Aplikasi</td>
+                                <td id="text-app">—</td>
+                            </tr>
+                            <tr>
+                                <td>Administrator</td>
+                                <td id="text-adm">—</td>
+                            </tr>
+                            <tr>
+                                <td>Username</td>
+                                <td id="text-usr">—</td>
+                            </tr>
+                            <tr>
+                                <td>Password</td>
+                                <td id="text-pass">—</td>
+                            </tr>
+                            <tr>
+                                <td>Nama Sekolah</td>
+                                <td id="text-skl">—</td>
+                            </tr>
+                            <tr>
+                                <td>Kepala Sekolah</td>
+                                <td id="text-kep">—</td>
+                            </tr>
+                            <tr>
+                                <td>Jenjang</td>
+                                <td id="text-jen">—</td>
+                            </tr>
+                            <tr>
+                                <td>Satuan Pend.</td>
+                                <td id="text-satuan">—</td>
+                            </tr>
+                            <tr>
+                                <td>Alamat</td>
+                                <td id="text-alm">—</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr class="install-divider">
+                    <div class="install-actions">
+                        <button type="button" id="prev4" class="btn-install btn-install-back mr-auto">
+                            <i class="fas fa-arrow-left"></i> Sebelumnya
+                        </button>
+                        <button type="button" id="next4" class="btn-install btn-install-success">
+                            <i class="fas fa-save"></i> Simpan
+                        </button>
+                    </div>
+                </div>
+
+                <?= form_close() ?>
+
+            </div>
+
+            <!-- Loading overlay -->
+            <div class="overlay d-none loading">
+                <div class="spinner-ring"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    var dataInstall = <?= json_encode($data) ?>;
+    var currentPage = dataInstall.current_page;
+    var satuanPend = [
+        [],
+        ['SD', 'MI'],
+        ['SMP', 'MTS'],
+        ['SMA', 'MA', 'SMK']
+    ];
+
+    $(function() {
+        $('#next1').click(function() {
+            currentPage++;
+            switchPage(currentPage, false);
+        });
+
+        $('#next2').click(function() {
+            var adminAda = dataInstall.nama_admin !== '' && dataInstall.user_admin !== '';
+            if (adminAda) {
+                currentPage++;
+                switchPage(currentPage, false);
+                return;
+            }
+
+            var hasInput = true;
+            $('.adm').each(function() {
+                if (!$(this).val()) {
+                    hasInput = false;
+                    return false;
+                }
+            });
+
+            if (!hasInput) {
+                return Swal.fire({
+                    title: 'ERROR',
+                    text: 'Semua harus diisi, jangan ada yang kosong',
+                    icon: 'error'
+                });
+            }
+            if ($('#input-pass').val() !== $('#input-rep-pass').val()) {
+                return Swal.fire({
+                    title: 'ERROR',
+                    text: 'Password tidak sama',
+                    icon: 'error'
+                });
+            }
+            if ($('#input-pass').val().length < 6) {
+                return Swal.fire({
+                    title: 'ERROR',
+                    text: 'Password kurang dari 6 karakter',
+                    icon: 'error'
+                });
+            }
+            markStep(2);
+            currentPage++;
+            switchPage(currentPage, false);
+        });
+
+        $('#prev2').click(function() {
+            currentPage--;
+            switchPage(currentPage, true);
+        });
+
+        $('#next3').click(function() {
+            var settingAda = dataInstall.aplikasi && dataInstall.sekolah && dataInstall.kepsek &&
+                dataInstall.jenjang && dataInstall.alamat && dataInstall.desa &&
+                dataInstall.kec && dataInstall.kota;
+            if (settingAda) {
+                currentPage++;
+                switchPage(currentPage, false);
+                return;
+            }
+
+            var hasInput = true;
+            $('.app').each(function() {
+                if (!$(this).val()) {
+                    hasInput = false;
+                    return false;
+                }
+            });
+
+            if (!hasInput) {
+                return Swal.fire({
+                    title: 'ERROR',
+                    text: 'Isi semua pilihan yang bertanda bintang (*)',
+                    icon: 'error'
+                });
+            }
+            markStep(3);
+            currentPage++;
+            switchPage(currentPage, false);
+        });
+
+        $('#prev3').click(function() {
+            currentPage--;
+            switchPage(currentPage, true);
+        });
+        $('#prev4').click(function() {
+            currentPage--;
+            switchPage(currentPage, true);
+        });
+        $('#next4').click(function() {
+            $('#installapp').submit();
+        });
+
+        $('#input-jenjang').on('change', function() {
+            var opts = '<option value="" disabled>Satuan Pendidikan</option>';
+            satuanPend[$(this).val()].forEach(function(v, i) {
+                opts += '<option value="' + (i + 1) + '">' + v + '</option>';
+            });
+            $('#input-satuan').html(opts);
+        });
+
+        $('#installapp').on('submit', function(e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            $('.loading').removeClass('d-none');
+
+            swal.fire({
+                title: 'Menyimpan instalasi',
+                text: 'Silahkan tunggu....',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                onOpen: () => swal.showLoading()
+            });
+
+            $.ajax({
+                url: base_url + 'install/createapp',
+                method: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    $('.loading').addClass('d-none');
+                    var ok = response.admin && response.insert;
+                    swal.fire({
+                        title: ok ? 'Sukses' : 'Gagal!',
+                        html: ok ? 'Aplikasi berhasil diinstall' : 'Gagal menyimpan data aplikasi',
+                        icon: ok ? 'success' : 'error',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    }).then(r => {
+                        if (r.value && ok) window.location.href = base_url;
+                    });
+                },
+                error: function(xhr) {
+                    $('.loading').addClass('d-none');
+                    swal.fire({
+                        title: 'ERROR',
+                        html: 'Gagal menyimpan data',
+                        icon: 'error'
+                    });
+                    console.log(xhr.responseText);
+                }
+            });
+        });
+    });
+
+    function markStep(n) {
+        $('.step-item:nth-child(' + n + ')').addClass('completed').removeClass('current');
+    }
+
+    function switchPage(page, back) {
+        // Update indicator
+        $('.step-item').each(function(i) {
+            var n = i + 1;
+            $(this).removeClass('current completed');
+            if (n < page) $(this).addClass('completed');
+            if (n === page) $(this).addClass('current');
+        });
+
+        if (back) $('.step-item:nth-child(' + (page + 1) + ')').removeClass('completed');
+
+        // Switch content
+        $('.step-content').removeClass('active');
+        $('.step-content[data-step="' + page + '"]').addClass('active');
+
+        if (page === 4) {
+            var alm = [$('#input-alamat').val(), $('#input-desa').val(),
+                    $('#input-kec').val(), $('#input-kota').val(), $('#input-prov').val()
+                ]
+                .filter(Boolean).join(', ');
+
+            $('#text-db').text($('#input-nama-db').val() || dataInstall.database);
+            $('#text-app').text($('#input-nama-app').val());
+            $('#text-adm').text($('#input-nama-adm').val());
+            $('#text-usr').text($('#input-user').val());
+            $('#text-pass').text($('#input-pass').val() || '••••••');
+            $('#text-skl').text($('#input-nama-skl').val());
+            $('#text-kep').text($('#input-nama-kepsek').val());
+            $('#text-jen').text($('#input-jenjang option:selected').text());
+            $('#text-satuan').text($('#input-satuan option:selected').text());
+            $('#text-alm').text(alm);
+        }
+    }
+</script>
+
+```
+
+---
+
+## File: application/views/install/update.php
+
+```php
+<div class="update-wrap">
+
+    <!-- Top Bar -->
+    <div class="update-topbar">
+        <div class="update-brand">
+            <img src="<?= base_url('assets/img/favicon.png') ?>" alt="Logo">
+            ZEDAPPS CBT
+        </div>
+        <a href="<?= base_url() ?>" class="btn-install btn-install-back">
+            <i class="fas fa-arrow-left"></i> Kembali
+        </a>
+    </div>
+
+    <!-- Heading -->
+    <h4 style="font-size:1rem;font-weight:700;color:#e0e0e0;margin:0 0 1.5rem;text-transform:uppercase;letter-spacing:.5px;">
+        Update Database
+    </h4>
+
+    <!-- Warning -->
+    <div class="install-info" style="margin-bottom:1.5rem;">
+        <h5>Sebelum melakukan update</h5>
+        <ol>
+            <li>Pastikan aplikasi sedang tidak digunakan.</li>
+            <li>Backup database terlebih dahulu untuk berjaga-jaga.</li>
+        </ol>
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;margin-bottom:1.25rem;">
+        <button id="check" class="btn-install btn-install-primary" onclick="cekDatabase()">
+            <i class="fas fa-search"></i> Cek Database
+        </button>
+        <button id="btn-update" class="btn-install btn-install-success d-none" onclick="updateDatabase()">
+            <i class="fas fa-sync-alt"></i> Update Database
+        </button>
+    </div>
+
+    <!-- Progress -->
+    <div id="progress" class="d-none" style="margin-bottom:1rem;">
+        <div class="progress-track">
+            <div class="progress-bar-custom" id="prog-bar">0%</div>
+        </div>
+    </div>
+
+    <!-- Spinner -->
+    <div id="spinner" class="install-spinner d-none" style="margin-bottom:1rem;">
+        <div class="spinner-ring"></div>
+        <span id="spinner-info">Mengambil informasi…</span>
+    </div>
+
+    <!-- Info -->
+    <div id="info-db" class="install-info d-none" style="margin-bottom:1.5rem;"></div>
+
+    <!-- Table results -->
+    <div class="row mt-2" id="info-table"></div>
+
+</div>
+
+<?= form_open('update', ['id' => 'update-database']) ?>
+<?= form_close() ?>
+
+<script>
+    function cekDatabase() {
+        $('#check').attr('disabled', true);
+        $('#spinner').removeClass('d-none');
+        $('#btn-update').addClass('d-none');
+        $('#progress').addClass('d-none');
+        $('#spinner-info').text('Mengambil informasi…');
+
+        $.ajax({
+            type: 'GET',
+            url: base_url + 'update/checkdatabase',
+            success: function(res) {
+                $('#check').removeAttr('disabled').html('<i class="fas fa-redo"></i> Cek Ulang Database');
+                $('#spinner').addClass('d-none');
+                $('#info-db').removeClass('d-none');
+
+                if (res.counts === 0) {
+                    $('#info-db').html('<i class="fas fa-check-circle" style="color:#4ade80;margin-right:.5rem;"></i>Database sudah versi terbaru.');
+                } else {
+                    $('#info-db').html('<i class="fas fa-exclamation-triangle" style="color:#facc15;margin-right:.5rem;"></i>Database perlu diperbarui ke versi terbaru.');
+                    $('#btn-update').removeClass('d-none');
+                }
+            },
+            error: function(xhr) {
+                swal.fire({
+                    title: 'ERROR',
+                    text: 'Ada kesalahan saat pengecekan database.',
+                    icon: 'error'
+                });
+                console.log(xhr.responseText);
+            }
+        });
+    }
+
+    function updateDatabase() {
+        $('#check').attr('disabled', true);
+        $('#btn-update').attr('disabled', true);
+        $('#spinner').removeClass('d-none');
+        $('#spinner-info').text('Update database…');
+        $('#info-db').html('Update database sedang berjalan…');
+
+        $.ajax({
+            method: 'GET',
+            url: base_url + 'update/updatedatabase',
+            success: function() {
+                $('#spinner').addClass('d-none');
+                $('#info-db').html('<i class="fas fa-check-circle" style="color:#4ade80;margin-right:.5rem;"></i>Update database selesai.');
+                $('#check').removeAttr('disabled');
+                $('#btn-update').removeAttr('disabled').addClass('d-none');
+            },
+            error: function(xhr) {
+                swal.fire({
+                    title: 'ERROR',
+                    html: xhr.responseText,
+                    icon: 'error'
+                });
+                console.log(xhr.responseText);
+            }
+        });
+    }
+
+    function updateProgress(count, message) {
+        var prog = Math.round(Number(count));
+        $('#prog-bar')
+            .css('width', prog + '%')
+            .text(prog + '%  ' + message);
+        $('#info-db').html(message);
+        if (count >= 100) {
+            $('#check').removeAttr('disabled');
+            $('#btn-update').removeAttr('disabled');
+        }
+    }
+</script>
+
 ```
 
 ---
@@ -66398,6 +68843,1388 @@ $satuan = [
 
     })
 </script>
+```
+
+---
+
+## File: application/views/users/admin/data.php
+
+```php
+{{FILE: users/admin/data.php}}
+<div class="content-wrapper bg-dark pt-4">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="text-bold"><?= $judul ?></h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content text-dark">
+        <div class="container-fluid">
+            <div class="card card-default my-shadow">
+
+                <div class="card-header bg-orange with-border">
+                    <h6 class="card-title text-bold"><?= $subjudul ?></h6>
+                    <div class="card-tools">
+                        <button type="button" onclick="reload_ajax()" class="btn btn-sm btn-default">
+                            <i class="fa fa-sync"></i>
+                            <span class="d-none d-sm-inline-block ml-1">Reload</span>
+                        </button>
+                        <button type="button" data-toggle="modal" data-target="#createAdminModal"
+                            class="btn btn-sm btn-primary">
+                            <i class="fas fa-plus"></i>
+                            <span class="d-none d-sm-inline-block ml-1">Tambah Admin</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body text-dark"></div>
+
+                <div class="table-responsive px-4 pb-3" style="border:0">
+                    <table id="users" class="w-100 table table-striped table-bordered table-hover">
+                        <thead class="bg-maroon">
+                            <tr>
+                                <th>No.</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Level</th>
+                                <th>Created On</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<?= form_open('create', ['id' => 'create']) ?>
+<div class="modal fade" id="createAdminModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createModalLabel">Tambah Admin</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <?php
+                $fields = [
+                    ['label' => 'First name',        'name' => 'first_name',       'type' => 'input'],
+                    ['label' => 'Last name',         'name' => 'last_name',        'type' => 'input'],
+                    ['label' => 'Email',             'name' => 'email',            'type' => 'input'],
+                    ['label' => 'Username',          'name' => 'username',         'type' => 'input'],
+                    ['label' => 'Password',          'name' => 'password',         'type' => 'password'],
+                    ['label' => 'Confirm password',  'name' => 'confirm_password', 'type' => 'password'],
+                ];
+                foreach ($fields as $f):
+                    echo '<div class="form-group row">';
+                    echo form_label($f['label'] . ':', $f['name'], ['class' => 'col-md-4 col-form-label']);
+                    echo form_error($f['name']);
+                    if ($f['type'] === 'password') {
+                        echo form_password(['name' => $f['name'], 'class' => 'col-md-7 form-control'], '', 'required');
+                    } else {
+                        echo form_input(['name' => $f['name'], 'class' => 'col-md-7 form-control'], set_value($f['name']), 'required');
+                    }
+                    echo '</div>';
+                endforeach;
+                ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Batal</button>
+                <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="fa fa-plus"></i> Simpan
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<?= form_close() ?>
+
+<script>
+    var user_id = '<?= $user->id ?>';
+</script>
+<script src="<?= base_url() ?>/assets/app/js/users/admin/data.js"></script>
+
+```
+
+---
+
+## File: application/views/users/admin/edit.php
+
+```php
+{{FILE: users/admin/edit.php}}
+<div class="content-wrapper bg-dark pt-4">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2 align-items-center">
+                <div class="col-6">
+                    <h1 class="text-bold"><?= $judul ?></h1>
+                </div>
+                <div class="col-6 text-right">
+                    <a href="<?= base_url('useradmin') ?>" class="btn btn-sm btn-danger">
+                        <i class="fas fa-arrow-circle-left"></i>
+                        <span class="d-none d-sm-inline-block ml-1">Kembali</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+
+                <?php if ($this->ion_auth->is_admin()): ?>
+                    <!-- ── Info User ── -->
+                    <div class="col-md-6 mb-3">
+                        <?= form_open('users/edit_info', ['id' => 'user_info'], ['id' => $users->id]) ?>
+                        <div class="card card-info my-shadow">
+                            <div class="card-header bg-orange">
+                                <h3 class="card-title text-bold"><?= $subjudul ?></h3>
+                            </div>
+                            <div class="card-body text-dark pb-0">
+                                <div class="form-group">
+                                    <label>Username</label>
+                                    <input type="text" name="username" class="form-control" value="<?= $users->username ?>">
+                                    <small class="help-block"></small>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label>First Name</label>
+                                        <input type="text" name="first_name" class="form-control" value="<?= $users->first_name ?>">
+                                        <small class="help-block"></small>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label>Last Name</label>
+                                        <input type="text" name="last_name" class="form-control" value="<?= $users->last_name ?>">
+                                        <small class="help-block"></small>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" name="email" class="form-control" value="<?= $users->email ?>">
+                                    <small class="help-block"></small>
+                                </div>
+                            </div>
+                            <div class="card-footer text-dark">
+                                <button type="submit" id="btn-info" class="btn btn-info float-right">Simpan</button>
+                            </div>
+                        </div>
+                        <?= form_close() ?>
+                    </div>
+                <?php endif ?>
+
+                <?php if ($user->id === $users->id || $this->ion_auth->is_admin()): ?>
+                    <!-- ── Foto Profile ── -->
+                    <div class="col-md-6 mb-3">
+                        <div class="card card-primary my-shadow">
+                            <div class="card-header bg-orange">
+                                <h3 class="card-title text-bold">Foto Profile</h3>
+                            </div>
+                            <div class="card-body text-dark">
+                                <div class="row">
+                                    <div class="col-5">
+                                        <?= form_open_multipart('', ['id' => 'set-foto']) ?>
+                                        <div class="form-group">
+                                            <label>Foto</label>
+                                            <input type="file" id="foto" name="foto" class="dropify"
+                                                data-max-file-size-preview="2M"
+                                                data-allowed-file-extensions="jpg jpeg png"
+                                                data-default-file="<?= base_url() . $profile->foto ?>">
+                                        </div>
+                                        <?= form_close() ?>
+                                    </div>
+                                    <div class="col-7">
+                                        <div class="form-group">
+                                            <label>Nama Lengkap</label>
+                                            <input type="text" id="nama-lengkap" class="form-control"
+                                                placeholder="Nama Lengkap" value="<?= $profile->nama_lengkap ?>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Jabatan</label>
+                                            <input type="text" id="jabatan" class="form-control"
+                                                placeholder="Jabatan" value="<?= $profile->jabatan ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer text-dark">
+                                <button onclick="simpanProfile()" id="simpan" class="btn btn-info float-right">Simpan</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ── Ubah Password ── -->
+                    <div class="col-md-6 mb-3">
+                        <?= form_open('useradmin/change_password', ['id' => 'change_password'], ['id' => $users->id]) ?>
+                        <div class="card card-warning my-shadow">
+                            <div class="card-header bg-orange">
+                                <h3 class="card-title text-bold">Ubah Password</h3>
+                            </div>
+                            <div class="card-body text-dark pb-0">
+                                <?php foreach (
+                                    [
+                                        ['label' => 'Password Lama',        'name' => 'old'],
+                                        ['label' => 'Password Baru',         'name' => 'new'],
+                                        ['label' => 'Konfirmasi Password',   'name' => 'new_confirm'],
+                                    ] as $f
+                                ): ?>
+                                    <div class="form-group">
+                                        <label><?= $f['label'] ?></label>
+                                        <input type="password" name="<?= $f['name'] ?>" class="form-control"
+                                            placeholder="<?= $f['label'] ?>">
+                                    </div>
+                                <?php endforeach ?>
+                            </div>
+                            <div class="card-footer text-dark d-flex justify-content-end gap-2">
+                                <button type="reset" class="btn btn-default mr-2">
+                                    <i class="fa fa-rotate-left"></i> Reset
+                                </button>
+                                <button type="submit" id="btn-pass" class="btn btn-info">Simpan</button>
+                            </div>
+                        </div>
+                        <?= form_close() ?>
+                    </div>
+                <?php endif ?>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    $(function() {
+        function submitajax(url, data, msg) {
+            swal.fire({
+                text: 'Silahkan tunggu…',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                onOpen: () => swal.showLoading()
+            });
+            $.ajax({
+                url,
+                data,
+                type: 'POST',
+                success: function(r) {
+                    if (r.status) {
+                        swal.fire({
+                                title: 'Sukses',
+                                text: msg,
+                                icon: 'success',
+                                confirmButtonColor: '#3085d6'
+                            })
+                            .then(res => {
+                                if (res.value) location.href = base_url + 'logout';
+                            });
+                    } else {
+                        var txt = r.errors ? 'Gagal edit admin' : r.msg ? 'Password lama tidak benar' : 'Terjadi kesalahan';
+                        swal.fire({
+                            title: 'Gagal',
+                            text: txt,
+                            icon: 'error'
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    swal.fire({
+                        title: 'Error',
+                        text: JSON.parse(xhr.responseText).Message,
+                        icon: 'error'
+                    });
+                }
+            });
+        }
+
+        var forms = [{
+                id: 'change_password',
+                btn: '#btn-pass',
+                msg: 'Password anda berhasil diganti'
+            },
+            {
+                id: 'user_info',
+                btn: '#btn-info',
+                msg: 'Informasi user berhasil diupdate'
+            },
+            {
+                id: 'user_level',
+                btn: '#btn-level',
+                msg: 'Level user berhasil diupdate'
+            },
+            {
+                id: 'user_status',
+                btn: '#btn-status',
+                msg: 'Status user berhasil diupdate'
+            },
+        ];
+
+        forms.forEach(function(f) {
+            $('form#' + f.id).on('submit', function(e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                $(f.btn).attr('disabled', true).text('Process…');
+                submitajax($(this).attr('action'), $(this).serialize(), f.msg);
+            });
+        });
+
+        $('form input, form select').on('change', function() {
+            $(this).closest('.form-group').removeClass('has-error');
+            $(this).nextAll('.help-block').eq(0).text('');
+        });
+    });
+</script>
+
+<?php if ($user->id === $users->id): ?>
+    <script>
+        var idUser = '<?= $user->id ?>';
+        var fprofil = '<?= base_url() . $profile->foto ?>';
+
+        $(function() {
+            ajaxcsrf();
+
+            var drEvent = $('.dropify').dropify({
+                messages: {
+                    default: 'Seret logo kesini atau klik',
+                    replace: 'Seret atau klik untuk mengganti logo',
+                    remove: 'Hapus',
+                    error: 'Ooops, ada kesalahan!!'
+                },
+                error: {
+                    fileSize: 'File terlalu besar (maks {{ value }}).',
+                    imageFormat: 'Format tidak diizinkan ({{ value }} saja).'
+                }
+            });
+
+            drEvent.on('dropify.afterClear', function(e, el) {
+                deleteImage($(e.currentTarget).data('default-file'));
+            });
+
+            drEvent.on('dropify.errors', function() {
+                $.toast({
+                    heading: 'Error',
+                    text: 'File rusak',
+                    icon: 'warning',
+                    showHideTransition: 'fade',
+                    hideAfter: 5000,
+                    position: 'top-right'
+                });
+            });
+
+            $('#foto').on('change', function() {
+                var input = this;
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('#prev-logo-kanan').attr('src', e.target.result);
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                    uploadAttach(base_url + 'useradmin/uploadfile/' + idUser, new FormData($('#set-foto')[0]));
+                }
+            });
+
+            function uploadAttach(action, data) {
+                $.ajax({
+                    type: 'POST',
+                    url: action,
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    timeout: 600000,
+                    success: function(d) {
+                        fprofil = d.src;
+                    },
+                    error: function(xhr) {
+                        swal.fire({
+                            title: 'Error',
+                            text: JSON.parse(xhr.responseText).Message,
+                            icon: 'error'
+                        });
+                    }
+                });
+            }
+
+            function deleteImage(src) {
+                $.ajax({
+                    data: {
+                        src
+                    },
+                    type: 'POST',
+                    url: base_url + 'useradmin/deletefile',
+                    cache: false,
+                    success: function() {
+                        fprofil = '';
+                    }
+                });
+            }
+        });
+
+        function simpanProfile() {
+            swal.fire({
+                text: 'Silahkan tunggu…',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                onOpen: () => swal.showLoading()
+            });
+            $.ajax({
+                data: {
+                    foto: fprofil,
+                    nama_lengkap: $('#nama-lengkap').val(),
+                    jabatan: $('#jabatan').val()
+                },
+                type: 'POST',
+                url: base_url + 'useradmin/saveprofile',
+                success: function() {
+                    swal.fire({
+                        title: 'Sukses',
+                        text: 'Profile berhasil disimpan',
+                        icon: 'success'
+                    });
+                },
+                error: function(xhr) {
+                    swal.fire({
+                        title: 'Error',
+                        text: JSON.parse(xhr.responseText).Message,
+                        icon: 'error'
+                    });
+                }
+            });
+        }
+    </script>
+<?php endif ?>
+
+```
+
+---
+
+## File: application/views/users/data.php
+
+```php
+{{FILE: users/data.php}}
+<?php /* Halaman ini adalah placeholder/legacy — konten chart belum diimplementasikan */ ?>
+<div class="content-wrapper bg-dark pt-4">
+    <section class="content-header">
+        <div class="container-fluid">
+            <h1 class="text-bold">Manajemen Pengguna</h1>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-default my-shadow">
+
+                <div class="card-header bg-orange with-border">
+                    <h3 class="card-title text-bold">Master <?= $subjudul ?></h3>
+                    <div class="card-tools">
+                        <button type="button" onclick="reload_ajax()" class="btn btn-sm btn-default">
+                            <i class="fa fa-sync"></i>
+                            <span class="d-none d-sm-inline-block ml-1">Reload</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body text-dark">
+                    <div class="mb-2">
+                        <label class="d-inline-flex align-items-center gap-1">
+                            <input type="checkbox" id="show_me"> Tampilkan saya
+                        </label>
+                    </div>
+                </div>
+
+                <div class="table-responsive px-4 pb-3" style="border:0">
+                    <table id="users" class="w-100 table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Level</th>
+                                <th>Created On</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>No.</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Level</th>
+                                <th>Created On</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    var user_id = '<?= $user->id ?>';
+</script>
+<script src="<?= base_url() ?>assets/dist/js/app/users/data.js"></script>
+
+
+```
+
+---
+
+## File: application/views/users/edit.php
+
+```php
+{{FILE: users/edit.php}}
+<div class="content-wrapper bg-dark pt-4">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2 align-items-center">
+                <div class="col-sm-6">
+                    <h1 class="text-bold">Edit User</h1>
+                </div>
+                <?php if ($this->ion_auth->is_admin()): ?>
+                    <div class="col-sm-6 text-right">
+                        <a href="<?= base_url('users') ?>" class="btn btn-sm btn-default">
+                            <i class="fa fa-arrow-left"></i> Batal
+                        </a>
+                    </div>
+                <?php endif ?>
+            </div>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+
+                <?php if ($this->ion_auth->is_admin()): ?>
+                    <!-- ── Data User ── -->
+                    <div class="col-sm-4 mb-3">
+                        <?= form_open('users/edit_info', ['id' => 'user_info'], ['id' => $users->id]) ?>
+                        <div class="card card-info my-shadow">
+                            <div class="card-header with-border">
+                                <h3 class="card-title">Data User</h3>
+                            </div>
+                            <div class="card-body pb-0">
+                                <div class="form-group">
+                                    <label>Username</label>
+                                    <input type="text" name="username" class="form-control" value="<?= $users->username ?>">
+                                    <small class="help-block"></small>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label>First Name</label>
+                                        <input type="text" name="first_name" class="form-control" value="<?= $users->first_name ?>">
+                                        <small class="help-block"></small>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label>Last Name</label>
+                                        <input type="text" name="last_name" class="form-control" value="<?= $users->last_name ?>">
+                                        <small class="help-block"></small>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" name="email" class="form-control" value="<?= $users->email ?>">
+                                    <small class="help-block"></small>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" id="btn-info" class="btn btn-info">Simpan</button>
+                            </div>
+                        </div>
+                        <?= form_close() ?>
+                    </div>
+                <?php endif ?>
+
+                <?php if ($user->id !== $users->id): ?>
+                    <!-- ── Level & Status ── -->
+                    <div class="col-sm-4 mb-3">
+                        <?= form_open('users/edit_level', ['id' => 'user_level'], ['id' => $users->id]) ?>
+                        <div class="card card-primary my-shadow">
+                            <div class="card-header with-border">
+                                <h3 class="card-title">Level</h3>
+                            </div>
+                            <div class="card-body pb-0">
+                                <div class="form-group">
+                                    <label>Level User</label>
+                                    <select id="level" name="level" class="form-control select2" style="width:100%!important">
+                                        <option value="">Pilih Level</option>
+                                        <?php foreach ($groups as $row): ?>
+                                            <option value="<?= $row->id ?>" <?= $level->id === $row->id ? 'selected' : '' ?>>
+                                                <?= $row->name ?>
+                                            </option>
+                                        <?php endforeach ?>
+                                    </select>
+                                    <small class="help-block"></small>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" id="btn-level" class="btn btn-primary">Simpan</button>
+                            </div>
+                        </div>
+                        <?= form_close() ?>
+
+                        <?= form_open('users/edit_status', ['id' => 'user_status'], ['id' => $users->id]) ?>
+                        <div class="card card-success my-shadow mt-3">
+                            <div class="card-header with-border">
+                                <h3 class="card-title">Status</h3>
+                            </div>
+                            <div class="card-body pb-0">
+                                <div class="form-group">
+                                    <label class="mr-3">
+                                        <input type="radio" name="status" value="1" <?= $users->active === '1' ? 'checked' : '' ?>>
+                                        Aktif
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="status" value="0" <?= $users->active === '0' ? 'checked' : '' ?>>
+                                        Tidak Aktif
+                                    </label>
+                                    <small class="help-block"></small>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" id="btn-status" class="btn btn-success">Simpan</button>
+                            </div>
+                        </div>
+                        <?= form_close() ?>
+                    </div>
+                <?php endif ?>
+
+                <?php if ($user->id === $users->id): ?>
+                    <!-- ── Ubah Password ── -->
+                    <div class="col-sm-4 mb-3">
+                        <?= form_open('users/change_password', ['id' => 'change_password'], ['id' => $users->id]) ?>
+                        <div class="card card-warning my-shadow">
+                            <div class="card-header with-border">
+                                <h3 class="card-title">Ubah Password</h3>
+                            </div>
+                            <div class="card-body pb-0">
+                                <?php foreach (
+                                    [
+                                        ['label' => 'Password Lama',        'name' => 'old'],
+                                        ['label' => 'Password Baru',         'name' => 'new'],
+                                        ['label' => 'Konfirmasi Password',   'name' => 'new_confirm'],
+                                    ] as $f
+                                ): ?>
+                                    <div class="form-group">
+                                        <label><?= $f['label'] ?></label>
+                                        <input type="password" name="<?= $f['name'] ?>" class="form-control"
+                                            placeholder="<?= $f['label'] ?>">
+                                        <small class="help-block"></small>
+                                    </div>
+                                <?php endforeach ?>
+                            </div>
+                            <div class="card-footer d-flex justify-content-end gap-2">
+                                <button type="reset" class="btn btn-default mr-2">
+                                    <i class="fa fa-rotate-left"></i> Reset
+                                </button>
+                                <button type="submit" id="btn-pass" class="btn btn-warning">Ganti Password</button>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif ?>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="<?= base_url() ?>assets/dist/js/app/users/edit.js"></script>
+
+<?php if ($user->id === $users->id): ?>
+    <script>
+        $(function() {
+            $('form#change_password').on('submit', function(e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                var btn = $('#btn-pass');
+                btn.attr('disabled', true).text('Process…');
+                submitajax($(this).attr('action'), $(this).serialize(), 'Password anda berhasil diganti', btn);
+            });
+        });
+    </script>
+<?php endif ?>
+
+```
+
+---
+
+## File: application/views/users/guru/data.php
+
+```php
+{{FILE: users/guru/data.php}}
+<div class="content-wrapper bg-dark pt-4">
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="text-bold"><?= $judul ?></h1>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="card card-default my-shadow" style="position:relative;">
+
+        <div class="card-header bg-orange with-border">
+          <h3 class="card-title text-bold"><?= $subjudul ?></h3>
+          <div class="card-tools">
+            <button type="button" onclick="reload_ajax()" class="btn btn-sm btn-default">
+              <i class="fa fa-sync"></i>
+              <span class="d-none d-sm-inline-block ml-1">Reload</span>
+            </button>
+            <button type="button" class="btn btn-action btn-success btn-sm"
+                    data-action="aktifkan" data-toggle="tooltip" title="Aktifkan">
+              <i class="fa fa-users m-1"></i>
+              <span class="d-none d-sm-inline-block ml-1">Aktifkan Semua</span>
+            </button>
+            <button type="button" class="btn btn-action btn-danger btn-sm"
+                    data-action="nonaktifkan" data-toggle="tooltip" title="Nonaktifkan">
+              <i class="fa fa-ban m-1"></i>
+              <span class="d-none d-sm-inline-block ml-1">Nonaktifkan Semua</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body text-dark">
+          <div class="table-responsive">
+            <table id="users" class="w-100 table table-striped table-bordered table-hover">
+              <thead class="bg-maroon">
+                <tr>
+                  <th class="text-center" style="width:40px">No.</th>
+                  <th>Nama</th>
+                  <th>Username</th>
+                  <th>Password</th>
+                  <th>Jabatan</th>
+                  <th class="text-center">Reset Login</th>
+                  <th class="text-center">Aksi</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
+
+        <div class="overlay d-none" id="loading">
+          <div class="spinner-grow"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>var user_id = '<?= $user->id ?>';</script>
+<script src="<?= base_url() ?>/assets/app/js/users/guru/data.js"></script>
+
+
+```
+
+---
+
+## File: application/views/users/guru/edit.php
+
+```php
+{{FILE: users/guru/edit.php}}
+<div class="content-wrapper bg-dark pt-4">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2 align-items-center">
+                <div class="col-6">
+                    <h1><?= $judul ?></h1>
+                </div>
+                <?php if ($this->ion_auth->is_admin()): ?>
+                    <div class="col-6 text-right">
+                        <a href="<?= base_url('userguru') ?>" class="btn btn-sm btn-danger">
+                            <i class="fas fa-arrow-circle-left"></i>
+                            <span class="d-none d-sm-inline-block ml-1">Kembali</span>
+                        </a>
+                    </div>
+                <?php endif ?>
+            </div>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+
+                <?php if ($user->username === $guru->username || $this->ion_auth->is_admin()): ?>
+
+                    <!-- ── Login Info ── -->
+                    <div class="col-md-6 mb-3">
+                        <div class="card my-shadow">
+                            <div class="card-header d-flex align-items-center justify-content-between">
+                                <?php if (is_null($users)): ?>
+                                    <h6 class="card-title mb-0"><?= $guru->nama_guru ?> belum aktif</h6>
+                                    <button type="button" id="btn-aktif" class="btn btn-success btn-sm">Aktifkan</button>
+                                <?php else: ?>
+                                    <h6 class="card-title mb-0">Edit Login <?= $guru->nama_guru ?></h6>
+                                    <?php if ($this->ion_auth->is_admin()): ?>
+                                        <button type="button" id="btn-nonaktif" class="btn btn-danger btn-sm">Nonaktifkan</button>
+                                    <?php endif ?>
+                                <?php endif ?>
+                            </div>
+                            <?= form_open('userguru/editlogin', ['id' => 'change_password'], ['id' => $guru->id]) ?>
+                            <div class="card-body">
+                                <?php
+                                $disabled = is_null($users) ? 'disabled' : '';
+                                $fields = [
+                                    ['label' => 'Nama Depan',    'name' => 'first_name', 'val' => is_null($users) ? '' : $users->first_name],
+                                    ['label' => 'Nama Belakang', 'name' => 'last_name',  'val' => is_null($users) ? '' : $users->last_name],
+                                    ['label' => 'Email',         'name' => 'email',      'val' => is_null($users) ? '' : $guru->email, 'type' => 'email'],
+                                ];
+                                foreach ($fields as $f):
+                                ?>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend w-40">
+                                            <span class="input-group-text"><?= $f['label'] ?></span>
+                                        </div>
+                                        <input type="<?= $f['type'] ?? 'text' ?>" name="<?= $f['name'] ?>"
+                                            class="form-control" value="<?= $f['val'] ?>"
+                                            placeholder="<?= $f['label'] ?>" <?= $disabled ?> required>
+                                    </div>
+                                <?php endforeach ?>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend w-40">
+                                        <span class="input-group-text">Username</span>
+                                    </div>
+                                    <input type="text" class="form-control" value="<?= $guru->username ?>" placeholder="Username" disabled>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend w-40">
+                                        <span class="input-group-text">Password</span>
+                                    </div>
+                                    <input type="password" class="form-control" value="<?= $guru->password ?>" placeholder="Password" disabled>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit" id="btn-level" class="btn btn-primary" <?= $disabled ?>>Simpan</button>
+                                </div>
+                            </div>
+                            <?= form_close() ?>
+                        </div>
+                    </div>
+
+                    <!-- ── Ubah Password ── -->
+                    <div class="col-md-6 mb-3">
+                        <div class="card card-warning my-shadow">
+                            <div class="card-header with-border">
+                                <h3 class="card-title">Ubah Password &amp; Username</h3>
+                            </div>
+                            <div class="card-body">
+                                <?php
+                                $pwFields = [
+                                    ['label' => 'Username',            'name' => 'username',    'type' => 'text',     'val' => is_null($users) ? '' : $users->username],
+                                    ['label' => 'Password Lama',       'name' => 'old',         'type' => 'password', 'val' => ''],
+                                    ['label' => 'Password Baru',       'name' => 'new',         'type' => 'password', 'val' => ''],
+                                    ['label' => 'Konfirmasi Password', 'name' => 'new_confirm', 'type' => 'password', 'val' => ''],
+                                ];
+                                foreach ($pwFields as $f):
+                                ?>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend w-40">
+                                            <span class="input-group-text"><?= $f['label'] ?></span>
+                                        </div>
+                                        <input type="<?= $f['type'] ?>" name="<?= $f['name'] ?>" class="form-control"
+                                            value="<?= $f['val'] ?>" placeholder="<?= $f['label'] ?>"
+                                            <?= $disabled ?> required>
+                                    </div>
+                                <?php endforeach ?>
+                                <div class="d-flex justify-content-end gap-2">
+                                    <button type="reset" class="btn btn-default mr-2" <?= $disabled ?>>
+                                        <i class="fa fa-rotate-left"></i> Reset
+                                    </button>
+                                    <button type="submit" id="btn-pass" class="btn btn-warning" <?= $disabled ?>>
+                                        Ganti Password
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <?php endif ?>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    var guru_id = '<?= $guru->id_guru ?>';
+</script>
+<script src="<?= base_url() ?>/assets/app/js/users/guru/edit.js"></script>
+
+<?php if ($user->id === $guru->id_guru): ?>
+    <script>
+        $(function() {
+            $('form#change_password').on('submit', function(e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                var btn = $('#btn-pass');
+                btn.attr('disabled', true).text('Process…');
+                submitajax($(this).attr('action'), $(this).serialize(), 'Password anda berhasil diganti', btn);
+            });
+        });
+    </script>
+<?php endif ?>
+
+
+```
+
+---
+
+## File: application/views/users/siswa/data.php
+
+```php
+{{FILE: users/siswa/data.php}}
+<div class="content-wrapper bg-dark pt-4">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="text-bold"><?= $judul ?></h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-default my-shadow" style="position:relative;">
+
+                <div class="card-header bg-orange with-border">
+                    <h3 class="card-title text-bold"><?= $subjudul ?></h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-action btn-success btn-sm"
+                            data-action="aktifkan" data-toggle="tooltip" title="Aktifkan">
+                            <i class="fa fa-users m-1"></i>
+                            <span class="d-none d-sm-inline-block ml-1">Aktifkan Semua</span>
+                        </button>
+                        <button type="button" class="btn btn-action btn-danger btn-sm"
+                            data-action="nonaktifkan" data-toggle="tooltip" title="Nonaktifkan">
+                            <i class="fa fa-ban m-1"></i>
+                            <span class="d-none d-sm-inline-block ml-1">Nonaktifkan Semua</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body text-dark">
+                    <!-- Search & Length controls -->
+                    <div class="row mb-2">
+                        <div class="col-sm-12 col-md-6">
+                            <label class="d-flex align-items-center gap-1">
+                                Show
+                                <select id="users_length" class="custom-select custom-select-sm form-control form-control-sm ml-1 mr-1" style="width:auto;">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <div class="d-flex justify-content-end align-items-center gap-1">
+                                <button id="btn-clear" type="button" class="btn btn-sm btn-light" disabled
+                                    data-toggle="tooltip" title="Hapus pencarian">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                                <input id="input-search" type="search" class="form-control form-control-sm"
+                                    style="width:auto;" placeholder="Cari…" aria-controls="users">
+                                <button id="btn-search" type="button" class="btn btn-sm btn-light" disabled
+                                    onclick="applySearch()" data-toggle="tooltip" title="Cari">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive mb-2">
+                        <?= form_open('', ['id' => 'bulk']) ?>
+                        <table id="users" class="w-100 table table-striped table-bordered table-hover">
+                            <thead class="bg-maroon">
+                                <tr>
+                                    <th class="text-center" style="width:40px">No.</th>
+                                    <th>NIS</th>
+                                    <th>Nama</th>
+                                    <th>Kelas</th>
+                                    <th>Username</th>
+                                    <th>Password</th>
+                                    <th class="text-center">Reset Login</th>
+                                    <th class="text-center">Status / Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body"></tbody>
+                        </table>
+                        <?= form_close() ?>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination" id="pagination"></ul>
+                        </nav>
+                    </div>
+                </div>
+
+                <div class="overlay d-none" id="loading">
+                    <div class="spinner-grow"></div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<?= form_open('', ['id' => 'pager']) ?>
+<input type="hidden" id="pager-page" name="page" value="1">
+<input type="hidden" id="pager-limit" name="limit" value="10">
+<?= form_close() ?>
+
+<script src="<?= base_url() ?>/assets/app/js/jquery.twbsPagination.js"></script>
+<script>
+    let currentPage = 1,
+        perPage = 10,
+        $pagination, defaultOpts, query;
+
+    $(function() {
+        ajaxcsrf();
+
+        $pagination = $('#pagination');
+        defaultOpts = {
+            visiblePages: 5,
+            initiateStartPageClick: false,
+            onPageClick: function(e, page) {
+                currentPage = page;
+                loadSiswa();
+            }
+        };
+        $pagination.twbsPagination(defaultOpts);
+
+        $('#users_length').on('change', function() {
+            $('#pager-limit').val($(this).val());
+            perPage = $(this).val();
+            currentPage = 1;
+            loadSiswa();
+        });
+
+        $('#input-search').on('change keyup', function() {
+            var val = $(this).val();
+            query = val === '' ? null : val;
+            $('#btn-clear, #btn-search').attr('disabled', query == null);
+        });
+
+        $('#btn-clear').on('click', function() {
+            query = null;
+            currentPage = 1;
+            $('#btn-clear, #btn-search').attr('disabled', true);
+            $('#input-search').val('');
+            loadSiswa();
+        });
+
+        /* ── Table action buttons ── */
+        function ajaxAction(url, onSuccess) {
+            $('#loading').removeClass('d-none');
+            $.ajax({
+                url,
+                type: 'GET',
+                success: function(r) {
+                    $('#loading').addClass('d-none');
+                    if (r.msg) {
+                        swal.fire({
+                            title: r.status ? 'Sukses' : 'Error',
+                            text: decodeURIComponent(r.msg),
+                            icon: r.status ? 'success' : 'error'
+                        });
+                        if (r.status && onSuccess) onSuccess();
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        title: 'Gagal',
+                        html: xhr.responseText,
+                        icon: 'error'
+                    });
+                }
+            });
+        }
+
+        $('#users').on('click', '.btn-aktif', function() {
+            ajaxAction(base_url + 'usersiswa/activate/' + $(this).data('id'), loadSiswa);
+        });
+
+        $('#users').on('click', '.btn-nonaktif', function() {
+            var username = $(this).data('username'),
+                nama = $(this).data('nama').replace("'", '');
+            ajaxAction(base_url + 'usersiswa/deactivate/' + username + '/' + nama, loadSiswa);
+        });
+
+        $('#users').on('click', '.btn-reset', function() {
+            var username = $(this).data('username'),
+                nama = encodeURIComponent($(this).data('nama'));
+            ajaxAction(base_url + 'usersiswa/reset_login/' + username + '/' + nama, loadSiswa);
+        });
+
+        $('.btn-action').on('click', function() {
+            var action = $(this).data('action');
+            var isAktif = action === 'aktifkan';
+            swal.fire({
+                title: isAktif ? 'Aktifkan semua siswa' : 'Nonaktifkan semua siswa',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Lanjutkan'
+            }).then(function(r) {
+                if (!r.value) return;
+                $('#loading').removeClass('d-none');
+                swal.fire({
+                    title: isAktif ? 'Mengaktifkan…' : 'Menonaktifkan…',
+                    text: 'Silahkan tunggu…',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                    onOpen: () => swal.showLoading()
+                });
+                $.ajax({
+                    url: base_url + (isAktif ? 'usersiswa/aktifkansemua' : 'usersiswa/nonaktifkansemua'),
+                    type: 'GET',
+                    success: function(res) {
+                        $('#loading').addClass('d-none');
+                        swal.fire({
+                            title: res.status ? 'Sukses' : 'Gagal',
+                            text: res.msg,
+                            icon: res.status ? 'success' : 'error'
+                        }).then(loadSiswa);
+                    },
+                    error: function(xhr) {
+                        Swal.fire({
+                            title: 'Gagal',
+                            html: xhr.responseText,
+                            icon: 'error'
+                        });
+                    }
+                });
+            });
+        });
+
+        loadSiswa();
+    });
+
+    function loadSiswa() {
+        $('#pager-page').val(currentPage);
+        $('#loading').removeClass('d-none');
+        var cari = query != null ? '&search=' + query : '';
+        $.ajax({
+            url: base_url + 'usersiswa/list',
+            type: 'POST',
+            data: $('#pager').serialize() + cari,
+            success: function(data) {
+                $('#loading').addClass('d-none');
+                $('#input-search').val(data.search);
+                if (data.pages > 0) {
+                    $pagination.removeClass('d-none').twbsPagination('destroy')
+                        .twbsPagination($.extend({}, defaultOpts, {
+                            startPage: currentPage,
+                            totalPages: data.pages
+                        }));
+                } else {
+                    $pagination.addClass('d-none');
+                }
+                previewData(data);
+            },
+            error: function(xhr) {
+                $('#loading').addClass('d-none');
+                swal.fire({
+                    title: 'ERROR',
+                    text: 'Ada kesalahan',
+                    icon: 'error'
+                });
+            }
+        });
+    }
+
+    function previewData(data) {
+        var html = '';
+        if (data.lists.length > 0) {
+            $.each(data.lists, function(idx, s) {
+                var kls = s.nama_kelas || '';
+                var no = perPage * (currentPage - 1) + (idx + 1);
+                html += `<tr>
+        <td class="text-center align-middle">
+          <input type="hidden" name="ids[]" value="${s.id_siswa}">${no}
+        </td>
+        <td class="align-middle">${s.nis}</td>
+        <td>
+          <div class="media d-flex align-items-center">
+            <img class="avatar img-circle" src="${base_url + s.foto}" width="30" height="30" alt="">
+            <div class="media-body ml-2">${s.nama}</div>
+          </div>
+        </td>
+        <td class="align-middle">${kls}</td>
+        <td class="align-middle">${s.username}</td>
+        <td class="align-middle">${s.password}</td>
+        <td class="text-center align-middle">
+          <button type="button" class="btn btn-default btn-xs btn-reset"
+                  ${s.reset == '0' ? 'disabled' : ''}
+                  data-username="${s.username}" data-nama="${s.nama}"
+                  data-toggle="tooltip" title="Reset Login">
+            <i class="fa fa-sync text-xs mx-1"></i>
+          </button>
+        </td>
+        <td class="text-center align-middle p-1">
+          ${s.aktif == '0'
+            ? `<span class="badge badge-danger">Nonaktif</span><br>
+               <button type="button" class="btn btn-aktif btn-success btn-xs mt-1"
+                       data-id="${s.id_siswa}" data-toggle="tooltip" title="Aktifkan">
+                 <i class="fa fa-user-plus text-xs mx-1"></i>
+               </button>`
+            : `<span class="badge badge-success">Aktif</span><br>
+               <button type="button" class="btn btn-nonaktif btn-danger btn-xs mt-1"
+                       data-username="${s.username}" data-nama="${s.nama}"
+                       data-toggle="tooltip" title="Nonaktifkan">
+                 <i class="fa fa-ban text-xs mx-1"></i>
+               </button>`
+          }
+        </td>
+      </tr>`;
+            });
+        } else {
+            html = '<tr><td colspan="8" class="text-center">Tidak ada data siswa</td></tr>';
+        }
+        $('#table-body').html(html);
+        $('.avatar').on('error', function() {
+            var src = $(this).attr('src').replace('profiles', 'foto_siswa');
+            $(this).attr('src', src).on('error', function() {
+                $(this).attr('src', base_url + 'assets/img/siswa.png');
+            });
+        });
+    }
+
+    function applySearch() {
+        query = $('#input-search').val();
+        currentPage = 1;
+        loadSiswa();
+    }
+</script>
+
+
+```
+
+---
+
+## File: application/views/users/siswa/edit.php
+
+```php
+{{FILE: users/siswa/edit.php}}
+<div class="content-wrapper bg-dark pt-4">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2 align-items-center">
+                <div class="col-6">
+                    <h1><?= $judul ?></h1>
+                </div>
+                <?php if ($this->ion_auth->is_admin()): ?>
+                    <div class="col-6 text-right">
+                        <a href="<?= base_url('usersiswa') ?>" class="btn btn-sm btn-danger">
+                            <i class="fas fa-arrow-circle-left"></i>
+                            <span class="d-none d-sm-inline-block ml-1">Kembali</span>
+                        </a>
+                    </div>
+                <?php endif ?>
+            </div>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+
+                <!-- ── Detail Siswa ── -->
+                <div class="col-md-3 mb-3">
+                    <div class="card card-info my-shadow">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Detail Data Siswa</h3>
+                        </div>
+                        <div class="card-body text-center">
+                            <?php
+                            if ($siswa->foto === 'assets/img/siswa.png') {
+                                $img = $siswa->jenis_kelamin === 'L' ? 'siswa-l.png' : 'siswa-p.png';
+                                $src = base_url() . 'assets/img/' . $img;
+                            } else {
+                                $src = base_url() . 'assets/img/' . $siswa->foto;
+                            }
+                            ?>
+                            <img src="<?= $src ?>" class="img-circle profile-avatar mt-2" alt="Foto Siswa"
+                                style="width:80px;height:80px;object-fit:cover;">
+                            <h4 class="mt-3 mb-0"><?= $siswa->nama ?></h4>
+                            <small class="text-muted">Kelas <?= $siswa->nama_kelas ?></small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Ubah Password ── -->
+                <div class="col-md-9 mb-3">
+                    <div class="card card-warning my-shadow">
+                        <div class="card-header with-border">
+                            <h3 class="card-title">Ubah Password &amp; Username</h3>
+                        </div>
+                        <div class="card-body">
+                            <?= $this->session->flashdata('editsiswa') ?>
+                            <?= form_open('usersiswa/update', ['id' => 'editsiswa'], ['method' => 'edit', 'id_siswa' => $siswa->id_siswa]) ?>
+
+                            <?php
+                            $pwFields = [
+                                ['label' => 'Username',            'name' => 'username',    'type' => 'text',     'val' => $siswa->username],
+                                ['label' => 'Password Lama',       'name' => 'old',         'type' => 'text',     'val' => $siswa->password],
+                                ['label' => 'Password Baru',       'name' => 'new',         'type' => 'text',     'val' => ''],
+                                ['label' => 'Konfirmasi Password', 'name' => 'new_confirm', 'type' => 'text',     'val' => ''],
+                            ];
+                            foreach ($pwFields as $f): ?>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend w-40">
+                                        <span class="input-group-text"><?= $f['label'] ?></span>
+                                    </div>
+                                    <input type="<?= $f['type'] ?>" name="<?= $f['name'] ?>" class="form-control"
+                                        value="<?= $f['val'] ?>" placeholder="<?= $f['label'] ?>"
+                                        <?= in_array($f['name'], ['username', 'old', 'new_confirm']) ? 'required' : '' ?>>
+                                </div>
+                            <?php endforeach ?>
+
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" id="btn-pass" class="btn btn-warning">Ganti Password</button>
+                            </div>
+                            <?= form_close() ?>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    $(function() {
+        $('#flashdata').fadeTo(10000, 500).slideUp(500, function() {
+            $(this).slideUp(500);
+        });
+    });
+</script>
+
 ```
 
 ---

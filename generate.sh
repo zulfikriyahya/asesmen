@@ -47,4 +47,24 @@ echo "✔ Selesai. $count file ditulis ke '$OUTPUT'."
 
 
 
-# sekarang refactor kode berikut ini menjadi lebih responsive, elegan, rapi, dan simetris, tanpa merubah logic apapun
+# # Skills & Project Convention Reference
+
+# Dokumen ini digunakan sebagai konteks bagi AI assistant saat membantu pengembangan project **MTsN 1 Pandeglang**. Baca dokumen ini sebelum memberikan saran kode atau arsitektur.
+
+# ---
+
+# ## Developer Profile
+
+# - **Nama**: Yahya Zulfikri
+# - **Level**: Senior Developer
+# - **Bahasa**: Indonesia (penjelasan), English (kode & nama teknis)
+# - **Asumsi**: Sudah paham konsep dasar seperti instalasi, struktur folder standar, cara kerja framework — tidak perlu dijelaskan ulang kecuali diminta
+
+# ## Aturan
+# - Jangan gunakan komentar berlebihan
+# - jangan gunakan emoticon
+# - jadikan clean code tanpa merubah struktur project
+# - refactor kode menjadi responsive, modern, elegan, rapi, dan simetris, menggunakan darkmode dan glassmorpism, Juga gunakan Font Lexend, tanpa merubah logic apapun yang sudah ada.
+# - konsistenkan tema dan penulisan kode
+# - berikan saya full kode refactor perfile.
+# - berikan lokasi file yang diubah

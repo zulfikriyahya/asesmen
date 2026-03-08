@@ -4,17 +4,31 @@ $logo_app = $setting->logo_kiri == null
     : base_url() . $setting->logo_kiri;
 ?>
 
-<aside class="main-sidebar sidebar-dark-orange my-shadow">
-
-    <!-- Brand -->
-    <a href="<?= base_url() ?>" class="brand-link bg-dark d-flex align-items-center" style="gap:.6rem;padding:.75rem 1rem;">
-        <img src="<?= $logo_app ?>" alt="App Logo" class="brand-image" style="opacity:.9;width:32px;height:32px;object-fit:contain;margin:0;">
-        <span class="brand-text">
-            <strong style="font-size:.95rem;"><?= htmlspecialchars($setting->nama_aplikasi, ENT_QUOTES, 'UTF-8') ?></strong>
+<aside class="main-sidebar my-shadow" style="
+    background: rgba(12, 14, 20, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(255,255,255,0.05);
+">
+    <a href="<?= base_url() ?>" class="brand-link d-flex align-items-center" style="
+        gap: .75rem;
+        padding: .85rem 1rem;
+        background: rgba(99,102,241,0.08);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        text-decoration: none;
+    ">
+        <img src="<?= $logo_app ?>" alt="Logo" style="
+            width: 32px; height: 32px; object-fit: contain;
+            border-radius: 8px; margin: 0; opacity: .95;
+        ">
+        <span class="brand-text" style="
+            font-size: .88rem; font-weight: 600;
+            color: rgba(255,255,255,0.88); letter-spacing: .01em;
+        ">
+            <?= htmlspecialchars($setting->nama_aplikasi, ENT_QUOTES, 'UTF-8') ?>
         </span>
     </a>
 
-    <!-- Sidebar -->
     <div class="sidebar">
         <nav class="mt-3 mb-0">
             <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent"
@@ -22,20 +36,16 @@ $logo_app = $setting->logo_kiri == null
             </ul>
         </nav>
     </div>
-
 </aside>
 
 <script>
     const page = '<?= $this->uri->segment(1) ?>';
     const pageact = '<?= $this->uri->segment(2) ?>';
 
-    const menus = [
-        // DASHBOARD
-        {
+    const menus = [{
             header: "<marquee><center>Selamat datang di <strong>ZEDAPPS SCHOOL.</strong></center></marquee>",
             menu: []
         },
-        // MASTER
         {
             header: '<b>MASTER</b>',
             cbt: '1',
@@ -74,9 +84,8 @@ $logo_app = $setting->logo_kiri == null
                         icon: 'fa fa-users'
                     },
                 ]
-            }, ]
+            }]
         },
-        // E-LEARNING
         {
             header: '<b>E-LEARNING</b>',
             cbt: '0',
@@ -134,7 +143,6 @@ $logo_app = $setting->logo_kiri == null
                 },
             ]
         },
-        // CBT
         {
             header: '<b>CBT</b>',
             cbt: '1',
@@ -227,7 +235,6 @@ $logo_app = $setting->logo_kiri == null
                 },
             ]
         },
-        // RAPOR
         {
             header: '<b>RAPOR</b>',
             cbt: '0',
@@ -245,7 +252,6 @@ $logo_app = $setting->logo_kiri == null
                 },
             ]
         },
-        // PENGATURAN
         {
             header: '<b>PENGATURAN</b>',
             cbt: '1',
@@ -300,7 +306,6 @@ $logo_app = $setting->logo_kiri == null
                 },
             ]
         },
-        // LOGOUT
         {
             name: '<strong class="text-danger">L O G O U T</strong>',
             icon: 'fas fa-sign-out-alt',
@@ -328,41 +333,40 @@ $logo_app = $setting->logo_kiri == null
                         var isOpen = slugs.includes(pageact) || slugs.includes(page);
 
                         html += `<li class="nav-item has-treeview ${isOpen ? 'menu-open' : ''}">
-            <a href="#" class="nav-link ${isOpen ? 'active' : ''}">
-              <i class="nav-icon ${menu.icon}"></i>
-              <p>${menu.name}<i class="fas fa-angle-left right"></i></p>
-            </a>
-            <ul class="nav nav-treeview">`;
+                            <a href="#" class="nav-link ${isOpen ? 'active' : ''}">
+                                <i class="nav-icon ${menu.icon}"></i>
+                                <p>${menu.name}<i class="fas fa-angle-left right"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">`;
 
                         menu.submenu.forEach(function(sub) {
                             var isActive = page + '/' + pageact === sub.link || page === sub.link;
                             html += `<li class="nav-item">
-              <a href="${base_url + sub.link}" class="nav-link ${isActive ? 'active' : ''}">
-                <i class="${sub.icon} nav-icon"></i>
-                <p>${sub.name}</p>
-              </a>
-            </li>`;
+                                <a href="${base_url + sub.link}" class="nav-link ${isActive ? 'active' : ''}">
+                                    <i class="${sub.icon} nav-icon"></i>
+                                    <p>${sub.name}</p>
+                                </a>
+                            </li>`;
                         });
 
                         html += `</ul></li>`;
                     } else {
                         html += `<li class="nav-item">
-            <a href="${base_url + menu.link}" class="nav-link ${page === menu.link ? 'active' : ''}">
-              <i class="nav-icon ${menu.icon}"></i>
-              <p>${menu.name}</p>
-            </a>
-          </li>`;
+                            <a href="${base_url + menu.link}" class="nav-link ${page === menu.link ? 'active' : ''}">
+                                <i class="nav-icon ${menu.icon}"></i>
+                                <p>${menu.name}</p>
+                            </a>
+                        </li>`;
                     }
                 });
             } else {
-                // Logout
-                html += `<hr/>
-        <li class="nav-item">
-          <a href="#" onclick="logout()" class="nav-link">
-            <i class="${section.icon} nav-icon"></i>
-            <p>${section.name}</p>
-          </a>
-        </li>`;
+                html += `<hr style="border-color:rgba(255,255,255,0.06);margin:.5rem 1rem;"/>
+                    <li class="nav-item">
+                        <a href="#" onclick="logout()" class="nav-link">
+                            <i class="${section.icon} nav-icon"></i>
+                            <p>${section.name}</p>
+                        </a>
+                    </li>`;
             }
         });
 

@@ -1,16 +1,25 @@
 </div><!-- /.content-wrapper -->
 
-<footer class="main-footer footer bg-dark">
-    <strong>ZEDAPPS SCHOOL</strong> Version <?= APP_VERSION ?>
+<footer class="main-footer" style="
+    background: rgba(15, 17, 23, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.45);
+    font-family: 'Lexend', sans-serif;
+    font-size: .78rem;
+    font-weight: 400;
+">
+    <strong style="color:rgba(255,255,255,0.65);">ZEDAPPS SCHOOL</strong>
+    &mdash; Version <?= APP_VERSION ?>
     <div class="float-right d-none d-sm-inline-block">
-        <strong>Copyright &copy; 2018 &ndash; <?= date('Y') ?></strong>
+        &copy; 2018 &ndash; <?= date('Y') ?>
     </div>
 </footer>
 
 <aside class="control-sidebar control-sidebar-dark"></aside>
 </div><!-- /.wrapper -->
 
-<!-- jQuery UI conflict fix -->
 <script>
     $.widget.bridge('uibutton', $.ui.button)
 </script>
@@ -67,7 +76,6 @@
 <script src="<?= base_url() ?>/assets/app/js/jquery-thumbnail-cut.js"></script>
 
 <script>
-    /* ── DataTables paging helper ── */
     $.fn.dataTableExt.oApi.fnPagingInfo = function(s) {
         return {
             iStart: s._iDisplayStart,
@@ -80,7 +88,6 @@
         };
     };
 
-    /* ── CSRF helper ── */
     function ajaxcsrf() {
         var csrf = {};
         csrf['<?= $this->security->get_csrf_token_name() ?>'] = '<?= $this->security->get_csrf_hash() ?>';
@@ -89,12 +96,10 @@
         });
     }
 
-    /* ── DataTable reload ── */
     function reload_ajax() {
         table.ajax.reload();
     }
 
-    /* ── Pace timeout guard ── */
     (function initDestroyTimeOutPace() {
         var counter = 0;
         var tid = setInterval(function() {
@@ -107,15 +112,14 @@
         }, 100);
     })();
 
-    /* ── Logout confirm ── */
     function logout() {
         swal.fire({
             title: 'Logout',
             text: 'Anda yakin ingin logout?',
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
+            confirmButtonColor: '#6366f1',
+            cancelButtonColor: '#ef4444',
             confirmButtonText: 'Logout!'
         }).then(function(r) {
             if (r.value) location.href = base_url + 'logout';
