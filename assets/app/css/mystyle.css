@@ -1,5 +1,5 @@
 /* styling opsi */
-.form-signin {
+/* .form-signin {
 	max-width: 500px;
 	margin: 20px auto;
 	background-color: #fff; -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
@@ -47,12 +47,12 @@
 	height:100vh;
 	-ms-flex-pack:center;
 	justify-content:center
-}
+} */
 /*
 WHAT IS NEW IN 3.3: "Added transforms to improve carousel performance in modern browsers."
 now override the 3.3 new styles for modern browsers & apply opacity
 */
-@media all and (transform-3d), (-webkit-transform-3d) {
+/* @media all and (transform-3d), (-webkit-transform-3d) {
 	.carousel-fade .carousel-inner > .item.next,
 	.carousel-fade .carousel-inner > .item.active.right {
 		opacity: 0;
@@ -79,14 +79,11 @@ now override the 3.3 new styles for modern browsers & apply opacity
 	position: sticky;
 	top: 0;
 	padding: 50px;
-	/* background-image: url("../img/bgx.jpg"); */
-	/* background-size:52px; */
-	/* background-repeat: repeat; */
 	background-color: #353a40;
 	height: 300px;
-}
+} */
 
-.overlap {
+/* .overlap {
 	margin-top: -260px
 }
 
@@ -101,9 +98,9 @@ now override the 3.3 new styles for modern browsers & apply opacity
 	border: 1px solid #D1D3D4;
 	font-weight: normal;
 	padding: 5px 0 5px 50px;
-}
+} */
 
-.funkyradio input[type="radio"]:empty,
+/* .funkyradio input[type="radio"]:empty,
 .funkyradio input[type="checkbox"]:empty {
 	display: none;
 }
@@ -112,16 +109,15 @@ now override the 3.3 new styles for modern browsers & apply opacity
 .funkyradio input[type="checkbox"]:empty ~ label {
 	position: relative;
 	line-height: 2em;
-	/*text-indent: 3.25em;*/
 	margin-top: 5px;
 	cursor: pointer;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-}
+} */
 
-.funkyradio input[type="radio"]:empty ~ label:before,
+/* .funkyradio input[type="radio"]:empty ~ label:before,
 .funkyradio input[type="checkbox"]:empty ~ label:before {
 	position: absolute;
 	display: block;
@@ -137,18 +133,17 @@ now override the 3.3 new styles for modern browsers & apply opacity
 .funkyradio input[type="radio"]:hover:not(:checked) ~ label,
 .funkyradio input[type="checkbox"]:hover:not(:checked) ~ label {
 	color: #888;
-}
+} */
 
-.funkyradio input[type="radio"]:hover:not(:checked) ~ label:before,
+/* .funkyradio input[type="radio"]:hover:not(:checked) ~ label:before,
 .funkyradio input[type="checkbox"]:hover:not(:checked) ~ label:before {
-	/*content: '\2714';*/
 	text-indent: .9em;
 	color: #000;
 	font-weight: bold;
 	padding: 5px 0 0 0;
-}
+} */
 
-.funkyradio input[type="radio"]:checked ~ label,
+/* .funkyradio input[type="radio"]:checked ~ label,
 .funkyradio input[type="checkbox"]:checked ~ label {
 	color: #fff;
 	background: #86C186;
@@ -157,14 +152,13 @@ now override the 3.3 new styles for modern browsers & apply opacity
 
 .funkyradio input[type="radio"]:checked ~ label:before,
 .funkyradio input[type="checkbox"]:checked ~ label:before {
-	/*content: '\2714';*/
 	text-indent: .9em;
 	color: #333;
 	background-color: #ccc;
 	padding: 5px 0 0 0;
-}
+} */
 
-.funkyradio input[type="radio"]:focus ~ label:before,
+/* .funkyradio input[type="radio"]:focus ~ label:before,
 .funkyradio input[type="checkbox"]:focus ~ label:before {
 	box-shadow: 0 0 0 3px #999;
 }
@@ -173,50 +167,50 @@ now override the 3.3 new styles for modern browsers & apply opacity
 .funkyradio-default input[type="checkbox"]:checked ~ label:before {
 	color: #333;
 	background-color: #ccc;
-}
+} */
 
-.funkyradio-primary input[type="radio"]:checked ~ label:before,
+/* .funkyradio-primary input[type="radio"]:checked ~ label:before,
 .funkyradio-primary input[type="checkbox"]:checked ~ label:before {
 	color: #fff;
 	background-color: #337ab7;
-}
+} */
 
-.funkyradio-success input[type="radio"]:checked ~ label:before,
+/* .funkyradio-success input[type="radio"]:checked ~ label:before,
 .funkyradio-success input[type="checkbox"]:checked ~ label:before {
 	color: #fff;
 	background-color: #5cb85c;
-}
+} */
 
-.funkyradio-danger input[type="radio"]:checked ~ label:before,
+/* .funkyradio-danger input[type="radio"]:checked ~ label:before,
 .funkyradio-danger input[type="checkbox"]:checked ~ label:before {
 	color: #fff;
 	background-color: #d9534f;
-}
+} */
 
-.funkyradio-warning input[type="radio"]:checked ~ label:before,
+/* .funkyradio-warning input[type="radio"]:checked ~ label:before,
 .funkyradio-warning input[type="checkbox"]:checked ~ label:before {
 	color: #fff;
 	background-color: #f0ad4e;
-}
+} */
 
-.funkyradio-info input[type="radio"]:checked ~ label:before,
+/* .funkyradio-info input[type="radio"]:checked ~ label:before,
 .funkyradio-info input[type="checkbox"]:checked ~ label:before {
 	color: #fff;
 	background-color: #5bc0de;
-}
+} */
 
-.huruf_opsi {
+/* .huruf_opsi {
 	margin-left: -36px;
 	margin-top: 9px;
 	position: absolute;
-}
+} */
 
-.btn.no-hover:hover {
+/* .btn.no-hover:hover {
 	cursor:default !important;
-}
+} */
 
 /* shadow */
-.shadow-sm {
+/* .shadow-sm {
 	box-shadow: 0 .125rem .25rem 0 rgba(58, 59, 69, .2) !important
 }
 
@@ -276,7 +270,6 @@ now override the 3.3 new styles for modern browsers & apply opacity
 }
 
 .btn-circle-micro {
-	/*height: 19px;*/
 	display: inline-block;
 	padding: .25em .4em;
 	font-size: 75%;
@@ -286,9 +279,9 @@ now override the 3.3 new styles for modern browsers & apply opacity
 	white-space: nowrap;
 	vertical-align: baseline;
 	border-radius: .80rem;
-}
+} */
 
-.btn-circle-sm {
+/* .btn-circle-sm {
 	width: 35px;
 	height: 35px;
 	text-align: center;
@@ -367,9 +360,9 @@ now override the 3.3 new styles for modern browsers & apply opacity
 	font-size: 24px;
 	line-height: 1.6;
 	text-align: center;
-}
+} */
 
-.container-jawaban:hover input ~ .checkmark {
+/* .container-jawaban:hover input ~ .checkmark {
 	background-color: #ccc;
 }
 
@@ -410,9 +403,9 @@ now override the 3.3 new styles for modern browsers & apply opacity
 	top: 1.2rem;
 	width: 1.85rem;
 	height: 1.85rem;
-}
+} */
 
-.checkbox-xl .custom-control-label {
+/* .checkbox-xl .custom-control-label {
 	padding-top: 23px;
 	padding-left: 20px;
 	cursor: pointer;
@@ -520,9 +513,9 @@ a.remove-pic {
 	width: 25px;
 	text-align: center;
 	padding: 3px 0
-}
+} */
 
-.inner-post-thumb {
+/* .inner-post-thumb {
 	position: relative
 }
 
@@ -594,9 +587,9 @@ ul.media-list {
 input.picupload {
 	width: 100px;
 	height: 100px
-}
+} */
 
-
+/*
 .select2-container {
 	width: auto;
 }
@@ -654,10 +647,10 @@ input.picupload {
 	bottom: 4px;
 	padding: 1px 1px 1px 10px;
 	width: 30px;
-}
+} */
 
 /*from bs 3*/
-@media (max-width:767px){
+/* @media (max-width:767px){
 	.hidden-xs{display:none!important}
 }
 @media (min-width:768px) and (max-width:991px){
@@ -676,12 +669,12 @@ input.picupload {
 }
 
 .img-zoom:hover {
-	-ms-transform: scale(2); /* IE 9 */
-	-webkit-transform: scale(2); /* Safari 3-8 */
+	-ms-transform: scale(2);
+	-webkit-transform: scale(2);
 	transform: scale(2);
-}
+} */
 
-div.list-jadwal-ujian div:nth-child(even) {
+/* div.list-jadwal-ujian div:nth-child(even) {
 	background: white;
 	padding-left: .25rem!important;
 	padding-right: .25rem!important;
@@ -704,8 +697,8 @@ div.list-jadwal-ujian div:nth-child(odd) {
 }
 #guru>tbody>tr>td{
 	border-top: unset;
-}
-
+} */
+/*
 .hrspan {
 	position: relative;
 	margin-bottom: 20px;
@@ -745,8 +738,8 @@ div.hr {
 	border-top: 1px solid rgba(0, 0, 0, 0.1);
 	height: 0px;
 	line-height: 0px;
-}
-
+} */
+/*
 .hr-title {
 	background-color: #fff;
 	font-weight: bold;
@@ -780,9 +773,9 @@ div.hr {
 	 line-height: 1.5em;
 	color: #818078;
 	 background-color: #fcfcfa;
-}
+} */
 
-.btn-disabled,
+/* .btn-disabled,
 .btn-disabled[disabled] {
 	opacity: .65;
 	cursor: not-allowed;
@@ -808,9 +801,9 @@ div.hr {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	max-width: 300px;
-}
+} */
 
-.rTable {
+/* .rTable {
 	display: table;
 	width: 100%;
 }
@@ -837,9 +830,9 @@ div.hr {
 }
 .rTableBody {
 	display: table-row-group;
-}
+} */
 
-.sTable {
+/* .sTable {
 	display: table;
 	width: 100%;
 }
@@ -867,9 +860,9 @@ div.hr {
 }
 .sTableBody {
 	display: table-row-group;
-}
+} */
 
-connection {
+/* connection {
 	border: 2px solid #b51c29;
 	border-radius: 31px;
 }
@@ -966,7 +959,7 @@ button.btn.shaded.btn-icon.outline.danger > i::before {
 }
 button.btn.shaded.btn-icon.outline.info > i::before {
 	background-color: rgba(54, 206, 230, 0.3);
-}
+} */
 
 /*
 .btn-label {position: relative;left: -12px;display: inline-block;padding: 6px 12px;background: rgba(0,0,0,0.15);border-radius: 3px 0 0 3px;}
@@ -974,9 +967,316 @@ button.btn.shaded.btn-icon.outline.info > i::before {
 .btn { margin-bottom:10px; }
  */
 
-input[type="search"]::-webkit-search-decoration,
+/* input[type="search"]::-webkit-search-decoration,
 input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-results-button,
 input[type="search"]::-webkit-search-results-decoration {
 	-webkit-appearance:none;
+} */
+
+/* ================================================================
+   Glass Design System — tambahkan ke mystyle.css
+   ================================================================ */
+
+/* ── Page title ── */
+.page-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+}
+
+/* ── Glass Card ── */
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.glass-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 1.25rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-wrap: wrap;
+}
+
+.glass-card-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0;
+}
+
+.glass-card-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.glass-card-body {
+  padding: 1.25rem;
+}
+
+/* ── Glass Alert ── */
+.glass-alert {
+  padding: 0.7rem 1.1rem;
+  border-radius: 9px;
+  font-size: 0.82rem;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.glass-alert-info {
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  color: rgba(165, 180, 252, 0.9);
+}
+
+.glass-alert-warning {
+  background: rgba(234, 179, 8, 0.08);
+  border: 1px solid rgba(234, 179, 8, 0.2);
+  color: rgba(253, 224, 71, 0.85);
+}
+
+.glass-alert-danger {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: rgba(248, 113, 113, 0.9);
+}
+
+/* ── Glass Table ── */
+.glass-table {
+  color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.glass-table thead tr {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.glass-table thead th {
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  border-color: rgba(255, 255, 255, 0.07) !important;
+  padding: 0.65rem 0.75rem;
+}
+
+.glass-table tbody td {
+  border-color: rgba(255, 255, 255, 0.04) !important;
+  padding: 0.55rem 0.75rem;
+  vertical-align: middle;
+  font-size: 0.83rem;
+}
+
+.glass-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+
+/* ── Badge pill ── */
+.badge-pill-glass {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.22);
+  border-radius: 20px;
+  font-size: 0.72rem;
+  color: #4ade80;
+  margin: 0.1rem 0.1rem;
+}
+
+/* ── Glass Buttons ── */
+.btn-glass {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.9rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.65);
+  font-family: "Lexend", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
+  white-space: nowrap;
+}
+
+.btn-glass:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+}
+
+.btn-glass.btn-xs {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+  border-radius: 6px;
+}
+.btn-glass.btn-sm {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.78rem;
+}
+
+.btn-glass-primary {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: rgba(99, 102, 241, 0.35);
+  color: #a5b4fc;
+}
+.btn-glass-primary:hover {
+  background: rgba(99, 102, 241, 0.35);
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.2);
+  color: #c7d2fe;
+  text-decoration: none;
+}
+
+.btn-glass-warning {
+  background: rgba(234, 179, 8, 0.12);
+  border-color: rgba(234, 179, 8, 0.28);
+  color: #fde047;
+}
+.btn-glass-warning:hover {
+  background: rgba(234, 179, 8, 0.22);
+  border-color: rgba(234, 179, 8, 0.45);
+  color: #fef08a;
+  text-decoration: none;
+}
+
+.btn-glass-danger {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.28);
+  color: #f87171;
+}
+.btn-glass-danger:hover {
+  background: rgba(239, 68, 68, 0.22);
+  border-color: rgba(239, 68, 68, 0.45);
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  text-decoration: none;
+}
+
+.btn-glass-success {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.28);
+  color: #4ade80;
+}
+.btn-glass-success:hover {
+  background: rgba(34, 197, 94, 0.22);
+  border-color: rgba(34, 197, 94, 0.45);
+  color: #86efac;
+  text-decoration: none;
+}
+
+/* ── Glass Modal ── */
+.glass-modal {
+  background: rgba(15, 17, 24, 0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+}
+
+.glass-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.35rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-modal-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.82);
+  margin: 0;
+}
+
+.glass-modal-close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 1.2rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.glass-modal-close:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.glass-modal-body {
+  padding: 1.35rem;
+}
+
+.glass-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.9rem 1.35rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ── Glass Form inputs ── */
+.glass-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9px;
+  color: rgba(255, 255, 255, 0.82);
+  padding: 0.58rem 0.9rem;
+  font-size: 0.85rem;
+  font-family: "Lexend", sans-serif;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
+}
+
+.glass-input:focus {
+  background: rgba(99, 102, 241, 0.07);
+  border-color: rgba(99, 102, 241, 0.45);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.glass-input::placeholder {
+  color: rgba(255, 255, 255, 0.18);
+}
+
+.glass-input option {
+  background: #1a1d28;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.glass-label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.02em;
 }
