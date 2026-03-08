@@ -22,7 +22,7 @@ $cp = $data->current_page;
         <!-- Brand -->
         <div class="install-brand">
             <img src="<?= base_url() ?>assets/img/favicon.png" alt="Logo">
-            <h1><b>ASESMEN MADRASAH</b> CBT</h1>
+            <h1><b>ASESMEN</b> MADRASAH</h1>
             <p>Ikuti langkah instalasi di sebelah kanan untuk menyelesaikan pengaturan aplikasi.</p>
         </div>
 
@@ -58,7 +58,7 @@ $cp = $data->current_page;
                 <div class="step-content <?= $cp == 1 ? 'active' : '' ?>" data-step="1">
                     <div class="install-form-grid">
                         <div class="install-field">
-                            <label>Host Name</label>
+                            <label>Hostname</label>
                             <input type="text" name="hostname" value="<?= $data->hostname ?>" placeholder="localhost" readonly>
                         </div>
                         <div class="install-field">
@@ -71,8 +71,8 @@ $cp = $data->current_page;
                             <small>Kosongkan jika tidak menggunakan password.</small>
                         </div>
                         <div class="install-field">
-                            <label>Nama Database</label>
-                            <input type="text" name="database" value="<?= $data->database ?>" placeholder="Nama Database" readonly>
+                            <label>Database Name</label>
+                            <input type="text" name="database" value="<?= $data->database ?>" placeholder="Database Name" readonly>
                             <small>Jangan gunakan spasi.</small>
                         </div>
                     </div>
@@ -232,7 +232,7 @@ $cp = $data->current_page;
                                 <td id="text-jen">—</td>
                             </tr>
                             <tr>
-                                <td>Satuan Pend.</td>
+                                <td>Satuan Pendidikan</td>
                                 <td id="text-satuan">—</td>
                             </tr>
                             <tr>
