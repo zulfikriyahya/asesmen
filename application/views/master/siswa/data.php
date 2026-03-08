@@ -437,29 +437,43 @@
         var html = '';
         if (data.lists.length > 0) {
             $.each(data.lists, function(idx, siswa) {
-                var kls = siswa.nama_kelas ? '<span class="badge-cyan" style="margin-left:4px">' + siswa.nama_kelas + '</span>' : '';
+                var kls = siswa.nama_kelas ? '<span class="badge-cyan">&#9632; ' + siswa.nama_kelas + '</span>' : '<span class="badge-light-glass">Tanpa Kelas</span>';
                 var status = siswa.aktif == "0" ?
-                    '<span class="badge-danger-glass" style="margin-left:4px">Nonaktif</span>' :
-                    '<span class="badge-success-glass" style="margin-left:4px">Aktif</span>';
-                var jk = '<span class="badge-light-glass" style="margin-left:4px">' + siswa.jenis_kelamin + '</span>';
+                    '<span class="badge-danger-glass">Nonaktif</span>' :
+                    '<span class="badge-success-glass">Aktif</span>';
+                var jk = siswa.jenis_kelamin == 'L' ?
+                    '<span class="badge-cyan"><i class="fas fa-mars"></i> L</span>' :
+                    '<span class="badge-cyan" style="background:rgba(236,72,153,0.15);border-color:rgba(236,72,153,0.3);color:#f9a8d4"><i class="fas fa-venus"></i> P</span>';
                 html += '<tr>' +
-                    '<td class="text-center" style="width:40px"><input name="checked[]" class="check" value="' + siswa.id_siswa + '" type="checkbox"></td>' +
-                    '<td class="text-center" style="width:50px">' + Number((perPage * (currentPage - 1)) + (idx + 1)) + '</td>' +
-                    '<td>' +
-                    '   <div class="d-flex align-items-center" style="gap:0.75rem">' +
-                    '       <img class="avatar-circle avatar" src="' + base_url + siswa.foto + '" alt="foto" style="flex-shrink:0">' +
+                    '<td class="text-center" style="width:44px;vertical-align:middle">' +
+                    '   <input name="checked[]" class="check" value="' + siswa.id_siswa + '" type="checkbox">' +
+                    '</td>' +
+                    '<td class="text-center" style="width:52px;vertical-align:middle;font-size:0.82rem;color:#64748b;font-family:\'Lexend\',sans-serif">' +
+                    '   ' + Number((perPage * (currentPage - 1)) + (idx + 1)) +
+                    '</td>' +
+                    '<td style="vertical-align:middle">' +
+                    '   <div class="d-flex align-items-center" style="gap:0.85rem">' +
+                    '       <img class="avatar-circle avatar" src="' + base_url + siswa.foto + '" alt="foto" style="flex-shrink:0;width:42px;height:42px">' +
                     '       <div>' +
-                    '           <div class="siswa-name">' + siswa.nama + '</div>' +
-                    '           <div style="margin-top:4px">' + kls + jk + status + '</div>' +
+                    '           <div style="font-family:\'Lexend\',sans-serif;font-size:0.88rem;font-weight:600;color:#e2e8f0;margin-bottom:6px">' + siswa.nama + '</div>' +
+                    '           <div style="display:flex;flex-wrap:wrap;gap:4px">' + kls + jk + status + '</div>' +
                     '       </div>' +
                     '   </div>' +
                     '</td>' +
-                    '<td style="width:180px">' +
-                    '   <div style="font-family:\'Lexend\',sans-serif;font-size:0.8rem;color:#94a3b8;margin-bottom:4px"><span style="color:#64748b;font-size:0.72rem">NIS</span><br>' + siswa.nis + '</div>' +
-                    '   <div style="font-family:\'Lexend\',sans-serif;font-size:0.8rem;color:#94a3b8"><span style="color:#64748b;font-size:0.72rem">NISN</span><br>' + siswa.nisn + '</div>' +
+                    '<td style="width:200px;vertical-align:middle">' +
+                    '   <div style="display:flex;flex-direction:column;gap:6px">' +
+                    '       <div style="display:flex;align-items:center;gap:6px">' +
+                    '           <span style="font-family:\'Lexend\',sans-serif;font-size:0.7rem;color:#475569;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;padding:1px 6px;flex-shrink:0">NIS</span>' +
+                    '           <span style="font-family:\'Lexend\',sans-serif;font-size:0.82rem;color:#cbd5e1">' + siswa.nis + '</span>' +
+                    '       </div>' +
+                    '       <div style="display:flex;align-items:center;gap:6px">' +
+                    '           <span style="font-family:\'Lexend\',sans-serif;font-size:0.7rem;color:#475569;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:4px;padding:1px 6px;flex-shrink:0">NISN</span>' +
+                    '           <span style="font-family:\'Lexend\',sans-serif;font-size:0.82rem;color:#cbd5e1">' + siswa.nisn + '</span>' +
+                    '       </div>' +
+                    '   </div>' +
                     '</td>' +
-                    '<td class="text-center" style="width:80px">' +
-                    '   <a class="btn btn-warning-glass btn-sm" href="' + base_url + 'datasiswa/edit/' + siswa.id_siswa + '">' +
+                    '<td class="text-center" style="width:80px;vertical-align:middle">' +
+                    '   <a class="btn btn-warning-glass btn-sm" href="' + base_url + 'datasiswa/edit/' + siswa.id_siswa + '" style="white-space:nowrap">' +
                     '       <i class="fa fa-pencil-alt mr-1"></i>Edit' +
                     '   </a>' +
                     '</td>' +
