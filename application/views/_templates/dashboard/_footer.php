@@ -112,6 +112,46 @@
         }, 100);
     })();
 
+    /* ── Select2 force dark dropdown ── */
+    $(document).on('select2:open', function() {
+        setTimeout(function() {
+            $('.select2-dropdown, .select2-results, .select2-results__options').each(function() {
+                $(this).css({
+                    'background': '#13151f',
+                    'background-color': '#13151f'
+                });
+            });
+            $('.select2-results__option').each(function() {
+                $(this).css({
+                    'background': '#13151f',
+                    'background-color': '#13151f',
+                    'color': 'rgba(255,255,255,0.75)'
+                });
+            });
+        }, 10);
+    });
+
+    $(document).on('mouseenter', '.select2-results__option', function() {
+        $(this).css({
+            'background-color': 'rgba(99,102,241,0.3)',
+            'color': '#c7d2fe'
+        });
+    });
+
+    $(document).on('mouseleave', '.select2-results__option', function() {
+        if (!$(this).attr('aria-selected') || $(this).attr('aria-selected') === 'false') {
+            $(this).css({
+                'background-color': '#13151f',
+                'color': 'rgba(255,255,255,0.75)'
+            });
+        } else {
+            $(this).css({
+                'background-color': 'rgba(99,102,241,0.15)',
+                'color': '#a5b4fc'
+            });
+        }
+    });
+
     function logout() {
         swal.fire({
             title: 'Logout',
