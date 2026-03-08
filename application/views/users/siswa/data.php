@@ -1,238 +1,6 @@
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap');
+<link rel="stylesheet" href="<?= base_url() ?>assets/app/css/users.css">
 
-    :root {
-        --bg-base: #080e1a;
-        --bg-mid: #0d1526;
-        --bg-top: #0a1929;
-        --glass-bg: rgba(255, 255, 255, 0.04);
-        --glass-hover: rgba(255, 255, 255, 0.08);
-        --glass-border: rgba(99, 179, 237, 0.15);
-        --accent: #22d3ee;
-        --accent2: #3b82f6;
-        --text-1: #e2f0ff;
-        --text-2: #7eb8d4;
-        --radius: 14px;
-        --radius-sm: 8px;
-        --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-    }
-
-    *,
-    *::before,
-    *::after {
-        font-family: 'Lexend', sans-serif !important;
-        box-sizing: border-box;
-    }
-
-    .page-wrap {
-        background: linear-gradient(140deg, var(--bg-base) 0%, var(--bg-mid) 55%, var(--bg-top) 100%);
-        min-height: 100vh;
-        padding: 2rem 0 3rem;
-    }
-
-    .page-title {
-        font-size: 1.45rem;
-        font-weight: 700;
-        color: var(--text-1);
-        letter-spacing: -.01em;
-        margin: 0 0 1.75rem;
-    }
-
-    .g-card {
-        background: var(--glass-bg);
-        backdrop-filter: blur(18px);
-        -webkit-backdrop-filter: blur(18px);
-        border: 1px solid var(--glass-border);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
-        overflow: hidden;
-        position: relative;
-    }
-
-    .g-card-header {
-        background: linear-gradient(135deg, rgba(34, 211, 238, 0.12), rgba(59, 130, 246, 0.08));
-        border-bottom: 1px solid var(--glass-border);
-        padding: .9rem 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: .75rem;
-        flex-wrap: wrap;
-    }
-
-    .g-card-header h3 {
-        margin: 0;
-        font-size: .9rem;
-        font-weight: 600;
-        color: var(--text-1);
-    }
-
-    .g-card-body {
-        padding: 1.5rem;
-    }
-
-    .btn-g {
-        display: inline-flex;
-        align-items: center;
-        gap: .4rem;
-        padding: .4rem .9rem;
-        border-radius: var(--radius-sm);
-        font-size: .8rem;
-        font-weight: 500;
-        cursor: pointer;
-        border: 1px solid var(--glass-border);
-        background: var(--glass-bg);
-        color: var(--text-1);
-        transition: background .2s, filter .2s;
-        white-space: nowrap;
-    }
-
-    .btn-g:hover {
-        background: var(--glass-hover);
-        color: #fff;
-    }
-
-    .btn-g.success {
-        background: linear-gradient(135deg, #22c55e, #16a34a);
-        border-color: transparent;
-        color: #fff;
-    }
-
-    .btn-g.success:hover {
-        filter: brightness(1.1);
-    }
-
-    .btn-g.danger {
-        background: linear-gradient(135deg, #ef4444, #dc2626);
-        border-color: transparent;
-        color: #fff;
-    }
-
-    .btn-g.danger:hover {
-        filter: brightness(1.1);
-    }
-
-    .btn-g:disabled {
-        opacity: .4;
-        cursor: not-allowed;
-        filter: none;
-    }
-
-    .toolbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: .75rem;
-        margin-bottom: 1.25rem;
-    }
-
-    .toolbar-left {
-        display: flex;
-        align-items: center;
-        gap: .5rem;
-        font-size: .82rem;
-        color: var(--text-2);
-    }
-
-    .toolbar-right {
-        display: flex;
-        align-items: center;
-        gap: .5rem;
-    }
-
-    .f-select-sm {
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid var(--glass-border);
-        border-radius: var(--radius-sm);
-        color: var(--text-1);
-        padding: .35rem .65rem;
-        font-size: .8rem;
-    }
-
-    .f-search {
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid var(--glass-border);
-        border-radius: var(--radius-sm);
-        color: var(--text-1);
-        padding: .38rem .75rem;
-        font-size: .8rem;
-        transition: border-color .2s, background .2s;
-        width: 180px;
-    }
-
-    .f-search:focus {
-        outline: none;
-        border-color: var(--accent);
-        background: rgba(34, 211, 238, 0.06);
-    }
-
-    .f-search::placeholder {
-        color: var(--text-2);
-        opacity: .55;
-    }
-
-    table#users {
-        color: var(--text-1) !important;
-    }
-
-    table#users thead th {
-        background: rgba(34, 211, 238, 0.12) !important;
-        color: var(--accent) !important;
-        border-color: var(--glass-border) !important;
-        font-size: .78rem;
-        font-weight: 600;
-        letter-spacing: .03em;
-        padding: .65rem 1rem !important;
-    }
-
-    table#users td {
-        border-color: var(--glass-border) !important;
-        font-size: .82rem;
-        padding: .55rem 1rem !important;
-        vertical-align: middle;
-    }
-
-    table#users tbody tr:hover {
-        background: rgba(34, 211, 238, 0.05) !important;
-    }
-
-    .badge-on {
-        background: rgba(34, 197, 94, 0.18);
-        color: #4ade80;
-        border: 1px solid rgba(34, 197, 94, 0.3);
-        border-radius: 20px;
-        padding: .15rem .65rem;
-        font-size: .72rem;
-        font-weight: 500;
-        white-space: nowrap;
-    }
-
-    .badge-off {
-        background: rgba(239, 68, 68, 0.18);
-        color: #f87171;
-        border: 1px solid rgba(239, 68, 68, 0.3);
-        border-radius: 20px;
-        padding: .15rem .65rem;
-        font-size: .72rem;
-        font-weight: 500;
-        white-space: nowrap;
-    }
-
-    .overlay-g {
-        position: absolute;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.55);
-        backdrop-filter: blur(4px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: var(--radius);
-        z-index: 10;
-    }
-</style>
-
-<div class="page-wrap content-wrapper">
+<div class="content-wrapper">
     <section class="content-header">
         <div class="container-fluid">
             <h1 class="page-title"><?= $judul ?></h1>
@@ -407,43 +175,42 @@
             var action = $(this).data('action'),
                 isAktif = action === 'aktifkan';
             swal.fire({
-                    title: isAktif ? 'Aktifkan semua siswa' : 'Nonaktifkan semua siswa',
-                    icon: 'info',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Lanjutkan'
-                })
-                .then(function(r) {
-                    if (!r.value) return;
-                    $('#loading').removeClass('d-none');
-                    swal.fire({
-                        title: isAktif ? 'Mengaktifkan…' : 'Menonaktifkan…',
-                        text: 'Silahkan tunggu…',
-                        allowEscapeKey: false,
-                        allowOutsideClick: false,
-                        onOpen: () => swal.showLoading()
-                    });
-                    $.ajax({
-                        url: base_url + (isAktif ? 'usersiswa/aktifkansemua' : 'usersiswa/nonaktifkansemua'),
-                        type: 'GET',
-                        success: function(res) {
-                            $('#loading').addClass('d-none');
-                            swal.fire({
-                                title: res.status ? 'Sukses' : 'Gagal',
-                                text: res.msg,
-                                icon: res.status ? 'success' : 'error'
-                            }).then(loadSiswa);
-                        },
-                        error: function(xhr) {
-                            Swal.fire({
-                                title: 'Gagal',
-                                html: xhr.responseText,
-                                icon: 'error'
-                            });
-                        }
-                    });
+                title: isAktif ? 'Aktifkan semua siswa' : 'Nonaktifkan semua siswa',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Lanjutkan'
+            }).then(function(r) {
+                if (!r.value) return;
+                $('#loading').removeClass('d-none');
+                swal.fire({
+                    title: isAktif ? 'Mengaktifkan…' : 'Menonaktifkan…',
+                    text: 'Silahkan tunggu…',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                    onOpen: () => swal.showLoading()
                 });
+                $.ajax({
+                    url: base_url + (isAktif ? 'usersiswa/aktifkansemua' : 'usersiswa/nonaktifkansemua'),
+                    type: 'GET',
+                    success: function(res) {
+                        $('#loading').addClass('d-none');
+                        swal.fire({
+                            title: res.status ? 'Sukses' : 'Gagal',
+                            text: res.msg,
+                            icon: res.status ? 'success' : 'error'
+                        }).then(loadSiswa);
+                    },
+                    error: function(xhr) {
+                        Swal.fire({
+                            title: 'Gagal',
+                            html: xhr.responseText,
+                            icon: 'error'
+                        });
+                    }
+                });
+            });
         });
 
         loadSiswa();
