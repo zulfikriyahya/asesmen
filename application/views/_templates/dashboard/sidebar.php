@@ -88,7 +88,7 @@ $logo_app = $setting->logo_kiri == null
         },
         {
             header: '<b>E-LEARNING</b>',
-            cbt: '0',
+            cbt: '1',
             menu: [{
                     name: 'Data E-Learning',
                     icon: 'fas fa-chalkboard',
@@ -118,7 +118,7 @@ $logo_app = $setting->logo_kiri == null
                 {
                     name: 'Pelaksanaan E-Learning',
                     icon: 'fas fa-microscope',
-                    cbt: '0',
+                    cbt: '1',
                     submenu: [{
                             name: 'Kehadiran Harian',
                             link: 'kelasabsensiharian',
@@ -237,7 +237,7 @@ $logo_app = $setting->logo_kiri == null
         },
         {
             header: '<b>RAPOR</b>',
-            cbt: '0',
+            cbt: '1',
             menu: [{
                     name: 'Setting Rapor',
                     link: 'rapor',
@@ -291,7 +291,7 @@ $logo_app = $setting->logo_kiri == null
                 {
                     name: 'Database',
                     icon: 'fa fa-database',
-                    cbt: '0',
+                    cbt: '1',
                     submenu: [{
                             name: 'Manajemen Data',
                             link: 'dbclear',
