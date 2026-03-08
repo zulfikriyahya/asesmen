@@ -369,12 +369,18 @@ body *:not(i):not([class*="fa"]):not([class*="ion"]):not([class*="bi"]):not([cla
 }
 
 /* ── Action row ── */
+/* ── Gap utility (Bootstrap 4 tidak punya gap) ── */
+.d-flex.gap-2 > * + * { margin-left: .5rem; }
+.flex-wrap.gap-2 > * { margin-bottom: .35rem; }
+
 .action-row {
     display: flex;
     justify-content: flex-end;
     gap: .5rem;
     margin-top: 1.25rem;
 }
+
+.action-row > * + * { margin-left: .5rem; }
 
 /* ── Badge ── */
 .badge-on {
