@@ -1,0 +1,414 @@
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap");
+
+:root {
+  --clr-primary: #06b6d4;
+  --clr-primary-dk: #0891b2;
+  --clr-accent: #22d3ee;
+  --clr-success: #10b981;
+  --clr-warning: #f59e0b;
+  --clr-danger: #ef4444;
+  --clr-info: #3b82f6;
+
+  --glass-bg: rgba(15, 23, 42, 0.72);
+  --glass-border: rgba(6, 182, 212, 0.18);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+
+  --surface-1: rgba(15, 23, 42, 0.85);
+  --surface-2: rgba(30, 41, 59, 0.7);
+  --surface-3: rgba(51, 65, 85, 0.5);
+
+  --text-primary: #f0f9ff;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+}
+
+/* ── BASE ─────────────────────────────────────────────── */
+.setting-page,
+.content-wrapper {
+  font-family: "Lexend", sans-serif !important;
+  background: linear-gradient(135deg, #020617 0%, #0c1a2e 50%, #0f2944 100%) !important;
+  min-height: 100vh;
+}
+
+.content-header h1 {
+  font-family: "Lexend", sans-serif;
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+}
+
+/* ── GLASS CARD ───────────────────────────────────────── */
+.card.my-shadow,
+.setting-card {
+  background: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--glass-shadow) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  overflow: hidden;
+}
+
+.card-header.bg-orange,
+.setting-card-header {
+  background: linear-gradient(
+    90deg,
+    rgba(6, 182, 212, 0.22) 0%,
+    rgba(14, 165, 233, 0.12) 100%
+  ) !important;
+  border-bottom: 1px solid var(--glass-border) !important;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-header.bg-orange .card-title h6,
+.setting-card-header .card-title h6 {
+  font-family: "Lexend", sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--clr-accent);
+  margin: 0;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.card-body.text-dark {
+  color: var(--text-primary) !important;
+  padding: 24px;
+}
+
+/* ── FORM ELEMENTS ────────────────────────────────────── */
+label {
+  font-family: "Lexend", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.form-control,
+.form-control-sm,
+select.form-control,
+textarea.form-control,
+textarea.required,
+textarea.w-100 {
+  font-family: "Lexend", sans-serif !important;
+  font-size: 0.88rem;
+  background: var(--surface-2) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius-sm) !important;
+  color: var(--text-primary) !important;
+  padding: 9px 12px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.form-control:focus,
+select.form-control:focus,
+textarea:focus {
+  border-color: var(--clr-primary) !important;
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.18) !important;
+  outline: none;
+  background: rgba(30, 41, 59, 0.9) !important;
+}
+
+.form-control::placeholder {
+  color: var(--text-muted);
+}
+
+.input-group-text {
+  background: rgba(6, 182, 212, 0.12) !important;
+  border: 1px solid var(--glass-border) !important;
+  color: var(--clr-accent) !important;
+  font-family: "Lexend", sans-serif;
+  font-size: 0.85rem;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm) !important;
+}
+
+select option {
+  background: #0f172a;
+  color: var(--text-primary);
+}
+
+/* ── BUTTONS ──────────────────────────────────────────── */
+.btn {
+  font-family: "Lexend", sans-serif !important;
+  font-size: 0.82rem;
+  font-weight: 500;
+  border-radius: var(--radius-sm) !important;
+  padding: 7px 16px;
+  transition: all 0.2s;
+  border: none;
+  letter-spacing: 0.02em;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--clr-primary) 0%, var(--clr-primary-dk) 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 12px rgba(6, 182, 212, 0.3);
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--clr-accent) 0%, var(--clr-primary) 100%) !important;
+  box-shadow: 0 4px 20px rgba(6, 182, 212, 0.45);
+  transform: translateY(-1px);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, var(--clr-success) 0%, #059669 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 12px rgba(16, 185, 129, 0.3);
+}
+.btn-success:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.45);
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, var(--clr-warning) 0%, #d97706 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 12px rgba(245, 158, 11, 0.3);
+}
+.btn-warning:hover {
+  transform: translateY(-1px);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, var(--clr-danger) 0%, #dc2626 100%) !important;
+  color: #fff !important;
+}
+.btn-danger:hover {
+  transform: translateY(-1px);
+}
+
+.btn-info {
+  background: linear-gradient(135deg, var(--clr-info) 0%, #2563eb 100%) !important;
+  color: #fff !important;
+}
+
+.btn-xs {
+  padding: 4px 10px;
+  font-size: 0.75rem;
+}
+
+.btn:disabled,
+.btn[disabled] {
+  opacity: 0.4 !important;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ── ALERTS ───────────────────────────────────────────── */
+.alert {
+  font-family: "Lexend", sans-serif;
+  font-size: 0.83rem;
+  border-radius: var(--radius-md) !important;
+  border: none !important;
+  padding: 14px 18px;
+}
+
+.alert-default-danger,
+.alert-warning {
+  background: rgba(239, 68, 68, 0.1) !important;
+  border-left: 3px solid var(--clr-danger) !important;
+  color: #fca5a5 !important;
+}
+.alert-warning {
+  color: #fde68a !important;
+  background: rgba(245, 158, 11, 0.1) !important;
+  border-left-color: var(--clr-warning) !important;
+}
+.alert-default-info {
+  background: rgba(6, 182, 212, 0.08) !important;
+  border-left: 3px solid var(--clr-primary) !important;
+  color: #a5f3fc !important;
+}
+.alert ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+.alert li {
+  margin-bottom: 3px;
+}
+
+/* ── TABLES ───────────────────────────────────────────── */
+.table {
+  font-family: "Lexend", sans-serif;
+  font-size: 0.82rem;
+  color: var(--text-primary) !important;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table thead tr {
+  background: linear-gradient(90deg, rgba(6, 182, 212, 0.3), rgba(14, 165, 233, 0.2)) !important;
+}
+
+.table thead th {
+  color: var(--clr-accent) !important;
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: none !important;
+  padding: 12px 10px;
+}
+
+.table tbody tr {
+  background: transparent;
+  transition: background 0.15s;
+}
+
+.table tbody tr:hover {
+  background: rgba(6, 182, 212, 0.06) !important;
+}
+
+.table td {
+  border-top: 1px solid rgba(6, 182, 212, 0.08) !important;
+  vertical-align: middle;
+  padding: 10px;
+  color: var(--text-primary);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+
+.table-bordered td,
+.table-bordered th {
+  border: 1px solid rgba(6, 182, 212, 0.12) !important;
+}
+
+.bg-maroon {
+  background: linear-gradient(90deg, rgba(6, 182, 212, 0.28), rgba(14, 165, 233, 0.18)) !important;
+}
+
+/* ── PROGRESS BAR ─────────────────────────────────────── */
+.progress {
+  background: var(--surface-3) !important;
+  border-radius: var(--radius-sm) !important;
+  overflow: hidden;
+}
+
+.progress-bar {
+  background: linear-gradient(90deg, var(--clr-primary), var(--clr-accent)) !important;
+  font-family: "Lexend", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: width 0.4s ease;
+}
+
+/* ── HR ───────────────────────────────────────────────── */
+hr {
+  border-color: var(--glass-border) !important;
+  margin: 20px 0;
+}
+
+/* ── DROPIFY ──────────────────────────────────────────── */
+.dropify-wrapper {
+  background: var(--surface-2) !important;
+  border: 2px dashed var(--glass-border) !important;
+  border-radius: var(--radius-md) !important;
+  color: var(--text-secondary) !important;
+  transition: border-color 0.2s;
+}
+.dropify-wrapper:hover {
+  border-color: var(--clr-primary) !important;
+  background: rgba(6, 182, 212, 0.06) !important;
+}
+.dropify-wrapper .dropify-message span.file-icon,
+.dropify-wrapper .dropify-message p {
+  color: var(--text-secondary) !important;
+}
+
+/* ── SIDEBAR LIST (PILIH SISWA) ───────────────────────── */
+.nav-sidebar .nav-item .nav-link {
+  font-family: "Lexend", sans-serif;
+  font-size: 0.82rem;
+  color: var(--text-secondary) !important;
+  border-radius: var(--radius-sm);
+  padding: 7px 12px;
+  transition: all 0.15s;
+}
+.nav-sidebar .nav-item .nav-link:hover,
+.nav-sidebar .nav-item .nav-link.active {
+  background: rgba(6, 182, 212, 0.14) !important;
+  color: var(--clr-accent) !important;
+}
+
+/* ── CARD (RAPOR PREVIEW) ─────────────────────────────── */
+.card.bg-gray-light,
+.bg-gray-light {
+  background: var(--surface-3) !important;
+}
+
+/* ── OVERLAY / LOADER ─────────────────────────────────── */
+.overlay {
+  background: rgba(2, 6, 23, 0.7) !important;
+  backdrop-filter: blur(4px);
+  border-radius: var(--radius-lg);
+}
+.spinner-grow {
+  color: var(--clr-primary) !important;
+}
+
+/* ── FORM GROUP ROW ───────────────────────────────────── */
+.form-group.row {
+  align-items: center;
+  margin-bottom: 16px;
+}
+.col-form-label {
+  font-family: "Lexend", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* ── SECTION DIVIDER ──────────────────────────────────── */
+.setting-section-title {
+  font-family: "Lexend", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--clr-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* ── INPUT SEARCH (BUKU INDUK) ────────────────────────── */
+.input-group-sm .form-control {
+  font-size: 0.82rem;
+  padding: 6px 10px;
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────── */
+@media (max-width: 768px) {
+  .card-body.text-dark {
+    padding: 16px;
+  }
+  .content-header h1 {
+    font-size: 1.1rem;
+  }
+  .card-header.bg-orange {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .form-group.row label {
+    margin-bottom: 4px;
+  }
+}

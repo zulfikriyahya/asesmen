@@ -1,17 +1,13 @@
 <?php
-
 $satuan = [
     "1" => ["I ~ V", "VI"],
     "2" => ["VII-VIII", "IX"],
-    "3" => [
-        "X-XI",
-        "XII"
-    ]
+    "3" => ["X-XI", "XII"]
 ];
-
 ?>
+<link rel="stylesheet" href="<?= base_url('assets/app/css/setting.css') ?>">
 
-<div class="content-wrapper bg-dark pt-4">
+<div class="content-wrapper setting-page pt-4">
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -25,35 +21,31 @@ $satuan = [
     <section class="content">
         <div class="container-fluid">
             <div class="card my-shadow mb-4">
+                <div class="card-header bg-orange">
+                    <div class="card-title">
+                        <h6 class="text-bold">Konfigurasi Rapor</h6>
+                    </div>
+                </div>
                 <div class="card-body text-dark">
-                    <div class="alert alert-default-info align-content-center" role="alert">
-                        <span><b>KKM</b></span>
+                    <div class="alert alert-default-info">
+                        <strong>KKM</strong>
                         <ul>
-                            <li>
-                                KKM Tunggal: mengatur semua mapel mempunyai KKM yang sama
-                            </li>
-                            <li>
-                                Total BOBOT harus 100
-                            </li>
-                            <li>
-                                Jangan lupa untuk menyimpan perubahan
-                            </li>
+                            <li>KKM Tunggal: mengatur semua mapel mempunyai KKM yang sama</li>
+                            <li>Total BOBOT harus 100</li>
+                            <li>Jangan lupa untuk menyimpan perubahan</li>
                         </ul>
-                        <span><b>TAPILKAN NIP</b></span>
-                        <ul class="m-0">
-                            <li>
-                                Pilih <b>YA</b> jika NIP kepala sekolah / walikelas diisi NIP
-                            </li>
-                            <li>
-                                Jika NIP kepala sekolah / walikelas diisi NUPTK atau nomor lain selain NIP maka
-                                sebaiknya pilih <b>TIDAK</b> ditampilkan
-                            </li>
+                        <strong>Tampilkan NIP</strong>
+                        <ul class="mb-0">
+                            <li>Pilih <b>YA</b> jika NIP kepala sekolah / walikelas diisi NIP</li>
+                            <li>Jika diisi NUPTK atau nomor lain, pilih <b>TIDAK</b></li>
                         </ul>
                     </div>
                     <hr>
+
                     <?= form_open('edit', array('id' => 'editsetting'), array('id_setting' => $rapor != null ? $rapor->id_setting : '')) ?>
                     <div class="row">
                         <div class="col-md-6">
+                            <p class="setting-section-title">Tanggal Rapor</p>
                             <div class="form-group row">
                                 <label class="col-5 col-form-label">Tgl Rapor PTS</label>
                                 <div class="col-7">
@@ -63,8 +55,7 @@ $satuan = [
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-5 col-form-label">Tgl Rapor Akhir
-                                    Kls <?= $satuan[$setting->jenjang][0] ?></label>
+                                <label class="col-5 col-form-label">Tgl Rapor Akhir Kls <?= $satuan[$setting->jenjang][0] ?></label>
                                 <div class="col-7">
                                     <input type="text" name="tgl_rapor_akhir"
                                         value="<?= $rapor != null ? $rapor->tgl_rapor_akhir : '' ?>"
@@ -72,19 +63,19 @@ $satuan = [
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-5 col-form-label">Tgl Rapor Akhir
-                                    Kls <?= $satuan[$setting->jenjang][1] ?></label>
+                                <label class="col-5 col-form-label">Tgl Rapor Akhir Kls <?= $satuan[$setting->jenjang][1] ?></label>
                                 <div class="col-7">
                                     <input type="text" name="tgl_rapor_kelas_akhir"
                                         value="<?= $rapor != null ? $rapor->tgl_rapor_kelas_akhir : '' ?>"
                                         class="form-control tgl" autocomplete="off" required>
                                 </div>
                             </div>
+
+                            <p class="setting-section-title mt-3">Tampilan NIP</p>
                             <div class="form-group row">
-                                <label class="col-5 col-form-label">Tampilkan NIP Kepala Sekolah</label>
+                                <label class="col-5 col-form-label">NIP Kepala Sekolah</label>
                                 <div class="col-7">
-                                    <?php
-                                    echo form_dropdown(
+                                    <?php echo form_dropdown(
                                         'nip_kepsek',
                                         $kkm_drop,
                                         $rapor != null && isset($rapor->nip_kepsek) ? $rapor->nip_kepsek : '',
@@ -93,10 +84,9 @@ $satuan = [
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-5 col-form-label">Tampilkan NIP Walikelas</label>
+                                <label class="col-5 col-form-label">NIP Walikelas</label>
                                 <div class="col-7">
-                                    <?php
-                                    echo form_dropdown(
+                                    <?php echo form_dropdown(
                                         'nip_walikelas',
                                         $kkm_drop,
                                         $rapor != null && isset($rapor->nip_walikelas) ? $rapor->nip_walikelas : '',
@@ -105,13 +95,15 @@ $satuan = [
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-md-1"></div>
+
                         <div class="col-md-5">
+                            <p class="setting-section-title">KKM & Bobot Nilai</p>
                             <div class="form-group row">
                                 <label class="col-4 col-form-label">KKM Tunggal</label>
                                 <div class="col-8">
-                                    <?php
-                                    echo form_dropdown(
+                                    <?php echo form_dropdown(
                                         'kkm_tunggal',
                                         $kkm_drop,
                                         $rapor != null ? $rapor->kkm_tunggal : '',
@@ -122,7 +114,8 @@ $satuan = [
                             <div class="form-group row">
                                 <label class="col-4 col-form-label">KKM</label>
                                 <div class="col-8">
-                                    <input type="number" name="kkm" value="<?= $rapor != null ? $rapor->kkm : '' ?>"
+                                    <input type="number" name="kkm"
+                                        value="<?= $rapor != null ? $rapor->kkm : '' ?>"
                                         class="form-control kkm" required>
                                 </div>
                             </div>
@@ -151,9 +144,10 @@ $satuan = [
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group col-12 text-right">
-                            <button type="submit" class='btn btn-success btn-sm float-right'><i class='fa fa-save'></i>
-                                Simpan
+
+                        <div class="form-group col-12 text-right mt-2">
+                            <button type="submit" class="btn btn-success btn-sm">
+                                <i class="fa fa-save mr-1"></i>Simpan
                             </button>
                         </div>
                     </div>
@@ -170,13 +164,9 @@ $satuan = [
 <script>
     $(document).ready(function() {
         function onChangeKkm() {
-            console.log('change');
             var tunggal = $('#tunggal').val();
-            if (tunggal == '1') {
-                $('.kkm').removeAttr('readonly');
-            } else {
-                $('.kkm').attr('readonly', 'true');
-            }
+            if (tunggal == '1') $('.kkm').removeAttr('readonly');
+            else $('.kkm').attr('readonly', 'true');
         }
 
         onChangeKkm();
@@ -185,29 +175,15 @@ $satuan = [
         $('.tgl').datetimepicker({
             i18n: {
                 id: {
-                    months: [
-                        'Januari', 'Februari', 'Maret', 'April', 'Mei',
-                        'Juni', 'Juli', 'Agustus', 'September',
-                        'Oktober', 'November', 'Desember'
-                    ],
-                    dayOfWeek: [
-                        'Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'
-                    ]
+                    months: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
+                    dayOfWeek: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab']
                 }
-            },
-            icons: {
-                next: 'fa fa-angle-right',
-                previous: 'fa fa-angle-left'
             },
             timepicker: false,
             scrollInput: false,
             scrollMonth: false,
             format: 'Y-m-d',
-            disabledWeekDays: [0],
-            widgetPositioning: {
-                horizontal: 'left',
-                vertical: 'bottom'
-            }
+            disabledWeekDays: [0]
         }).change(function() {
             $(this).val(buat_tanggal_indonesia($(this).val()));
         });
@@ -216,29 +192,21 @@ $satuan = [
             e.stopPropagation();
             e.preventDefault();
             e.stopImmediatePropagation();
-
-            console.log($(this).serialize());
             $('#loading').removeClass('d-none');
-
             $.ajax({
                 url: base_url + 'rapor/saveraporadmin',
-                type: "POST",
-                dataType: "json",
+                type: 'POST',
+                dataType: 'json',
                 data: $(this).serialize(),
                 success: function(response) {
                     setTimeout(function() {
                         $('#loading').addClass('d-none');
-                        if (response.status) {
-                            showSuccessToast("Sukses")
-                        } else {
-                            showSuccessToast("gagal")
-                        }
+                        response.status ? showSuccessToast('Sukses') : showDangerToast('Gagal');
                     }, 500);
                 },
-                error: function(xhr, status, error) {
+                error: function() {
                     $('#loading').addClass('d-none');
-                    console.log("response:", xhr.responseText);
-                    showDangerToast('gagal disimpan')
+                    showDangerToast('Gagal disimpan');
                 }
             });
         });
@@ -246,6 +214,5 @@ $satuan = [
         $('#tunggal').on('change', function() {
             onChangeKkm();
         });
-
-    })
+    });
 </script>

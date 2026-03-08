@@ -1,4 +1,6 @@
-<div class="content-wrapper bg-dark pt-4">
+<link rel="stylesheet" href="<?= base_url('assets/app/css/setting.css') ?>">
+
+<div class="content-wrapper setting-page pt-4">
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -18,51 +20,40 @@
                     </div>
                 </div>
                 <div class="card-body text-dark">
-                    <div class="alert alert-warning shadow align-content-center" role="alert">
-                        <strong>Catatan !</strong> <br>BACKUP terlebih dahulu di menu Backup/Restore.
+                    <div class="alert alert-warning">
+                        <strong>Catatan!</strong> BACKUP terlebih dahulu di menu Backup/Restore sebelum melanjutkan.
                     </div>
 
-                    <?php
-                    //echo '<pre>';
-                    //var_dump($tables);
-                    //echo '</pre>';
-                    foreach ($tables as $ket => $table) :
-                        $keterangan = $ket == '1' ?
-                            '<li>Tabel berisi data yang bisa digunakan sepanjang tahun/semester</li>' .
-                            '<li>Sebaiknya tidak dihapus, kecuali data sudah tidak diperlukan</li>' .
-                            '<li>Tabel otomatis dibackup ketika dihapus, lihat di menu Backup/Restore untuk melihat backup table yang dihapus</li>' :
-                            '<li>Tabel berisi data yang hanya digunakan satu tahun/semester</li>' .
-                            '<li>Tabel otomatis dibackup ketika dihapus, lihat di menu Backup/Restore untuk melihat backup table yang dihapus</li>';
+                    <?php foreach ($tables as $ket => $table) :
+                        $keterangan = $ket == '1'
+                            ? '<li>Tabel berisi data yang bisa digunakan sepanjang tahun/semester</li><li>Sebaiknya tidak dihapus kecuali data sudah tidak diperlukan</li><li>Tabel otomatis dibackup ketika dihapus</li>'
+                            : '<li>Tabel berisi data yang hanya digunakan satu tahun/semester</li><li>Tabel otomatis dibackup ketika dihapus</li>';
                     ?>
-                        <div class="alert alert-default-info border-info">
-                            <ul class="mb-1">
-                                <?= $keterangan ?>
-                            </ul>
+                        <div class="alert alert-default-info">
+                            <ul class="mb-0"><?= $keterangan ?></ul>
                         </div>
-                        <table id="database" class="table table-striped table-bordered table-hover mb-5">
+                        <table class="table table-striped table-bordered table-hover mb-5">
                             <thead class="bg-maroon">
                                 <tr>
-                                    <th width="50" height="50" class="text-center p-0 align-middle">No.</th>
-                                    <th class="text-center p-0 align-middle">Tabel</th>
-                                    <th class="text-center p-0 align-middle">Total Data</th>
-                                    <th class="text-center p-0 align-middle">Aksi</th>
+                                    <th width="50" class="text-center align-middle">No.</th>
+                                    <th class="text-center align-middle">Tabel</th>
+                                    <th class="text-center align-middle">Total Data</th>
+                                    <th class="text-center align-middle">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php
-                                $no = 1;
+                                <?php $no = 1;
                                 foreach ($table as $info) : ?>
                                     <tr>
                                         <td class="text-center align-middle"><?= $no ?></td>
                                         <td class="align-middle"><?= $info['name'] ?></td>
                                         <td class="align-middle text-center"><?= $info['size'] ?></td>
-                                        <td class="text-center p-0 align-middle">
-                                            <?php
-                                            $disable = $info['size'] == 0 ? 'disabled="disabled"' : '';
-                                            ?>
+                                        <td class="text-center align-middle">
+                                            <?php $disable = $info['size'] == 0 ? 'disabled' : ''; ?>
                                             <button class="btn btn-sm btn-warning"
-                                                onclick="hapus('<?= $info['table'] ?>')" <?= $disable ?>><i
-                                                    class="fa fa-trash"> Kosongkan</i></button>
+                                                onclick="hapus('<?= $info['table'] ?>')" <?= $disable ?>>
+                                                <i class="fa fa-trash mr-1"></i>Kosongkan
+                                            </button>
                                         </td>
                                     </tr>
                                 <?php $no++;
@@ -82,20 +73,17 @@
 <script>
     function hapus(src) {
         swal.fire({
-            title: "Anda yakin?",
-            html: "Tabel akan dihapus!",
-            icon: "warning",
+            title: 'Anda yakin?',
+            html: 'Tabel akan dikosongkan!',
+            icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Hapus!"
+            confirmButtonColor: '#06b6d4',
+            cancelButtonColor: '#ef4444',
+            confirmButtonText: 'Kosongkan!'
         }).then(result => {
             if (result.value) {
                 swal.fire({
-                    text: "Silahkan tunggu....",
-                    button: false,
-                    closeOnClickOutside: false,
-                    closeOnEsc: false,
+                    text: 'Silahkan tunggu....',
                     allowEscapeKey: false,
                     allowOutsideClick: false,
                     onOpen: () => {
@@ -104,31 +92,28 @@
                 });
                 $.ajax({
                     url: base_url + 'dbclear/hapustable',
-                    type: "POST",
+                    type: 'POST',
                     data: $('#delete-table').serialize() + '&table=' + src,
                     success: function(respon) {
-                        console.log(respon);
                         swal.fire({
-                            title: "Berhasil",
-                            text: respon.message,
-                            icon: "success"
-                        }).then(result => {
-                            if (result.value) {
-                                window.location.href = base_url + 'dbclear';
-                            }
-                        });
+                                title: 'Berhasil',
+                                text: respon.message,
+                                icon: 'success'
+                            })
+                            .then(r => {
+                                if (r.value) window.location.href = base_url + 'dbclear';
+                            });
                     },
-                    error: function(xhr, status, error) {
-                        console.log(xhr.responseText);
-                        const err = JSON.parse(xhr.responseText)
+                    error: function(xhr) {
+                        const err = JSON.parse(xhr.responseText);
                         swal.fire({
-                            title: "Error",
+                            title: 'Error',
                             text: err.Message,
-                            icon: "error"
+                            icon: 'error'
                         });
                     }
                 });
             }
-        })
+        });
     }
 </script>
