@@ -8043,7 +8043,7 @@ foreach ($soal_ada as $key => $value) {
         if (data.siswa.length > 0) {
             $('#print-preview').html(card);
         } else {
-            $('#print-preview').html('<b>Tidak ada data siswa</b>');
+            $('#print-preview').html('<b>Belum ada data</b>');
         }
         $('#loading').addClass('d-none');
 
@@ -37274,7 +37274,7 @@ $ekstra_guru = $guru->ekstra_kelas == null ? [] : unserialize($guru->ekstra_kela
                     '</tr>';
             });
         } else {
-            html += '<tr><td colspan="5" class="text-center align-middle">Tidak ada data siswa</td><tr>';
+            html += '<tr><td colspan="5" class="text-center align-middle">Belum ada data</td><tr>';
         }
         $('#table-body').html(html);
         $(`.avatar`).each(function() {
@@ -55514,7 +55514,7 @@ if (!file_exists(FCPATH . $siswa->foto)) {
                                     <?php endforeach;
                                 else: ?>
                                     <tr>
-                                        <td colspan="6" class="text-center align-middle">Tidak ada data siswa</td>
+                                        <td colspan="6" class="text-center align-middle">Belum ada data</td>
                                     <tr>
                                     <?php endif; ?>
                             </tbody>

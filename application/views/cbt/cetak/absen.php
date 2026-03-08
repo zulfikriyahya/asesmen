@@ -387,7 +387,7 @@
         if (data.siswa.length > 0) {
             $('#print-preview').html(card);
         } else {
-            $('#print-preview').html('<b>Tidak ada data siswa</b>');
+            $('#print-preview').html('<b>Belum ada data</b>');
         }
         $('#loading').addClass('d-none');
 

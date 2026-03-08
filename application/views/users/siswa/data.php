@@ -287,7 +287,7 @@
                 </tr>`;
             });
         } else {
-            html = '<tr><td colspan="8" class="text-center" style="padding:2rem;color:#7eb8d4;">Tidak ada data siswa</td></tr>';
+            html = '<tr><td colspan="8" class="text-center" style="padding:2rem;color:#7eb8d4;">Belum ada data</td></tr>';
         }
         $('#table-body').html(html);
         $('.avatar').on('error', function() {

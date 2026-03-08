@@ -65,7 +65,7 @@
                                     <?php endforeach;
                                 else: ?>
                                     <tr>
-                                        <td colspan="6" class="text-center align-middle">Tidak ada data siswa</td>
+                                        <td colspan="6" class="text-center align-middle">Belum ada data</td>
                                     <tr>
                                     <?php endif; ?>
                             </tbody>
