@@ -30,29 +30,25 @@
                 </div>
 
                 <div class="card-body">
-                    <div class="row mb-2">
-                        <div class="col-sm-6 mb-2">
-                            <div class="d-flex align-items-center" style="gap:0.4rem">
-                                <label class="mb-0" style="font-family:'Lexend',sans-serif;font-size:0.82rem;color:#94a3b8">Show</label>
-                                <select id="users_length" class="custom-select-glass">
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                            </div>
+                    <div class="d-flex align-items-center justify-content-between flex-wrap mb-3" style="gap:0.5rem">
+                        <div class="d-flex align-items-center" style="gap:0.5rem">
+                            <label class="mb-0" style="font-family:'Lexend',sans-serif;font-size:0.82rem;color:#94a3b8;white-space:nowrap">Show</label>
+                            <select id="users_length" class="custom-select-glass" style="width:80px">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
                         </div>
-                        <div class="col-sm-6 mb-2">
-                            <div class="search-row justify-content-sm-end">
-                                <input id="input-search" type="search" class="form-control-glass form-control" placeholder="Cari siswa..." aria-controls="users">
-                                <button id="btn-search" type="button" class="btn btn-cyan btn-sm" onclick="applySearch()" disabled="disabled">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </div>
+                        <div class="d-flex align-items-center" style="gap:0.4rem;flex:1;max-width:360px">
+                            <input id="input-search" type="search" class="form-control form-control-glass" placeholder="Cari siswa..." aria-controls="users">
+                            <button id="btn-search" type="button" class="btn btn-cyan btn-sm flex-shrink-0" onclick="applySearch()" disabled="disabled">
+                                <i class="fa fa-search"></i>
+                            </button>
                         </div>
                     </div>
 
-                    <div class="filter-row">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap mb-3" style="gap:0.5rem">
                         <div class="dropdown dropdown-glass">
                             <button id="dropdown-btn" class="btn btn-danger-glass dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-expanded="false" disabled="disabled">
                                 Aksi
@@ -63,9 +59,9 @@
                                 <a class="dropdown-item" id="hapus" href="#">HAPUS</a>
                             </div>
                         </div>
-                        <div class="d-flex align-items-center" style="gap:0.4rem">
-                            <label class="mb-0" style="font-family:'Lexend',sans-serif;font-size:0.82rem;color:#94a3b8">Filter</label>
-                            <select id="users-filter" class="custom-select-glass">
+                        <div class="d-flex align-items-center" style="gap:0.5rem">
+                            <label class="mb-0" style="font-family:'Lexend',sans-serif;font-size:0.82rem;color:#94a3b8;white-space:nowrap">Filter</label>
+                            <select id="users-filter" class="custom-select-glass" style="width:130px">
                                 <option value="1">Aktif</option>
                                 <option value="5">Tanpa Kelas</option>
                                 <option value="3">Pindah</option>
