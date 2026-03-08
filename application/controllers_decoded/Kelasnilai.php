@@ -120,13 +120,11 @@ class Kelasnilai extends CI_Controller
             return $dates;
         } else {
             if (!(date('N', strtotime($taun . '-' . $bulan . '-' . $i)) == $idday)) {
-                goto I8ZK7;
             }
             $days++;
             array_push($dates, date('Y-m-d', strtotime($taun . '-' . $bulan . '-' . $i)));
             $i++;
             if (!($i < $total_days)) {
-                goto v79C0;
             }
         }
     }

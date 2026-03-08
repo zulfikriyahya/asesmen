@@ -11,18 +11,15 @@ class Kelas_model extends CI_Model
         if ($this->agent->is_browser()) {
             $agent = $this->agent->browser() . ' ' . $this->agent->version();
             if ($agent == 'unknown') {
-                goto P5O3x;
             }
             $os = $this->agent->platform();
             $ip = $this->input->ip_address();
             return $this->insertLog($table, $id_siswa, $id_kjm, $jamke, $mapel, $desc, $agent, $os, $ip);
         } else {
             if ($this->agent->is_mobile()) {
-                goto HZ5Nt;
             }
             $agent = 'unknown';
             if ($agent == 'unknown') {
-                goto P5O3x;
             }
             $os = $this->agent->platform();
             $ip = $this->input->ip_address();
@@ -114,14 +111,12 @@ class Kelas_model extends CI_Model
         $this->db->where('k.id_kelas', $id);
         if (!($id_tp != null)) {
             if (!($id_smt != null)) {
-                goto CZgXR;
             }
             $this->db->where('k.id_smt', $id_smt);
             return $this->db->get()->row();
         } else {
             $this->db->where('k.id_tp', $id_tp);
             if (!($id_smt != null)) {
-                goto CZgXR;
             }
             $this->db->where('k.id_smt', $id_smt);
             return $this->db->get()->row();
@@ -140,14 +135,12 @@ class Kelas_model extends CI_Model
         $this->db->where('k.nama_kelas', $nama_kelas);
         if (!($id_tp != null)) {
             if (!($id_smt != null)) {
-                goto gea19;
             }
             $this->db->where('k.id_smt', $id_smt);
             return $this->db->get()->row();
         } else {
             $this->db->where('k.id_tp', $id_tp);
             if (!($id_smt != null)) {
-                goto gea19;
             }
             $this->db->where('k.id_smt', $id_smt);
             return $this->db->get()->row();
@@ -166,7 +159,6 @@ class Kelas_model extends CI_Model
         } else {
             foreach ($result as $row) {
                 $ret[$row->nama_kelas] = $row->id_kelas;
-                SQ_oR:
             }
             return $ret;
         }
@@ -193,7 +185,6 @@ class Kelas_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_jurusan] = $row->nama_jurusan;
-                NNT7N:
             }
             return $ret;
         }
@@ -212,7 +203,6 @@ class Kelas_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_level] = $row->level;
-                ws_9i:
             }
             return $ret;
         }
@@ -225,10 +215,8 @@ class Kelas_model extends CI_Model
             return $levels;
         } else {
             if ($jenjang == '2') {
-                goto buF76;
             }
             if ($jenjang == '3') {
-                goto mOG_M;
             }
             return $levels;
         }
@@ -242,7 +230,6 @@ class Kelas_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_guru] = $row->nama_guru;
-                ntjKd:
             }
             return $ret;
         }
@@ -260,7 +247,6 @@ class Kelas_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_guru] = $row->nama_guru;
-                Yt10F:
             }
             return $ret;
         }
@@ -316,7 +302,6 @@ class Kelas_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_siswa] = $row;
-                jcEqH:
             }
             return $ret;
         }
@@ -343,34 +328,10 @@ class Kelas_model extends CI_Model
             return $ret;
         } else {
             foreach ($result as $key => $row) {
-                goto D_vwa;
-                cWX8A:
-                x0oWG:
-                goto A6VsF;
-                A6VsF:
-                WDSEb:
-                goto KbhVs;
-                bpo_w:
-                $ret[$row->id_kelas] = [];
-                goto EbDwU;
-                D_vwa:
                 if (isset($ret[$row->id_kelas])) {
-                    goto HQi5G;
                 }
-                goto bpo_w;
-                EbDwU:
+                $ret[$row->id_kelas] = [];
                 array_push($ret[$row->id_kelas], $row);
-                goto u1g41;
-                LDlgZ:
-                array_push($ret[$row->id_kelas], $row);
-                goto cWX8A;
-                qAp3_:
-                HQi5G:
-                goto LDlgZ;
-                u1g41:
-                goto x0oWG;
-                goto qAp3_;
-                KbhVs:
             }
             return $ret;
         }
@@ -388,42 +349,12 @@ class Kelas_model extends CI_Model
             return $ret;
         } else {
             foreach ($result as $key => $row) {
-                goto CbAic;
-                JaJNT:
-                if (isset($ret[$row->id_mapel][$row->id_kelas])) {
-                    goto eZzxd;
-                }
-                goto NDgJ3;
-                CNgXX:
-                eZzxd:
-                goto gW0C7;
-                PsPMt:
-                goto q9gtw;
-                goto CNgXX;
-                NDgJ3:
-                $ret[$row->id_mapel][$row->id_kelas] = [];
-                goto Bc6ge;
-                Kr_WG:
-                scYCu:
-                goto egvD9;
-                CbAic:
                 if (!($row->id_mapel != '')) {
-                    goto o3mym;
                 }
-                goto JaJNT;
-                zrvkv:
-                q9gtw:
-                goto YwsVM;
-                Bc6ge:
+                if (isset($ret[$row->id_mapel][$row->id_kelas])) {
+                }
+                $ret[$row->id_mapel][$row->id_kelas] = [];
                 array_push($ret[$row->id_mapel][$row->id_kelas], $row);
-                goto PsPMt;
-                gW0C7:
-                array_push($ret[$row->id_mapel][$row->id_kelas], $row);
-                goto zrvkv;
-                YwsVM:
-                o3mym:
-                goto Kr_WG;
-                egvD9:
             }
             return $ret;
         }
@@ -503,7 +434,6 @@ class Kelas_model extends CI_Model
             array_push($inputData, $data);
             $i++;
             if (!($i < 7)) {
-                goto Rr_gg;
             }
         }
     }
@@ -551,7 +481,6 @@ class Kelas_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_mapel][$row->jenis][$row->id_materi] = $row->kode_materi;
-                ndJ7c:
             }
             return $ret;
         }
@@ -573,7 +502,6 @@ class Kelas_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->jenis][$row->id_kjm] = $row;
-                uT2JF:
             }
             return $ret;
         }
@@ -664,7 +592,6 @@ class Kelas_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 array_push($ret, $row->id_kelas);
-                Uhm2F:
             }
             return $ret;
         }
@@ -680,7 +607,6 @@ class Kelas_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_kelas] = $row->nama_kelas;
-                DVG5_:
             }
             return $ret;
         }
@@ -696,7 +622,6 @@ class Kelas_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_kelas] = $row->nama_kelas;
-                AHQVr:
             }
             return $ret;
         }
@@ -714,34 +639,10 @@ class Kelas_model extends CI_Model
             return $ret;
         } else {
             foreach ($result as $key => $row) {
-                goto jO8Ef;
-                LXEEL:
-                ahkgn:
-                goto HGMPD;
-                VPfFd:
-                array_push($ret[$row->id_kelas], $row);
-                goto RHUJL;
-                TH1f7:
-                EA_pg:
-                goto KaZA7;
-                RHUJL:
-                goto EA_pg;
-                goto LXEEL;
-                HGMPD:
-                array_push($ret[$row->id_kelas], $row);
-                goto TH1f7;
-                KaZA7:
-                eYMsn:
-                goto ohI1e;
-                el_Vf:
-                $ret[$row->id_kelas] = [];
-                goto VPfFd;
-                jO8Ef:
                 if (isset($ret[$row->id_kelas])) {
-                    goto ahkgn;
                 }
-                goto el_Vf;
-                ohI1e:
+                $ret[$row->id_kelas] = [];
+                array_push($ret[$row->id_kelas], $row);
             }
             return $ret;
         }
@@ -819,7 +720,6 @@ class Kelas_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_materi] = $row;
-                s1PdQ:
             }
             return $ret;
         }
@@ -833,11 +733,9 @@ class Kelas_model extends CI_Model
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto KwXyv;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_siswa] = $row;
-                B6fWz:
             }
             return $ret;
         } else {
@@ -845,11 +743,9 @@ class Kelas_model extends CI_Model
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto KwXyv;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_siswa] = $row;
-                B6fWz:
             }
             return $ret;
         }
@@ -869,7 +765,6 @@ class Kelas_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->jenis][] = $row;
-                DrQvR:
             }
             return $ret;
         }
@@ -916,11 +811,9 @@ class Kelas_model extends CI_Model
         if ($with_key) {
             $ret = [];
             if (!$result) {
-                goto NXxZB;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->jam_ke] = $row;
-                gvByg:
             }
             return $ret;
         } else {
@@ -942,7 +835,6 @@ class Kelas_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_hari][$row->jam_ke] = $row;
-                uuPcy:
             }
             return $ret;
         }
@@ -963,29 +855,12 @@ class Kelas_model extends CI_Model
             return $ret;
         } else {
             foreach ($result as $key => $row) {
-                goto n3i0T;
-                CT9pH:
-                $subs_jam = $len_kls + 10;
-                goto BOlkj;
-                ognM2:
-                $ret[$jam] = $row;
-                goto wIAAD;
-                wIAAD:
-                PDk3U:
-                goto zY7aZ;
-                I5PMW:
-                $len = $sisa === 3 ? 2 : 1;
-                goto cacE0;
-                n3i0T:
                 $len_kls = strlen($row->id_kelas);
-                goto CT9pH;
-                cacE0:
-                $jam = substr($row->id_kjm, strlen($row->id_kjm) - $len, 1);
-                goto ognM2;
-                BOlkj:
+                $subs_jam = $len_kls + 10;
                 $sisa = strlen($row->id_kjm) - $subs_jam;
-                goto I5PMW;
-                zY7aZ:
+                $len = $sisa === 3 ? 2 : 1;
+                $jam = substr($row->id_kjm, strlen($row->id_kjm) - $len, 1);
+                $ret[$jam] = $row;
             }
             return $ret;
         }
@@ -1007,29 +882,12 @@ class Kelas_model extends CI_Model
             return $ret;
         } else {
             foreach ($result as $key => $row) {
-                goto lxI5s;
-                eyfKB:
-                $subs_jam = $len_kls + 10;
-                goto GI4VY;
-                rquLe:
-                VVr1w:
-                goto R8fUh;
-                Oft3i:
-                $jam = substr($row->id_kjm, strlen($row->id_kjm) - $sisa, $len);
-                goto g6cX0;
-                GI4VY:
-                $sisa = strlen($row->id_kjm) - $subs_jam;
-                goto kszZU;
-                kszZU:
-                $len = $sisa === 3 ? 2 : 1;
-                goto Oft3i;
-                lxI5s:
                 $len_kls = strlen($row->id_kelas);
-                goto eyfKB;
-                g6cX0:
+                $subs_jam = $len_kls + 10;
+                $sisa = strlen($row->id_kjm) - $subs_jam;
+                $len = $sisa === 3 ? 2 : 1;
+                $jam = substr($row->id_kjm, strlen($row->id_kjm) - $sisa, $len);
                 $ret[$row->jadwal_materi][$jam] = $row;
-                goto rquLe;
-                R8fUh:
             }
             return $ret;
         }
@@ -1047,35 +905,15 @@ class Kelas_model extends CI_Model
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto DKL07;
             }
             foreach ($result as $key => $row) {
-                goto MSrA6;
-                MSrA6:
                 $len_kls = strlen($row->id_kelas);
-                goto oHIs9;
-                oHIs9:
                 $subs_jam = $len_kls + 10;
-                goto HRR7h;
-                laodu:
-                $len = $sisa === 3 ? 2 : 1;
-                goto L71DT;
-                huuYd:
-                y0BwP:
-                goto afANu;
-                k2Cs6:
-                $ret[$row->id_mapel][$jam][$row->jenis] = $row;
-                goto huuYd;
-                HRR7h:
                 $sisa = strlen($row->id_kjm) - $subs_jam;
-                goto laodu;
-                Q13nv:
-                $row->materi_kelas = unserialize($row->materi_kelas ?? '');
-                goto k2Cs6;
-                L71DT:
+                $len = $sisa === 3 ? 2 : 1;
                 $jam = substr($row->id_kjm, strlen($row->id_kjm) - $sisa, $len);
-                goto Q13nv;
-                afANu:
+                $row->materi_kelas = unserialize($row->materi_kelas ?? '');
+                $ret[$row->id_mapel][$jam][$row->jenis] = $row;
             }
             return $ret;
         } else {
@@ -1084,35 +922,15 @@ class Kelas_model extends CI_Model
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto DKL07;
             }
             foreach ($result as $key => $row) {
-                goto MSrA6;
-                MSrA6:
                 $len_kls = strlen($row->id_kelas);
-                goto oHIs9;
-                oHIs9:
                 $subs_jam = $len_kls + 10;
-                goto HRR7h;
-                laodu:
-                $len = $sisa === 3 ? 2 : 1;
-                goto L71DT;
-                huuYd:
-                y0BwP:
-                goto afANu;
-                k2Cs6:
-                $ret[$row->id_mapel][$jam][$row->jenis] = $row;
-                goto huuYd;
-                HRR7h:
                 $sisa = strlen($row->id_kjm) - $subs_jam;
-                goto laodu;
-                Q13nv:
-                $row->materi_kelas = unserialize($row->materi_kelas ?? '');
-                goto k2Cs6;
-                L71DT:
+                $len = $sisa === 3 ? 2 : 1;
                 $jam = substr($row->id_kjm, strlen($row->id_kjm) - $sisa, $len);
-                goto Q13nv;
-                afANu:
+                $row->materi_kelas = unserialize($row->materi_kelas ?? '');
+                $ret[$row->id_mapel][$jam][$row->jenis] = $row;
             }
             return $ret;
         }
@@ -1159,11 +977,9 @@ class Kelas_model extends CI_Model
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto lcNZJ;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_siswa][$row->jenis][$row->jadwal_materi][$row->jam_ke] = $row;
-                aUGal:
             }
             return $ret;
         } else {
@@ -1172,11 +988,9 @@ class Kelas_model extends CI_Model
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto lcNZJ;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_siswa][$row->jenis][$row->jadwal_materi][$row->jam_ke] = $row;
-                aUGal:
             }
             return $ret;
         }
@@ -1195,7 +1009,6 @@ class Kelas_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_siswa] = $row;
-                osJxY:
             }
             return $ret;
         }
@@ -1208,56 +1021,22 @@ class Kelas_model extends CI_Model
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto neAf3;
             }
             foreach ($result as $key => $row) {
-                goto vDFvc;
-                fst4r:
-                $jenis = substr($row->id_materi, strlen($row->id_materi) - 1, 1);
-                goto EduIH;
-                i0SyR:
-                $sisa = strlen($row->id_materi) - ($len_kls + 10);
-                goto TE84R;
-                rlh_4:
-                $subs_bln = $len_kls + $len_tp_smt + $len_tahun;
-                goto NBjzf;
-                TE84R:
-                $len = $sisa === 3 ? 2 : 1;
-                goto vviVf;
-                Of2ut:
-                $len_tp_smt = 2;
-                goto FRp3Z;
-                CxAsx:
-                $tgl = substr($row->id_materi, $subs_tgl, 2);
-                goto tjfEi;
-                klbZN:
-                $len_bln = 2;
-                goto h_YsC;
-                vviVf:
-                $bulan = substr($row->id_materi, $subs_bln, 2);
-                goto CxAsx;
-                icWoH:
-                lDbgs:
-                goto YfngD;
-                FRp3Z:
-                $len_tahun = 4;
-                goto klbZN;
-                EduIH:
-                $ret[$jenis][$row->id_siswa][$bulan][$tgl][$jam] = $row;
-                goto icWoH;
-                tjfEi:
-                $jam = substr($row->id_materi, strlen($row->id_materi) - $sisa, $len);
-                goto fst4r;
-                vDFvc:
                 $len_kls = strlen($id_kelas);
-                goto Of2ut;
-                NBjzf:
-                $subs_tgl = $subs_bln + $len_bln;
-                goto i0SyR;
-                h_YsC:
+                $len_tp_smt = 2;
+                $len_tahun = 4;
+                $len_bln = 2;
                 $len_hari = 2;
-                goto rlh_4;
-                YfngD:
+                $subs_bln = $len_kls + $len_tp_smt + $len_tahun;
+                $subs_tgl = $subs_bln + $len_bln;
+                $sisa = strlen($row->id_materi) - ($len_kls + 10);
+                $len = $sisa === 3 ? 2 : 1;
+                $bulan = substr($row->id_materi, $subs_bln, 2);
+                $tgl = substr($row->id_materi, $subs_tgl, 2);
+                $jam = substr($row->id_materi, strlen($row->id_materi) - $sisa, $len);
+                $jenis = substr($row->id_materi, strlen($row->id_materi) - 1, 1);
+                $ret[$jenis][$row->id_siswa][$bulan][$tgl][$jam] = $row;
             }
             return $ret;
         } else {
@@ -1265,56 +1044,22 @@ class Kelas_model extends CI_Model
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto neAf3;
             }
             foreach ($result as $key => $row) {
-                goto vDFvc;
-                fst4r:
-                $jenis = substr($row->id_materi, strlen($row->id_materi) - 1, 1);
-                goto EduIH;
-                i0SyR:
-                $sisa = strlen($row->id_materi) - ($len_kls + 10);
-                goto TE84R;
-                rlh_4:
-                $subs_bln = $len_kls + $len_tp_smt + $len_tahun;
-                goto NBjzf;
-                TE84R:
-                $len = $sisa === 3 ? 2 : 1;
-                goto vviVf;
-                Of2ut:
-                $len_tp_smt = 2;
-                goto FRp3Z;
-                CxAsx:
-                $tgl = substr($row->id_materi, $subs_tgl, 2);
-                goto tjfEi;
-                klbZN:
-                $len_bln = 2;
-                goto h_YsC;
-                vviVf:
-                $bulan = substr($row->id_materi, $subs_bln, 2);
-                goto CxAsx;
-                icWoH:
-                lDbgs:
-                goto YfngD;
-                FRp3Z:
-                $len_tahun = 4;
-                goto klbZN;
-                EduIH:
-                $ret[$jenis][$row->id_siswa][$bulan][$tgl][$jam] = $row;
-                goto icWoH;
-                tjfEi:
-                $jam = substr($row->id_materi, strlen($row->id_materi) - $sisa, $len);
-                goto fst4r;
-                vDFvc:
                 $len_kls = strlen($id_kelas);
-                goto Of2ut;
-                NBjzf:
-                $subs_tgl = $subs_bln + $len_bln;
-                goto i0SyR;
-                h_YsC:
+                $len_tp_smt = 2;
+                $len_tahun = 4;
+                $len_bln = 2;
                 $len_hari = 2;
-                goto rlh_4;
-                YfngD:
+                $subs_bln = $len_kls + $len_tp_smt + $len_tahun;
+                $subs_tgl = $subs_bln + $len_bln;
+                $sisa = strlen($row->id_materi) - ($len_kls + 10);
+                $len = $sisa === 3 ? 2 : 1;
+                $bulan = substr($row->id_materi, $subs_bln, 2);
+                $tgl = substr($row->id_materi, $subs_tgl, 2);
+                $jam = substr($row->id_materi, strlen($row->id_materi) - $sisa, $len);
+                $jenis = substr($row->id_materi, strlen($row->id_materi) - 1, 1);
+                $ret[$jenis][$row->id_siswa][$bulan][$tgl][$jam] = $row;
             }
             return $ret;
         }

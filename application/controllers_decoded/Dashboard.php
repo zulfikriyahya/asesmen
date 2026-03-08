@@ -25,7 +25,6 @@ class Dashboard extends CI_Controller
             return $info_box;
         } else {
             if ($setting->jenjang == '2') {
-                goto StHuI;
             }
             $box = [['box' => 'blue', 'total' => $this->dashboard->total('master_siswa'), 'title' => 'Siswa', 'url' => 'datasiswa', 'icon' => 'users'], ['box' => 'cyan', 'total' => $this->dashboard->total('master_kelas', 'id_tp=' . $tp . ' AND id_smt=' . $smt), 'title' => 'Rombel', 'url' => 'datakelas', 'icon' => 'bell'], ['box' => 'teal', 'total' => $this->dashboard->total('master_guru'), 'title' => 'Guru', 'url' => 'dataguru', 'icon' => 'user'], ['box' => 'fuchsia', 'total' => $this->dashboard->totalWaliKelas($tp, $smt), 'title' => 'Wali Kelas', 'url' => 'dataguru', 'icon' => 'user'], ['box' => 'success', 'total' => $this->dashboard->total('master_mapel', $where), 'title' => 'Mapel', 'url' => 'datamapel', 'icon' => 'book'], ['box' => 'yellow', 'total' => $this->dashboard->total('master_ekstra'), 'title' => 'Ekstrakurikuler', 'url' => 'dataekstra', 'icon' => 'book']];
             $info_box = json_decode(json_encode($box), FALSE);
@@ -42,7 +41,6 @@ class Dashboard extends CI_Controller
             return $info_box;
         } else {
             if ($setting->jenjang == '2') {
-                goto xFh00;
             }
             $box = [['box' => 'teal', 'total' => $this->dashboard->total('master_kelas'), 'title' => 'Rombel', 'icon' => 'user'], ['box' => 'blue', 'total' => $this->dashboard->total('master_siswa'), 'title' => 'Siswa', 'icon' => 'users'], ['box' => 'fuchsia', 'total' => $this->dashboard->total('master_guru'), 'title' => 'Guru', 'icon' => 'user'], ['box' => 'success', 'total' => $this->dashboard->total('master_mapel', $where), 'title' => 'Mapel', 'icon' => 'book']];
             $info_box = json_decode(json_encode($box), FALSE);

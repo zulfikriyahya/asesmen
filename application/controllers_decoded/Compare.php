@@ -44,36 +44,21 @@ class Compare extends CI_Controller
         $sql_commands_to_run = array();
         if (!($action == 'create')) {
             if (!($action == 'drop')) {
-                goto Ow1YJ;
             }
             foreach ($tables as $table) {
                 $sql_commands_to_run[] = "DROP TABLE {$table};";
-                lZaPA:
             }
             return $sql_commands_to_run;
         } else {
             foreach ($tables as $table) {
-                goto DEv2C;
-                DEv2C:
                 $query = $this->DB1->query("SHOW CREATE TABLE `{$table}` -- create tables");
-                goto AtD0m;
-                AtD0m:
                 $table_structure = $query->row_array();
-                goto xykHu;
-                RZWfs:
-                Zutwn:
-                goto EA9mb;
-                xykHu:
                 $sql_commands_to_run[] = $table_structure['Create Table'] . ';';
-                goto RZWfs;
-                EA9mb:
             }
             if (!($action == 'drop')) {
-                goto Ow1YJ;
             }
             foreach ($tables as $table) {
                 $sql_commands_to_run[] = "DROP TABLE {$table};";
-                lZaPA:
             }
             return $sql_commands_to_run;
         }
@@ -112,10 +97,8 @@ class Compare extends CI_Controller
             $length = max(count($old), count($new));
             $i = 0;
             if (!($i < $length)) {
-                goto eby_L;
             }
             if (!($old[$i] != $new[$i])) {
-                goto Jezfr;
             }
             $differences++;
             $i++;
@@ -133,17 +116,8 @@ class Compare extends CI_Controller
             return $sql_commands_to_run;
         } else {
             foreach ($tables as $table) {
-                goto VItMP;
-                PtSuM:
-                $table_structure_live[$table] = $this->table_field_data((array) $this->DB2, $table);
-                goto PnE5n;
-                PnE5n:
-                lbjEy:
-                goto IqPHW;
-                VItMP:
                 $table_structure_development[$table] = $this->table_field_data((array) $this->DB1, $table);
-                goto PtSuM;
-                IqPHW:
+                $table_structure_live[$table] = $this->table_field_data((array) $this->DB2, $table);
             }
             $sql_commands_to_run = array_merge($sql_commands_to_run, $this->determine_field_changes($table_structure_development, $table_structure_live));
             return $sql_commands_to_run;
@@ -159,7 +133,6 @@ class Compare extends CI_Controller
         } else {
             $fields[] = $row;
             if (!$row = mysql_fetch_assoc($result)) {
-                goto yOxNJ;
             }
         }
     }

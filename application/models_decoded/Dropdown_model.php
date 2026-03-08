@@ -11,7 +11,6 @@ class Dropdown_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_bln] = $row->nama_bln;
-                E7H1d:
             }
             return $ret;
         }
@@ -26,7 +25,6 @@ class Dropdown_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_sesi] = $row->nama_sesi;
-                LQILz:
             }
             return $ret;
         }
@@ -40,7 +38,6 @@ class Dropdown_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_ruang] = $row->nama_ruang;
-                eENv6:
             }
             return $ret;
         }
@@ -54,7 +51,6 @@ class Dropdown_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_sesi] = ['mulai' => $row->waktu_mulai, 'akhir' => $row->waktu_akhir];
-                y5uPw:
             }
             return $ret;
         }
@@ -83,7 +79,6 @@ class Dropdown_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_mapel] = $row->nama_mapel;
-                aN059:
             }
             return $ret;
         }
@@ -99,7 +94,6 @@ class Dropdown_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_mapel] = $row->kode;
-                XX_mc:
             }
             return $ret;
         }
@@ -114,37 +108,30 @@ class Dropdown_model extends CI_Model
         if (!$res) {
             $ret = [];
             if (!(count($ress) > 0)) {
-                goto xayZf;
             }
             $this->db->where_in('kelompok', $ress);
             $this->db->order_by('urutan_tampil');
             $result = $this->db->get('master_mapel')->result();
             if (!$result) {
-                goto AkVAy;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_mapel] = $row->nama_mapel;
-                PWkRR:
             }
             return $ret;
         } else {
             foreach ($res as $key => $row) {
                 $ress[$row->id_kel_mapel] = $row->kode_kel_mapel;
-                bQIJS:
             }
             $ret = [];
             if (!(count($ress) > 0)) {
-                goto xayZf;
             }
             $this->db->where_in('kelompok', $ress);
             $this->db->order_by('urutan_tampil');
             $result = $this->db->get('master_mapel')->result();
             if (!$result) {
-                goto AkVAy;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_mapel] = $row->nama_mapel;
-                PWkRR:
             }
             return $ret;
         }
@@ -163,7 +150,6 @@ class Dropdown_model extends CI_Model
         } else {
             foreach ($res as $key => $row) {
                 $ress[$row->id_kel_mapel] = $row;
-                Jvhq5:
             }
             return $ress;
         }
@@ -176,11 +162,9 @@ class Dropdown_model extends CI_Model
             $result = $this->db->get('master_mapel')->result();
             $ret = [];
             if (!$result) {
-                goto n5Vkv;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->kelompok][$row->id_mapel] = $row->nama_mapel;
-                PBJAB:
             }
             return $ret;
         } else {
@@ -195,10 +179,8 @@ class Dropdown_model extends CI_Model
             return $levels;
         } else {
             if ($jenjang == '2') {
-                goto esK7K;
             }
             if ($jenjang == '3') {
-                goto JNnoy;
             }
             return $levels;
         }
@@ -215,11 +197,9 @@ class Dropdown_model extends CI_Model
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto OQ3oo;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_kelas] = $row->nama_kelas;
-                Q693V:
             }
             return $ret;
         } else {
@@ -227,11 +207,9 @@ class Dropdown_model extends CI_Model
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto OQ3oo;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_kelas] = $row->nama_kelas;
-                Q693V:
             }
             return $ret;
         }
@@ -249,7 +227,6 @@ class Dropdown_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->kode_kelas] = $row->nama_kelas;
-                LHss5:
             }
             return $ret;
         }
@@ -260,33 +237,27 @@ class Dropdown_model extends CI_Model
         $this->db->from('master_kelas');
         if (!($tp != null)) {
             if (!($smt != null)) {
-                goto JKdPs;
             }
             $this->db->where('id_smt', $smt);
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto FAulW;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_kelas] = $row->kode_kelas;
-                sqs1f:
             }
             return $ret;
         } else {
             $this->db->where('id_tp', $tp);
             if (!($smt != null)) {
-                goto JKdPs;
             }
             $this->db->where('id_smt', $smt);
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto FAulW;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_kelas] = $row->kode_kelas;
-                sqs1f:
             }
             return $ret;
         }
@@ -317,7 +288,6 @@ class Dropdown_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_kelas] = $row->nama_kelas;
-                nOHiK:
             }
             return $ret;
         }
@@ -331,7 +301,6 @@ class Dropdown_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_ekstra] = $row->nama_ekstra;
-                fuccx:
             }
             return $ret;
         }
@@ -345,7 +314,6 @@ class Dropdown_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_ekstra] = $row->kode_ekstra;
-                Q6J3i:
             }
             return $ret;
         }
@@ -359,7 +327,6 @@ class Dropdown_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_jurusan] = $row->kode_jurusan;
-                fXwfD:
             }
             return $ret;
         }
@@ -376,7 +343,6 @@ class Dropdown_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_guru] = $row->nama_guru;
-                w4eUr:
             }
             return $ret;
         }
@@ -390,7 +356,6 @@ class Dropdown_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_level] = $row->level;
-                v1IKt:
             }
             return $ret;
         }
@@ -404,7 +369,6 @@ class Dropdown_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_jenis] = $row->nama_jenis . ' (' . $row->kode_jenis . ')';
-                AiVDf:
             }
             return $ret;
         }
@@ -418,7 +382,6 @@ class Dropdown_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_bank] = $row->bank_kode;
-                KgdBU:
             }
             return $ret;
         }
@@ -436,7 +399,6 @@ class Dropdown_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_jadwal] = $row->bank_kode;
-                a6lne:
             }
             return $ret;
         }
@@ -456,7 +418,6 @@ class Dropdown_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_jadwal] = $row->nama_mapel;
-                nWRox:
             }
             return array_unique($ret);
         }
@@ -474,7 +435,6 @@ class Dropdown_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_jadwal] = $row->bank_kode;
-                Gi46o:
             }
             return $ret;
         }
@@ -490,11 +450,9 @@ class Dropdown_model extends CI_Model
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto v6cin;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_jadwal] = $row->bank_kode;
-                lPOgr:
             }
             return $ret;
         } else {
@@ -505,11 +463,9 @@ class Dropdown_model extends CI_Model
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto v6cin;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_jadwal] = $row->bank_kode;
-                lPOgr:
             }
             return $ret;
         }

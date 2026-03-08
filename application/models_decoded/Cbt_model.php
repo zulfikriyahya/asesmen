@@ -9,25 +9,20 @@ class Cbt_model extends CI_Model
         $this->db->where($pk, $id);
         if (!($join !== null)) {
             if (!($order !== null)) {
-                goto UHgck;
             }
             foreach ($order as $field => $sort) {
                 $this->db->order_by($field, $sort);
-                n8cx8:
             }
             $query = $this->db->get();
             return $query;
         } else {
             foreach ($join as $table => $field) {
                 $this->db->join($table, $field);
-                jvL0Z:
             }
             if (!($order !== null)) {
-                goto UHgck;
             }
             foreach ($order as $field => $sort) {
                 $this->db->order_by($field, $sort);
-                n8cx8:
             }
             $query = $this->db->get();
             return $query;
@@ -38,18 +33,15 @@ class Cbt_model extends CI_Model
         if ($this->agent->is_browser()) {
             $agent = $this->agent->browser() . ' ' . $this->agent->version();
             if ($agent == 'unknown') {
-                goto Rda12;
             }
             $os = $this->agent->platform();
             $ip = $this->input->ip_address();
             return $this->insertLog($id_siswa, $id_jadwal, $type, $desc, $agent, $os, $ip);
         } else {
             if ($this->agent->is_mobile()) {
-                goto VdTFe;
             }
             $agent = 'unknown';
             if ($agent == 'unknown') {
-                goto Rda12;
             }
             $os = $this->agent->platform();
             $ip = $this->input->ip_address();
@@ -117,7 +109,6 @@ class Cbt_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_ruang] = $row->kode_ruang;
-                OBRt6:
             }
             return $ret;
         }
@@ -139,7 +130,6 @@ class Cbt_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_jurusan] = $row->kode_jurusan;
-                rET21:
             }
             return $ret;
         }
@@ -172,14 +162,12 @@ class Cbt_model extends CI_Model
         $this->db->where('id_jadwal', $id_jadwal);
         if (!($sesi != null)) {
             if (!($ruang != null)) {
-                goto UvFoj;
             }
             $this->db->where('id_ruang', $ruang);
             return $this->db->get()->result();
         } else {
             $this->db->where('id_sesi', $sesi);
             if (!($ruang != null)) {
-                goto UvFoj;
             }
             $this->db->where('id_ruang', $ruang);
             return $this->db->get()->result();
@@ -193,33 +181,27 @@ class Cbt_model extends CI_Model
         $this->db->where('id_smt', $smt);
         if (!($ruang != null)) {
             if (!($sesi != null)) {
-                goto dWpik;
             }
             $this->db->where('id_sesi', $sesi);
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto gL4Op;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_jadwal][$row->id_ruang][$row->id_sesi] = $row;
-                nrYhN:
             }
             return $ret;
         } else {
             $this->db->where('id_ruang', $ruang);
             if (!($sesi != null)) {
-                goto dWpik;
             }
             $this->db->where('id_sesi', $sesi);
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto gL4Op;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_jadwal][$row->id_ruang][$row->id_sesi] = $row;
-                nrYhN:
             }
             return $ret;
         }
@@ -237,11 +219,9 @@ class Cbt_model extends CI_Model
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto SYyHx;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->ruang_id][$row->sesi_id] = $row;
-                IhsSY:
             }
             return $ret;
         } else {
@@ -251,11 +231,9 @@ class Cbt_model extends CI_Model
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto SYyHx;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->ruang_id][$row->sesi_id] = $row;
-                IhsSY:
             }
             return $ret;
         }
@@ -272,7 +250,6 @@ class Cbt_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->ruang_id][$row->sesi_id][] = $row->kelas_id;
-                UPu88:
             }
             return $ret;
         }
@@ -298,7 +275,6 @@ class Cbt_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_jenis] = $row->kode_jenis;
-                E4OdW:
             }
             return $ret;
         }
@@ -313,7 +289,6 @@ class Cbt_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_jenis] = $row->kode_jenis;
-                M3jXr:
             }
             return $ret;
         }
@@ -354,11 +329,9 @@ class Cbt_model extends CI_Model
         $this->db->where('a.id_jenis', $jenis);
         if (!($level != '0')) {
             if (!($dari != null)) {
-                goto wfGr0;
             }
             $this->db->where('a.tgl_mulai >=', $dari);
             if (!($sampai != null)) {
-                goto r8CM8;
             }
             $this->db->where('a.tgl_mulai <=', $sampai);
             $this->db->order_by('a.tgl_mulai', 'ASC');
@@ -367,11 +340,9 @@ class Cbt_model extends CI_Model
         } else {
             $this->db->where('c.bank_level', $level);
             if (!($dari != null)) {
-                goto wfGr0;
             }
             $this->db->where('a.tgl_mulai >=', $dari);
             if (!($sampai != null)) {
-                goto r8CM8;
             }
             $this->db->where('a.tgl_mulai <=', $sampai);
             $this->db->order_by('a.tgl_mulai', 'ASC');
@@ -395,11 +366,9 @@ class Cbt_model extends CI_Model
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto Cui61;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->tgl_mulai][$row->id_mapel][] = $row;
-                q9Hkl:
             }
             return $ret;
         } else {
@@ -412,11 +381,9 @@ class Cbt_model extends CI_Model
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto Cui61;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->tgl_mulai][$row->id_mapel][] = $row;
-                q9Hkl:
             }
             return $ret;
         }
@@ -428,11 +395,9 @@ class Cbt_model extends CI_Model
             $result = $this->db->get('cbt_bank_soal')->result();
             $ret['0'] = 'Pilih Bank Soal :';
             if (!$result) {
-                goto kHA2L;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_bank] = $row->bank_kode;
-                Tg055:
             }
             return $ret;
         } else {
@@ -440,11 +405,9 @@ class Cbt_model extends CI_Model
             $result = $this->db->get('cbt_bank_soal')->result();
             $ret['0'] = 'Pilih Bank Soal :';
             if (!$result) {
-                goto kHA2L;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_bank] = $row->bank_kode;
-                Tg055:
             }
             return $ret;
         }
@@ -460,11 +423,9 @@ class Cbt_model extends CI_Model
             $result = $this->db->get('cbt_bank_soal')->result();
             $ret = [];
             if (!$result) {
-                goto sihE2;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_bank] = $row;
-                YeYFW:
             }
             return $ret;
         } else {
@@ -472,11 +433,9 @@ class Cbt_model extends CI_Model
             $result = $this->db->get('cbt_bank_soal')->result();
             $ret = [];
             if (!$result) {
-                goto sihE2;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_bank] = $row;
-                YeYFW:
             }
             return $ret;
         }
@@ -496,7 +455,6 @@ class Cbt_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_bank] = $row;
-                CgB5m:
             }
             return $ret;
         }
@@ -514,7 +472,6 @@ class Cbt_model extends CI_Model
         } else {
             foreach ($result as $row) {
                 $ret[$row->jenis][] = $row;
-                AeAr9:
             }
             return $ret;
         }
@@ -571,7 +528,6 @@ class Cbt_model extends CI_Model
         } else {
             foreach ($result as $row) {
                 $ret[$row->sesi_id][$row->ruang_id][$row->kelas_id] = $row->nama_kelas;
-                RM0Wa:
             }
             return $ret;
         }
@@ -603,7 +559,6 @@ class Cbt_model extends CI_Model
         } else {
             foreach ($result as $row) {
                 $ret[$row->kode_sesi] = $row;
-                lYSvD:
             }
             return $ret;
         }
@@ -847,7 +802,6 @@ class Cbt_model extends CI_Model
         $this->db->join('level_kelas b', 'b.id_level=a.level_id', 'left');
         if (!($tp != null)) {
             if (!($smt != null)) {
-                goto Y12J2;
             }
             $this->db->where('a.id_smt', $smt);
             $this->db->order_by('a.nama_kelas', 'ASC');
@@ -855,7 +809,6 @@ class Cbt_model extends CI_Model
         } else {
             $this->db->where('a.id_tp', $tp);
             if (!($smt != null)) {
-                goto Y12J2;
             }
             $this->db->where('a.id_smt', $smt);
             $this->db->order_by('a.nama_kelas', 'ASC');
@@ -885,11 +838,9 @@ class Cbt_model extends CI_Model
         $this->db->join('master_guru c', 'c.id_guru=a.bank_guru_id', 'left');
         if (!($guru !== null)) {
             if (!($mapel !== null)) {
-                goto iZPz6;
             }
             $this->db->where('a.bank_mapel_id', $mapel);
             if (!($level !== null)) {
-                goto HVrxT;
             }
             $this->db->where('a.bank_level', $level);
             $this->db->order_by('a.bank_level', 'ASC');
@@ -897,17 +848,14 @@ class Cbt_model extends CI_Model
             $ret = [];
             foreach ($result as $row) {
                 $ret[$row->id_tp][$row->id_smt][] = $row;
-                KEoJS:
             }
             return $ret;
         } else {
             $this->db->where('a.bank_guru_id', $guru);
             if (!($mapel !== null)) {
-                goto iZPz6;
             }
             $this->db->where('a.bank_mapel_id', $mapel);
             if (!($level !== null)) {
-                goto HVrxT;
             }
             $this->db->where('a.bank_level', $level);
             $this->db->order_by('a.bank_level', 'ASC');
@@ -915,7 +863,6 @@ class Cbt_model extends CI_Model
             $ret = [];
             foreach ($result as $row) {
                 $ret[$row->id_tp][$row->id_smt][] = $row;
-                KEoJS:
             }
             return $ret;
         }
@@ -1007,7 +954,6 @@ class Cbt_model extends CI_Model
             $ret = [];
             foreach ($result as $key => $row) {
                 $ret[$row->id_soal] = $row;
-                OHr1D:
             }
             return $ret;
         } else {
@@ -1016,7 +962,6 @@ class Cbt_model extends CI_Model
             $ret = [];
             foreach ($result as $key => $row) {
                 $ret[$row->id_soal] = $row;
-                OHr1D:
             }
             return $ret;
         }
@@ -1058,7 +1003,6 @@ class Cbt_model extends CI_Model
         $this->db->where('soal IS NULL')->or_where('soal =""');
         if (!($jenis == '1')) {
             if (!($jenis == '2')) {
-                goto quDIx;
             }
             $this->db->where('opsi_a IS NULL')->or_where('opsi_a =""');
             $this->db->where('jawaban IS NULL')->or_where('jawaban =""');
@@ -1066,7 +1010,6 @@ class Cbt_model extends CI_Model
             $result = $this->db->get()->result();
             foreach ($result as $key => $row) {
                 $ret[$row->bank_id][] = $row;
-                PDr6e:
             }
             return $ret;
         } else {
@@ -1074,16 +1017,13 @@ class Cbt_model extends CI_Model
             $this->db->where('opsi_b IS NULL')->or_where('opsi_b =""');
             $this->db->where('opsi_c IS NULL')->or_where('opsi_c =""');
             if (!($opsi_ganda == '4')) {
-                goto ezXVL;
             }
             $this->db->where('opsi_d IS NULL')->or_where('opsi_d =""');
             if (!($opsi_ganda == '5')) {
-                goto HlO2z;
             }
             $this->db->where('opsi_d IS NULL')->or_where('opsi_d =""');
             $this->db->where('opsi_e IS NULL')->or_where('opsi_e =""');
             if (!($jenis == '2')) {
-                goto quDIx;
             }
             $this->db->where('opsi_a IS NULL')->or_where('opsi_a =""');
             $this->db->where('jawaban IS NULL')->or_where('jawaban =""');
@@ -1091,7 +1031,6 @@ class Cbt_model extends CI_Model
             $result = $this->db->get()->result();
             foreach ($result as $key => $row) {
                 $ret[$row->bank_id][] = $row;
-                PDr6e:
             }
             return $ret;
         }
@@ -1118,7 +1057,6 @@ class Cbt_model extends CI_Model
             $jumlah = serialize($kelas);
             $data = array('id_tp' => $tp, 'id_smt' => $smt, 'bank_kode' => strip_tags($this->input->post('kode', TRUE) ?? ''), 'bank_jenis_id' => strip_tags($this->input->post('jenis', TRUE) ?? ''), 'bank_mapel_id' => strip_tags($this->input->post('mapel', TRUE) ?? ''), 'bank_kelas' => $jumlah, 'bank_level' => $this->input->post('level', TRUE), 'bank_guru_id' => strip_tags($this->input->post('guru', TRUE) ?? ''), 'jml_soal' => strip_tags($this->input->post('tampil_pg', TRUE) ?? ''), 'tampil_pg' => strip_tags($this->input->post('tampil_pg', TRUE) ?? ''), 'bobot_pg' => strip_tags($this->input->post('bobot_pg', TRUE) ?? ''), 'opsi' => strip_tags($this->input->post('opsi', TRUE) ?? ''), 'jml_kompleks' => strip_tags($this->input->post('tampil_kompleks', TRUE) ?? ''), 'tampil_kompleks' => strip_tags($this->input->post('tampil_kompleks', TRUE) ?? ''), 'bobot_kompleks' => strip_tags($this->input->post('bobot_kompleks', TRUE) ?? ''), 'jml_jodohkan' => strip_tags($this->input->post('tampil_jodohkan', TRUE) ?? ''), 'tampil_jodohkan' => strip_tags($this->input->post('tampil_jodohkan', TRUE) ?? ''), 'bobot_jodohkan' => strip_tags($this->input->post('bobot_jodohkan', TRUE) ?? ''), 'jml_isian' => strip_tags($this->input->post('tampil_isian', TRUE) ?? ''), 'tampil_isian' => strip_tags($this->input->post('tampil_isian', TRUE) ?? ''), 'bobot_isian' => strip_tags($this->input->post('bobot_isian', TRUE) ?? ''), 'jml_esai' => strip_tags($this->input->post('bobot_esai', TRUE) ?? ''), 'bobot_esai' => strip_tags($this->input->post('bobot_esai', TRUE) ?? ''), 'tampil_esai' => strip_tags($this->input->post('tampil_esai', TRUE) ?? ''), 'status' => strip_tags($this->input->post('status', TRUE) ?? ''), 'soal_agama' => strip_tags($this->input->post('soal_agama', TRUE) ?? ''));
             if (!$id) {
-                goto WxMZc;
             }
             $this->db->where('id_bank', $id);
             return $this->db->update('cbt_bank_soal', $data);
@@ -1126,7 +1064,6 @@ class Cbt_model extends CI_Model
             $kelas[] = ['kelas_id' => $this->input->post('kelas[' . $i . ']', true)];
             $i++;
             if (!($i <= $rows)) {
-                goto ZWvM4;
             }
         }
     }
@@ -1155,7 +1092,6 @@ class Cbt_model extends CI_Model
         $this->db->join('level_kelas g', 'b.bank_level=g.id_level');
         if (!($guru !== null)) {
             if (!($rekap !== null)) {
-                goto ADMhq;
             }
             $this->db->where('a.rekap', $rekap);
             $this->db->order_by('a.tgl_mulai', 'DESC');
@@ -1165,7 +1101,6 @@ class Cbt_model extends CI_Model
         } else {
             $this->db->where('b.bank_guru_id', $guru);
             if (!($rekap !== null)) {
-                goto ADMhq;
             }
             $this->db->where('a.rekap', $rekap);
             $this->db->order_by('a.tgl_mulai', 'DESC');
@@ -1186,11 +1121,9 @@ class Cbt_model extends CI_Model
         $this->db->join('level_kelas g', 'b.bank_level=g.id_level');
         if (!($guru !== null)) {
             if (!($mapel !== null)) {
-                goto HTDSx;
             }
             $this->db->where('b.bank_mapel_id', $mapel);
             if (!($level !== null)) {
-                goto gmT1y;
             }
             $this->db->where('b.bank_level', $level);
             $this->db->order_by('b.bank_level', 'ASC');
@@ -1201,17 +1134,14 @@ class Cbt_model extends CI_Model
             $ret = [];
             foreach ($query as $key => $row) {
                 $ret['<b>' . $row->kode_jenis . '</b>  ' . $row->tahun . ' smt ' . $row->nama_smt][$row->level][] = $row;
-                Oe1c7:
             }
             return $ret;
         } else {
             $this->db->where('b.bank_guru_id', $guru);
             if (!($mapel !== null)) {
-                goto HTDSx;
             }
             $this->db->where('b.bank_mapel_id', $mapel);
             if (!($level !== null)) {
-                goto gmT1y;
             }
             $this->db->where('b.bank_level', $level);
             $this->db->order_by('b.bank_level', 'ASC');
@@ -1222,7 +1152,6 @@ class Cbt_model extends CI_Model
             $ret = [];
             foreach ($query as $key => $row) {
                 $ret['<b>' . $row->kode_jenis . '</b>  ' . $row->tahun . ' smt ' . $row->nama_smt][$row->level][] = $row;
-                Oe1c7:
             }
             return $ret;
         }
@@ -1236,7 +1165,6 @@ class Cbt_model extends CI_Model
             $ret = [];
             foreach ($result as $key => $row) {
                 $ret[$row->id_jadwal][$row->id_siswa] = $row;
-                JifVz:
             }
             return $ret;
         } else {
@@ -1245,7 +1173,6 @@ class Cbt_model extends CI_Model
             $ret = [];
             foreach ($result as $key => $row) {
                 $ret[$row->id_jadwal][$row->id_siswa] = $row;
-                JifVz:
             }
             return $ret;
         }
@@ -1259,7 +1186,6 @@ class Cbt_model extends CI_Model
             $ret = [];
             foreach ($result as $key => $row) {
                 $ret[$row->id_bank][$row->id_siswa] = $row;
-                DMbXd:
             }
             return $ret;
         } else {
@@ -1268,7 +1194,6 @@ class Cbt_model extends CI_Model
             $ret = [];
             foreach ($result as $key => $row) {
                 $ret[$row->id_bank][$row->id_siswa] = $row;
-                DMbXd:
             }
             return $ret;
         }
@@ -1317,11 +1242,9 @@ class Cbt_model extends CI_Model
         $this->db->from('cbt_rekap');
         if (!($mapel != '0')) {
             if (!($jadwal != null)) {
-                goto eUVUv;
             }
             $this->db->where('id_jadwal', $jadwal);
             if (!($guru != null)) {
-                goto sgJsD;
             }
             $this->db->where('id_guru', $guru);
             $this->db->where('tp', $tp);
@@ -1333,11 +1256,9 @@ class Cbt_model extends CI_Model
         } else {
             $this->db->where('id_mapel', $mapel);
             if (!($jadwal != null)) {
-                goto eUVUv;
             }
             $this->db->where('id_jadwal', $jadwal);
             if (!($guru != null)) {
-                goto sgJsD;
             }
             $this->db->where('id_guru', $guru);
             $this->db->where('tp', $tp);
@@ -1353,7 +1274,6 @@ class Cbt_model extends CI_Model
         $this->db->from('cbt_rekap');
         if (!($jadwal != '0')) {
             if (!($guru != null)) {
-                goto ZjlDz;
             }
             $this->db->where('id_guru', $guru);
             $this->db->where('tp', $tp);
@@ -1365,7 +1285,6 @@ class Cbt_model extends CI_Model
         } else {
             $this->db->where('id_jadwal', $jadwal);
             if (!($guru != null)) {
-                goto ZjlDz;
             }
             $this->db->where('id_guru', $guru);
             $this->db->where('tp', $tp);
@@ -1385,11 +1304,9 @@ class Cbt_model extends CI_Model
         $this->db->join('buku_induk i', 'i.id_siswa=a.id_siswa AND =i.status=1');
         if (!($id_mapel != '0')) {
             if (!($id_jadwal != null)) {
-                goto i7SQJ;
             }
             $this->db->where('a.id_jadwal', $id_jadwal);
             if (!($id_guru != null)) {
-                goto w0Q6m;
             }
             $this->db->where('a.id_guru', $id_guru);
             $this->db->where('a.id_kelas', $id_kelas);
@@ -1401,11 +1318,9 @@ class Cbt_model extends CI_Model
         } else {
             $this->db->where('a.id_mapel', $id_mapel);
             if (!($id_jadwal != null)) {
-                goto i7SQJ;
             }
             $this->db->where('a.id_jadwal', $id_jadwal);
             if (!($id_guru != null)) {
-                goto w0Q6m;
             }
             $this->db->where('a.id_guru', $id_guru);
             $this->db->where('a.id_kelas', $id_kelas);
@@ -1425,7 +1340,6 @@ class Cbt_model extends CI_Model
         $this->db->join('buku_induk i', 'i.id_siswa=a.id_siswa AND =i.status=1');
         if (!($id_jadwal != '0')) {
             if (!($id_guru != null)) {
-                goto yWTpS;
             }
             $this->db->where('a.id_guru', $id_guru);
             $this->db->where('a.id_kelas', $id_kelas);
@@ -1437,7 +1351,6 @@ class Cbt_model extends CI_Model
         } else {
             $this->db->where('a.id_jadwal', $id_jadwal);
             if (!($id_guru != null)) {
-                goto yWTpS;
             }
             $this->db->where('a.id_guru', $id_guru);
             $this->db->where('a.id_kelas', $id_kelas);
@@ -1457,7 +1370,6 @@ class Cbt_model extends CI_Model
             $ret = [];
             foreach ($result as $key => $row) {
                 $ret[$row->id_jadwal] = $row;
-                e2Phw:
             }
             return $ret;
         } else {
@@ -1466,7 +1378,6 @@ class Cbt_model extends CI_Model
             $ret = [];
             foreach ($result as $key => $row) {
                 $ret[$row->id_jadwal] = $row;
-                e2Phw:
             }
             return $ret;
         }
@@ -1569,14 +1480,12 @@ class Cbt_model extends CI_Model
         $data = array('id_tp' => $id_tp, 'id_smt' => $id_smt, 'id_bank' => $bank_id, 'id_jenis' => $jenis_id, 'tgl_mulai' => $mulai, 'tgl_selesai' => $selesai, 'durasi_ujian' => $durasi, 'jarak' => $jarak, 'acak_soal' => !$acak_soal ? '0' : $acak_soal, 'acak_opsi' => !$acak_opsi ? '0' : $acak_opsi, 'hasil_tampil' => !$hasil_tampil ? '0' : $hasil_tampil, 'token' => !$token ? '0' : $token, 'status' => !$status ? '0' : $status, 'reset_login' => !$reset_login ? '0' : $reset_login);
         if ($id == '') {
             if ($check != null) {
-                goto ij7ZU;
             }
             $this->db->insert('cbt_jadwal', $data);
             $insert_id = $this->db->insert_id();
             return $insert_id;
         } else {
             if ($check != null && $check->id_jadwal != $id) {
-                goto frsZ9;
             }
             $this->db->where('id_jadwal', $id);
             return $this->db->update('cbt_jadwal', $data);
@@ -1663,7 +1572,6 @@ class Cbt_model extends CI_Model
         } else {
             foreach ($result as $row) {
                 $ret[$row->jenis][] = $row;
-                Zpln6:
             }
             return $ret;
         }
@@ -1743,7 +1651,6 @@ class Cbt_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_ruang] = $row->kode_ruang;
-                kN87J:
             }
             return $ret;
         }
@@ -1921,7 +1828,6 @@ class Cbt_model extends CI_Model
             return $this->db->get()->result();
         } else {
             if (is_array($id_siswa)) {
-                goto MRs9c;
             }
             $this->db->where('a.id_siswa', $id_siswa);
             $this->db->where('a.id_jadwal=', $id_jadwal);
@@ -2112,22 +2018,9 @@ class Cbt_model extends CI_Model
             $result = $this->db->get()->result();
             $ret = [];
             foreach ($result as $row) {
-                goto ngCOq;
-                rVrZx:
-                $ret[$row->tp][$row->smt][$row->kode_jenis][$row->id_kelas] = $row->nama_kelas;
-                goto iJH2c;
-                iJH2c:
-                zaiYT:
-                goto BbRuw;
-                ngCOq:
                 if (!($row->id_kelas != '')) {
-                    goto zaiYT;
                 }
-                goto rVrZx;
-                BbRuw:
-                sBtvb:
-                goto qW9ZZ;
-                qW9ZZ:
+                $ret[$row->tp][$row->smt][$row->kode_jenis][$row->id_kelas] = $row->nama_kelas;
             }
             return $ret;
         } else {
@@ -2136,22 +2029,9 @@ class Cbt_model extends CI_Model
             $result = $this->db->get()->result();
             $ret = [];
             foreach ($result as $row) {
-                goto ngCOq;
-                rVrZx:
-                $ret[$row->tp][$row->smt][$row->kode_jenis][$row->id_kelas] = $row->nama_kelas;
-                goto iJH2c;
-                iJH2c:
-                zaiYT:
-                goto BbRuw;
-                ngCOq:
                 if (!($row->id_kelas != '')) {
-                    goto zaiYT;
                 }
-                goto rVrZx;
-                BbRuw:
-                sBtvb:
-                goto qW9ZZ;
-                qW9ZZ:
+                $ret[$row->tp][$row->smt][$row->kode_jenis][$row->id_kelas] = $row->nama_kelas;
             }
             return $ret;
         }

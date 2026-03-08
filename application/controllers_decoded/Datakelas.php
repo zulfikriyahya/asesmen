@@ -153,37 +153,24 @@ class Datakelas extends CI_Controller
             $rowsSelect = count($this->input->post('siswa', true));
             $i = 0;
             if (!($i <= $rowsSelect)) {
-                goto WHJQl;
             }
             $id_siswa = $this->input->post('siswa[' . $i . ']', true);
             if (!($id_siswa != null)) {
-                goto iK560;
             }
             $insert = ['id_kelas_siswa' => $id_tp . $id_smt . $id_siswa, 'id_tp' => $id_tp, 'id_smt' => $id_smt, 'id_kelas' => $id, 'id_siswa' => $id_siswa];
             $this->db->replace('kelas_siswa', $insert);
             $i++;
         } else {
             foreach ($siswakelas as $id_siswa => $sis) {
-                goto Nzc15;
-                Nzc15:
                 $insert = ['id_kelas_siswa' => $id_tp . $id_smt . $id_siswa, 'id_tp' => $id_tp, 'id_smt' => $id_smt, 'id_kelas' => 0, 'id_siswa' => $id_siswa];
-                goto qSYQM;
-                ttcO0:
-                S8L4t:
-                goto ECGBu;
-                qSYQM:
                 $this->db->replace('kelas_siswa', $insert);
-                goto ttcO0;
-                ECGBu:
             }
             $rowsSelect = count($this->input->post('siswa', true));
             $i = 0;
             if (!($i <= $rowsSelect)) {
-                goto WHJQl;
             }
             $id_siswa = $this->input->post('siswa[' . $i . ']', true);
             if (!($id_siswa != null)) {
-                goto iK560;
             }
             $insert = ['id_kelas_siswa' => $id_tp . $id_smt . $id_siswa, 'id_tp' => $id_tp, 'id_smt' => $id_smt, 'id_kelas' => $id, 'id_siswa' => $id_siswa];
             $this->db->replace('kelas_siswa', $insert);

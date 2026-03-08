@@ -71,7 +71,6 @@ class Master_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_mapel] = $row->nama_mapel;
-                gzZJc:
             }
             return $ret;
         }
@@ -107,7 +106,6 @@ class Master_model extends CI_Model
             $row_mapels = count($this->input->post('mapel', true));
             $i = 0;
             if (!($i <= $row_mapels)) {
-                goto UXHRd;
             }
             array_push($mapels, $this->input->post('mapel[' . $i . ']', true));
             $i++;
@@ -188,7 +186,6 @@ class Master_model extends CI_Model
             $this->db->order_by('ISNULL(f.level_id), f.level_id ASC');
             $this->db->order_by('a.nama', 'ASC');
             if (!($search != null)) {
-                goto BSfrp;
             }
             $this->db->like('a.nama', $search);
             $this->db->or_like('a.nis', $search);
@@ -198,14 +195,12 @@ class Master_model extends CI_Model
             $this->db->join('buku_induk u', 'u.id_siswa=a.id_siswa AND u.status = ' . $filter);
             $this->db->join('master_kelas f', 'f.id_kelas=d.id_kelas', 'left');
             if (!($filter == '1')) {
-                goto SXr9w;
             }
             $this->db->where('f.id_kelas IS NOT NULL');
             $this->db->order_by('f.nama_kelas', 'ASC');
             $this->db->order_by('ISNULL(f.level_id), f.level_id ASC');
             $this->db->order_by('a.nama', 'ASC');
             if (!($search != null)) {
-                goto BSfrp;
             }
             $this->db->like('a.nama', $search);
             $this->db->or_like('a.nis', $search);
@@ -223,7 +218,6 @@ class Master_model extends CI_Model
             $this->db->join('master_kelas f', 'f.id_kelas=d.id_kelas', 'left');
             $this->db->where('f.id_kelas IS NULL');
             if (!($search != null)) {
-                goto N0pBC;
             }
             $this->db->like('a.nama', $search);
             $this->db->or_like('a.nis', $search);
@@ -233,11 +227,9 @@ class Master_model extends CI_Model
             $this->db->join('buku_induk u', 'u.id_siswa=a.id_siswa AND u.status = ' . $filter);
             $this->db->join('master_kelas f', 'f.id_kelas=d.id_kelas', 'left');
             if (!($filter == '1')) {
-                goto PPAML;
             }
             $this->db->where('f.id_kelas IS NOT NULL');
             if (!($search != null)) {
-                goto N0pBC;
             }
             $this->db->like('a.nama', $search);
             $this->db->or_like('a.nis', $search);
@@ -252,7 +244,6 @@ class Master_model extends CI_Model
         if (!($limit > 0)) {
             $this->db->join('master_siswa b', 'b.id_siswa=a.id_siswa', 'right');
             if (!($search != null)) {
-                goto a2X1v;
             }
             $this->db->like('b.nama', $search);
             $this->db->or_like('b.nis', $search);
@@ -266,7 +257,6 @@ class Master_model extends CI_Model
             $this->db->limit($limit, $offset);
             $this->db->join('master_siswa b', 'b.id_siswa=a.id_siswa', 'right');
             if (!($search != null)) {
-                goto a2X1v;
             }
             $this->db->like('b.nama', $search);
             $this->db->or_like('b.nis', $search);
@@ -328,7 +318,6 @@ class Master_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_siswa] = $row;
-                k5T0o:
             }
             return $ret;
         }
@@ -390,10 +379,8 @@ class Master_model extends CI_Model
             $id_jurusan = [];
             foreach ($jurusan as $j) {
                 $id_jurusan[] = $j->jurusan_id;
-                Sl6Vt:
             }
             if (!($id_jurusan === [])) {
-                goto kBp3u;
             }
             $id_jurusan = null;
             $this->db->select('*');
@@ -561,7 +548,6 @@ class Master_model extends CI_Model
     {
         if (!($arrMapel != null)) {
             if (!($arrMapel != null)) {
-                goto et1ji;
             }
             $this->db->or_where_in('id_mapel', explode(',', $arrMapel));
             $this->db->where('status', '1');
@@ -570,7 +556,6 @@ class Master_model extends CI_Model
         } else {
             $this->db->where_in('kelompok', $arrKelompok);
             if (!($arrMapel != null)) {
-                goto et1ji;
             }
             $this->db->or_where_in('id_mapel', explode(',', $arrMapel));
             $this->db->where('status', '1');
@@ -582,7 +567,6 @@ class Master_model extends CI_Model
     {
         if (!($arrMapel != null)) {
             if (!($arrMapel != null)) {
-                goto fJO27;
             }
             $this->db->or_where_in('id_mapel', explode(',', $arrMapel));
             $this->db->order_by('urutan_tampil');
@@ -590,7 +574,6 @@ class Master_model extends CI_Model
         } else {
             $this->db->where_in('kelompok', $arrKelompok);
             if (!($arrMapel != null)) {
-                goto fJO27;
             }
             $this->db->or_where_in('id_mapel', explode(',', $arrMapel));
             $this->db->order_by('urutan_tampil');
@@ -702,7 +685,6 @@ class Master_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_tp][$row->id_smt] = $row->id_kelas;
-                Y2uec:
             }
             return $ret;
         }
@@ -726,10 +708,8 @@ class Master_model extends CI_Model
             $id_mapel = [];
             foreach ($mapel as $d) {
                 $id_mapel[] = $d->mapel_id;
-                Z6fHJ:
             }
             if (!($id_mapel === [])) {
-                goto JM9Gj;
             }
             $id_mapel = null;
             $this->db->select('id_mapel, nama_mapel');
@@ -742,10 +722,8 @@ class Master_model extends CI_Model
             $id_mapel = [];
             foreach ($mapel as $d) {
                 $id_mapel[] = $d->mapel_id;
-                Z6fHJ:
             }
             if (!($id_mapel === [])) {
-                goto JM9Gj;
             }
             $id_mapel = null;
             $this->db->select('id_mapel, nama_mapel');
@@ -844,22 +822,9 @@ class Master_model extends CI_Model
             return $ret;
         } else {
             foreach ($result as $key => $row) {
-                goto hbsly;
-                J91w5:
-                mJpKM:
-                goto yJUoj;
-                FxBer:
-                fJJWg:
-                goto J91w5;
-                hbsly:
                 if (!($row->id_level == '4')) {
-                    goto fJJWg;
                 }
-                goto IsnyN;
-                IsnyN:
                 $ret[$row->id_tp][$row->id_smt][$row->id_kelas] = $row;
-                goto FxBer;
-                yJUoj:
             }
             return $ret;
         }
@@ -891,14 +856,11 @@ class Master_model extends CI_Model
             $result = $this->db->get()->result();
             $ret = [];
             if ($tp != null && $smt != null) {
-                goto lZgZi;
             }
             if (!$result) {
-                goto OO9Lw;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_tp][$row->id_smt][$row->id_kelas] = $row;
-                brjak:
             }
             return $ret;
         } else {
@@ -910,14 +872,11 @@ class Master_model extends CI_Model
             $result = $this->db->get()->result();
             $ret = [];
             if ($tp != null && $smt != null) {
-                goto lZgZi;
             }
             if (!$result) {
-                goto OO9Lw;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_tp][$row->id_smt][$row->id_kelas] = $row;
-                brjak:
             }
             return $ret;
         }
@@ -933,7 +892,6 @@ class Master_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_kelas][$row->id_siswa] = $row;
-                UXlfX:
             }
             return $ret;
         }
@@ -951,7 +909,6 @@ class Master_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_siswa] = $row;
-                MBANm:
             }
             return $ret;
         }

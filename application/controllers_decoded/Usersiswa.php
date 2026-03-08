@@ -89,14 +89,12 @@ class Usersiswa extends CI_Controller
         $deleted = true;
         if (!($user_siswa != null)) {
             if ($deleted) {
-                goto AZpsI;
             }
             $data = ['status' => false, 'msg' => 'Akun siswa tidak tersedia (sudah digunakan).'];
             return $data;
         } else {
             $deleted = $this->ion_auth->delete_user($user_siswa->id);
             if ($deleted) {
-                goto AZpsI;
             }
             $data = ['status' => false, 'msg' => 'Akun siswa tidak tersedia (sudah digunakan).'];
             return $data;
@@ -128,7 +126,6 @@ class Usersiswa extends CI_Controller
             return $data;
         } else {
             if ($this->ion_auth->logged_in() && $this->ion_auth->is_admin()) {
-                goto OzaoK;
             }
             $data = ['status' => false, 'msg' => 'Anda bukan admin.'];
             return $data;

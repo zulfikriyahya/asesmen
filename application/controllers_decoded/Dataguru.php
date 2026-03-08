@@ -330,28 +330,23 @@ class Dataguru extends CI_Controller
             $mapels = [];
             $check_mapel = $this->input->post('mapel', true);
             if (!$check_mapel) {
-                goto vqJxW;
             }
             $row_mapels = count($this->input->post('mapel', true));
             $i = 0;
             if (!($i <= $row_mapels)) {
-                goto XVz1w;
             }
             $mapel = $this->input->post('mapel[' . $i . ']', true);
             $nama_mapel = $this->input->post('nama_mapel' . $mapel, true);
             $check = $this->input->post('kelasmapel' . $mapel, true);
             if (!$check) {
-                goto MLYoE;
             }
             $row_kelas = count($this->input->post('kelasmapel' . $mapel, true));
             $kelas = [];
             $j = 0;
             if (!($j <= $row_kelas)) {
-                goto eWqYT;
             }
             $kelasmapel = $this->input->post('kelasmapel' . $mapel . '[' . $j . ']', true);
             if ($copy) {
-                goto eoohD;
             }
             $kelas[] = ['kelas' => $kelasmapel];
             $j++;
@@ -360,28 +355,23 @@ class Dataguru extends CI_Controller
             $mapels = [];
             $check_mapel = $this->input->post('mapel', true);
             if (!$check_mapel) {
-                goto vqJxW;
             }
             $row_mapels = count($this->input->post('mapel', true));
             $i = 0;
             if (!($i <= $row_mapels)) {
-                goto XVz1w;
             }
             $mapel = $this->input->post('mapel[' . $i . ']', true);
             $nama_mapel = $this->input->post('nama_mapel' . $mapel, true);
             $check = $this->input->post('kelasmapel' . $mapel, true);
             if (!$check) {
-                goto MLYoE;
             }
             $row_kelas = count($this->input->post('kelasmapel' . $mapel, true));
             $kelas = [];
             $j = 0;
             if (!($j <= $row_kelas)) {
-                goto eWqYT;
             }
             $kelasmapel = $this->input->post('kelasmapel' . $mapel . '[' . $j . ']', true);
             if ($copy) {
-                goto eoohD;
             }
             $kelas[] = ['kelas' => $kelasmapel];
             $j++;

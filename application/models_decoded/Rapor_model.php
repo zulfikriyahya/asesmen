@@ -27,7 +27,6 @@ class Rapor_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_mapel] = $row;
-                cqKs7:
             }
             return $ret;
         }
@@ -96,7 +95,6 @@ class Rapor_model extends CI_Model
         } else {
             foreach ($result as $row) {
                 $ret[$row->id_siswa] = $row;
-                iA06z:
             }
             return $ret;
         }
@@ -124,7 +122,6 @@ class Rapor_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_nilai_pts] = $row;
-                V4MFo:
             }
             return $ret;
         }
@@ -151,7 +148,6 @@ class Rapor_model extends CI_Model
         } else {
             foreach ($result as $row) {
                 $ret[$row->id_siswa] = $row;
-                lfHup:
             }
             return $ret;
         }
@@ -198,7 +194,6 @@ class Rapor_model extends CI_Model
         } else {
             foreach ($result as $row) {
                 $ret[$row->id_siswa] = $row;
-                oAbNP:
             }
             return $ret;
         }
@@ -241,7 +236,6 @@ class Rapor_model extends CI_Model
         } else {
             foreach ($result as $row) {
                 $ret[$row->id_siswa] = $row;
-                fv4AE:
             }
             return $ret;
         }
@@ -363,7 +357,6 @@ class Rapor_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_kelas][$row->id_tp][$row->id_smt] = $row;
-                a_XSk:
             }
             return $ret;
         }
@@ -377,7 +370,6 @@ class Rapor_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_siswa][$row->id_tp][$row->id_smt] = $row;
-                gTdMi:
             }
             return $ret;
         }
@@ -562,10 +554,8 @@ class Rapor_model extends CI_Model
             return ['Baik', 'Kurang peka', 'Telinga perlu dibersihkan', ''];
         } else {
             if ($jenis == '2') {
-                goto IECSA;
             }
             if ($jenis == '3') {
-                goto xINHV;
             }
             return ['Tubuh sehat dan kuat', 'Mudah kecapekan', 'Kebersihan badan kurang terjaga', ''];
         }
@@ -580,7 +570,6 @@ class Rapor_model extends CI_Model
         $this->db->join('rapor_naik d', 'a.id_siswa=d.id_siswa AND a.id_tp=d.id_tp AND a.id_smt=d.id_smt', 'left');
         if (!($level != null)) {
             if (!($id_kelas != null)) {
-                goto l4pM1;
             }
             $this->db->where('a.id_kelas', $id_kelas);
             $this->db->where('a.id_tp', $id_tp);
@@ -589,7 +578,6 @@ class Rapor_model extends CI_Model
         } else {
             $this->db->where('c.level_id', $level);
             if (!($id_kelas != null)) {
-                goto l4pM1;
             }
             $this->db->where('a.id_kelas', $id_kelas);
             $this->db->where('a.id_tp', $id_tp);
@@ -646,7 +634,6 @@ class Rapor_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_tp][$row->id_smt] = $row;
-                kEDz2:
             }
             return $ret;
         }
@@ -729,7 +716,6 @@ class Rapor_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->tp] = $row;
-                SXeO0:
             }
             return $ret;
         }
@@ -741,41 +727,33 @@ class Rapor_model extends CI_Model
         $this->db->join('master_siswa b', 'a.id_siswa=b.id_siswa');
         if (!($tp != null)) {
             if (!($smt != null)) {
-                goto jdzE8;
             }
             $this->db->where('a.smt', $smt);
             if (!($kelas != null)) {
-                goto RcTE5;
             }
             $this->db->where('a.kelas', $kelas);
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto m_9t1;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_siswa] = $row;
-                gKHbA:
             }
             return $ret;
         } else {
             $this->db->where('a.tp', $tp);
             if (!($smt != null)) {
-                goto jdzE8;
             }
             $this->db->where('a.smt', $smt);
             if (!($kelas != null)) {
-                goto RcTE5;
             }
             $this->db->where('a.kelas', $kelas);
             $result = $this->db->get()->result();
             $ret = [];
             if (!$result) {
-                goto m_9t1;
             }
             foreach ($result as $key => $row) {
                 $ret[$row->id_siswa] = $row;
-                gKHbA:
             }
             return $ret;
         }
@@ -829,7 +807,6 @@ class Rapor_model extends CI_Model
         } else {
             foreach ($result as $key => $row) {
                 $ret[$row->id_tp][$row->id_smt][$row->id_kelas] = unserialize($row->ekstra ?? '');
-                zF8bF:
             }
             return $ret;
         }
@@ -844,7 +821,6 @@ class Rapor_model extends CI_Model
             $ret = [];
             foreach ($result as $res) {
                 $ret[$res->id_tp][$res->id_smt][$res->id_siswa][] = $res;
-                jcR6C:
             }
             return $ret;
         } else {
@@ -853,7 +829,6 @@ class Rapor_model extends CI_Model
             $ret = [];
             foreach ($result as $res) {
                 $ret[$res->id_tp][$res->id_smt][$res->id_siswa][] = $res;
-                jcR6C:
             }
             return $ret;
         }
@@ -867,7 +842,6 @@ class Rapor_model extends CI_Model
             $ret = [];
             foreach ($result as $res) {
                 $ret[$res->id_tp][$res->id_smt][$res->id_siswa][$res->jenis] = $res;
-                EfQfx:
             }
             return $ret;
         } else {
@@ -876,7 +850,6 @@ class Rapor_model extends CI_Model
             $ret = [];
             foreach ($result as $res) {
                 $ret[$res->id_tp][$res->id_smt][$res->id_siswa][$res->jenis] = $res;
-                EfQfx:
             }
             return $ret;
         }
@@ -890,7 +863,6 @@ class Rapor_model extends CI_Model
             $ret = [];
             foreach ($result as $res) {
                 $ret[$res->id_siswa][$res->id_tp][$res->id_smt] = $res;
-                gEI0_:
             }
             return $ret;
         } else {
@@ -899,7 +871,6 @@ class Rapor_model extends CI_Model
             $ret = [];
             foreach ($result as $res) {
                 $ret[$res->id_siswa][$res->id_tp][$res->id_smt] = $res;
-                gEI0_:
             }
             return $ret;
         }

@@ -36,7 +36,6 @@ class Update extends CI_Controller
             $result = [];
             foreach ($data as $key => $value) {
                 $result[$key] = is_array($data) || is_object($data) ? $this->object_to_array($value) : $value;
-                OLxj1:
             }
             return $result;
         }
@@ -57,16 +56,12 @@ class Update extends CI_Controller
                 $i = 0;
                 $c = count($query);
                 if (!($i < $c)) {
-                    goto AFwrI;
                 }
                 if (!($datafld[$i]->name == $query[$i]->column_name)) {
-                    goto WreuG;
                 }
                 if (!($query[$i]->extra != '')) {
-                    goto Mc836;
                 }
                 if ($query[$i]->extra == 'auto_increment') {
-                    goto i2x3g;
                 }
                 $datafld[$i]->extra = $query[$i]->extra;
                 $retval[$i] = new stdClass();
@@ -80,16 +75,12 @@ class Update extends CI_Controller
                 $i = 0;
                 $c = count($query);
                 if (!($i < $c)) {
-                    goto AFwrI;
                 }
                 if (!($datafld[$i]->name == $query[$i]->column_name)) {
-                    goto WreuG;
                 }
                 if (!($query[$i]->extra != '')) {
-                    goto Mc836;
                 }
                 if ($query[$i]->extra == 'auto_increment') {
-                    goto i2x3g;
                 }
                 $datafld[$i]->extra = $query[$i]->extra;
                 $retval[$i] = new stdClass();
@@ -165,7 +156,6 @@ class Update extends CI_Controller
                 $i = 0;
                 $c = count($query);
                 if (!($i < $c)) {
-                    goto nRUCA;
                 }
                 $retval[$i] = new stdClass();
                 $retval[$i]->name = $query[$i]->column_name;
@@ -186,7 +176,6 @@ class Update extends CI_Controller
                 $i = 0;
                 $c = count($query);
                 if (!($i < $c)) {
-                    goto nRUCA;
                 }
                 $retval[$i] = new stdClass();
                 $retval[$i]->name = $query[$i]->column_name;

@@ -804,7 +804,6 @@ class Cbtbanksoal extends CI_Controller
             $dom->loadHTML('<?xml encoding="UTF-8">' . $html, LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
             $images = $dom->getElementsByTagName('img');
             if ($images) {
-                goto NcJxV;
             }
             return $html;
         }

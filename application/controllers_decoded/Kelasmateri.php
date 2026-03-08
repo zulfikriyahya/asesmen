@@ -338,12 +338,10 @@ class Kelasmateri extends CI_Controller
             $time = mktime(12, 0, 0, $month, $d, $year);
             $day_of_week = date('N', $time);
             if (!(date('m', $time) == $month && $day_of_week == $day)) {
-                goto BiAq_;
             }
             array_push($list, date('Y-m-d', $time));
             $d++;
             if (!($d <= $numdays)) {
-                goto Gkmuo;
             }
         }
     }

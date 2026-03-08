@@ -165,7 +165,6 @@ class Userguru extends CI_Controller
             $remove[] = ' ';
             $hasil = str_replace($remove, '', $teks ?? '');
             if (!strpos($teks, ' ')) {
-                goto UD5wr;
             }
         }
     }

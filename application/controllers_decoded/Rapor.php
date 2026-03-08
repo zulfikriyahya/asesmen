@@ -339,103 +339,33 @@ class Rapor extends CI_Controller
             $nilai = [];
             $arrKiKd[] = [];
             if (!($guru->wali_kelas != null)) {
-                goto fdTL7;
             }
             $aspek = ['1', '2'];
             foreach ($aspek as $asp) {
-                goto fWKIY;
-                jca1p:
-                $no = $i + 1;
-                goto DQ5qp;
-                DZKVt:
-                EYHeJ:
-                goto SL_rg;
-                fWKIY:
                 $i = 0;
-                goto XffPj;
-                XffPj:
-                lzLZK:
-                goto Rsknx;
-                Rsknx:
                 if (!($i < 8)) {
-                    goto EYHeJ;
                 }
-                goto jca1p;
-                SL_rg:
-                zZHPO:
-                goto H3M0M;
-                tRjZd:
-                OEV8o:
-                goto rcOES;
-                utM0n:
-                goto lzLZK;
-                goto DZKVt;
-                rcOES:
-                $i++;
-                goto utM0n;
-                DQ5qp:
+                $no = $i + 1;
                 $arrKiKd[$asp][$id_mapel . $guru->wali_kelas . $asp . $no] = $this->rapor->getKikdMapel($id_mapel . $guru->wali_kelas . $asp . $no, $tp->id_tp, $smt->id_smt);
-                goto tRjZd;
-                H3M0M:
+                $i++;
             }
             if ($filter == '1') {
-                goto E2zsj;
             }
             $guru_mapel = '';
             foreach ($jabatan_guru as $jab) {
-                goto HxQQi;
-                MDtqx:
-                idkQR:
-                goto MGKui;
-                HxQQi:
                 foreach ($jab->ekstra_kelas as $mk) {
-                    goto ZEykX;
-                    ARvLl:
-                    foreach ($mk['kelas_ekstra'] as $km) {
-                        goto P1U1e;
-                        P1U1e:
-                        if (!($km['kelas'] == $guru->wali_kelas)) {
-                            goto oMlK0;
-                        }
-                        goto gKmGn;
-                        oxx7O:
-                        pKrT5:
-                        goto NiIch;
-                        gKmGn:
-                        $guru_mapel = $jab->nama_guru;
-                        goto pmpbk;
-                        pmpbk:
-                        oMlK0:
-                        goto oxx7O;
-                        NiIch:
-                    }
-                    goto oFmPy;
-                    ZEykX:
                     if (!($mk['id_ekstra'] == $id_mapel)) {
-                        goto NXCvT;
                     }
-                    goto ARvLl;
-                    OoQsF:
-                    EEcdM:
-                    goto EkoAV;
-                    oFmPy:
-                    UOpO2:
-                    goto LOWHi;
-                    LOWHi:
-                    NXCvT:
-                    goto OoQsF;
-                    EkoAV:
+                    foreach ($mk['kelas_ekstra'] as $km) {
+                        if (!($km['kelas'] == $guru->wali_kelas)) {
+                        }
+                        $guru_mapel = $jab->nama_guru;
+                    }
                 }
-                goto vjv9C;
-                vjv9C:
-                I0ZY2:
-                goto MDtqx;
-                MGKui:
             }
             $dummyEkstra = ['deskripsi' => '', 'nilai' => '', 'predikat' => ''];
             $i = 0;
             if (!($i < count($siswas))) {
-                goto N1YxR;
             }
             $siswa = $siswas[$i];
             $ne = $this->rapor->getEkstraKelas($id_mapel, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
@@ -448,103 +378,33 @@ class Rapor extends CI_Controller
             $nilai = [];
             $arrKiKd[] = [];
             if (!($guru->wali_kelas != null)) {
-                goto fdTL7;
             }
             $aspek = ['1', '2'];
             foreach ($aspek as $asp) {
-                goto fWKIY;
-                jca1p:
-                $no = $i + 1;
-                goto DQ5qp;
-                DZKVt:
-                EYHeJ:
-                goto SL_rg;
-                fWKIY:
                 $i = 0;
-                goto XffPj;
-                XffPj:
-                lzLZK:
-                goto Rsknx;
-                Rsknx:
                 if (!($i < 8)) {
-                    goto EYHeJ;
                 }
-                goto jca1p;
-                SL_rg:
-                zZHPO:
-                goto H3M0M;
-                tRjZd:
-                OEV8o:
-                goto rcOES;
-                utM0n:
-                goto lzLZK;
-                goto DZKVt;
-                rcOES:
-                $i++;
-                goto utM0n;
-                DQ5qp:
+                $no = $i + 1;
                 $arrKiKd[$asp][$id_mapel . $guru->wali_kelas . $asp . $no] = $this->rapor->getKikdMapel($id_mapel . $guru->wali_kelas . $asp . $no, $tp->id_tp, $smt->id_smt);
-                goto tRjZd;
-                H3M0M:
+                $i++;
             }
             if ($filter == '1') {
-                goto E2zsj;
             }
             $guru_mapel = '';
             foreach ($jabatan_guru as $jab) {
-                goto HxQQi;
-                MDtqx:
-                idkQR:
-                goto MGKui;
-                HxQQi:
                 foreach ($jab->ekstra_kelas as $mk) {
-                    goto ZEykX;
-                    ARvLl:
-                    foreach ($mk['kelas_ekstra'] as $km) {
-                        goto P1U1e;
-                        P1U1e:
-                        if (!($km['kelas'] == $guru->wali_kelas)) {
-                            goto oMlK0;
-                        }
-                        goto gKmGn;
-                        oxx7O:
-                        pKrT5:
-                        goto NiIch;
-                        gKmGn:
-                        $guru_mapel = $jab->nama_guru;
-                        goto pmpbk;
-                        pmpbk:
-                        oMlK0:
-                        goto oxx7O;
-                        NiIch:
-                    }
-                    goto oFmPy;
-                    ZEykX:
                     if (!($mk['id_ekstra'] == $id_mapel)) {
-                        goto NXCvT;
                     }
-                    goto ARvLl;
-                    OoQsF:
-                    EEcdM:
-                    goto EkoAV;
-                    oFmPy:
-                    UOpO2:
-                    goto LOWHi;
-                    LOWHi:
-                    NXCvT:
-                    goto OoQsF;
-                    EkoAV:
+                    foreach ($mk['kelas_ekstra'] as $km) {
+                        if (!($km['kelas'] == $guru->wali_kelas)) {
+                        }
+                        $guru_mapel = $jab->nama_guru;
+                    }
                 }
-                goto vjv9C;
-                vjv9C:
-                I0ZY2:
-                goto MDtqx;
-                MGKui:
             }
             $dummyEkstra = ['deskripsi' => '', 'nilai' => '', 'predikat' => ''];
             $i = 0;
             if (!($i < count($siswas))) {
-                goto N1YxR;
             }
             $siswa = $siswas[$i];
             $ne = $this->rapor->getEkstraKelas($id_mapel, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
@@ -590,103 +450,33 @@ class Rapor extends CI_Controller
             $nilai = [];
             $arrKiKd[] = [];
             if (!($guru->wali_kelas != null)) {
-                goto KZRMm;
             }
             $aspek = ['1', '2'];
             foreach ($aspek as $asp) {
-                goto p0tbs;
-                FFzLn:
-                $no = $i + 1;
-                goto kRVHG;
-                p0tbs:
                 $i = 0;
-                goto Ubfhi;
-                E9yv2:
-                goto ExZxW;
-                goto Ukz0T;
-                Ubfhi:
-                ExZxW:
-                goto JKgix;
-                Xd2vY:
-                QXqwI:
-                goto LwS4C;
-                Ukz0T:
-                y6wtE:
-                goto Xd2vY;
-                IR0dY:
-                lbKzX:
-                goto oYZ6o;
-                JKgix:
                 if (!($i < 8)) {
-                    goto y6wtE;
                 }
-                goto FFzLn;
-                kRVHG:
+                $no = $i + 1;
                 $arrKiKd[$asp][$id_mapel . $guru->wali_kelas . $asp . $no] = $this->rapor->getKikdMapel($id_mapel . $guru->wali_kelas . $asp . $no, $tp->id_tp, $smt->id_smt);
-                goto IR0dY;
-                oYZ6o:
                 $i++;
-                goto E9yv2;
-                LwS4C:
             }
             if ($filter == '1') {
-                goto rr0Xm;
             }
             $guru_mapel = '';
             foreach ($jabatan_guru as $jab) {
-                goto dTur9;
-                dTur9:
                 foreach ($jab->ekstra_kelas as $mk) {
-                    goto tyQJs;
-                    LXhGK:
-                    foreach ($mk['kelas_ekstra'] as $km) {
-                        goto zZ4Ge;
-                        JK81w:
-                        Iityl:
-                        goto GGtqf;
-                        oBSiP:
-                        nqO5t:
-                        goto JK81w;
-                        hqCro:
-                        $guru_mapel = $jab->nama_guru;
-                        goto oBSiP;
-                        zZ4Ge:
-                        if (!($km['kelas'] == $guru->wali_kelas)) {
-                            goto nqO5t;
-                        }
-                        goto hqCro;
-                        GGtqf:
-                    }
-                    goto WsjyO;
-                    WsjyO:
-                    LOv3X:
-                    goto nQqFQ;
-                    u7BJR:
-                    Eu55N:
-                    goto A96B0;
-                    tyQJs:
                     if (!($mk['id_ekstra'] == $id_mapel)) {
-                        goto yNUjm;
                     }
-                    goto LXhGK;
-                    nQqFQ:
-                    yNUjm:
-                    goto u7BJR;
-                    A96B0:
+                    foreach ($mk['kelas_ekstra'] as $km) {
+                        if (!($km['kelas'] == $guru->wali_kelas)) {
+                        }
+                        $guru_mapel = $jab->nama_guru;
+                    }
                 }
-                goto w4Vl8;
-                ehxsK:
-                aEu05:
-                goto V3Rfe;
-                w4Vl8:
-                lfOi2:
-                goto ehxsK;
-                V3Rfe:
             }
             $dummyEkstra = ['deskripsi' => '', 'nilai' => '', 'predikat' => ''];
             $i = 0;
             if (!($i < count($siswas))) {
-                goto RoHkV;
             }
             $siswa = $siswas[$i];
             $ne = $this->rapor->getEkstraKelas($id_mapel, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
@@ -699,103 +489,33 @@ class Rapor extends CI_Controller
             $nilai = [];
             $arrKiKd[] = [];
             if (!($guru->wali_kelas != null)) {
-                goto KZRMm;
             }
             $aspek = ['1', '2'];
             foreach ($aspek as $asp) {
-                goto p0tbs;
-                FFzLn:
-                $no = $i + 1;
-                goto kRVHG;
-                p0tbs:
                 $i = 0;
-                goto Ubfhi;
-                E9yv2:
-                goto ExZxW;
-                goto Ukz0T;
-                Ubfhi:
-                ExZxW:
-                goto JKgix;
-                Xd2vY:
-                QXqwI:
-                goto LwS4C;
-                Ukz0T:
-                y6wtE:
-                goto Xd2vY;
-                IR0dY:
-                lbKzX:
-                goto oYZ6o;
-                JKgix:
                 if (!($i < 8)) {
-                    goto y6wtE;
                 }
-                goto FFzLn;
-                kRVHG:
+                $no = $i + 1;
                 $arrKiKd[$asp][$id_mapel . $guru->wali_kelas . $asp . $no] = $this->rapor->getKikdMapel($id_mapel . $guru->wali_kelas . $asp . $no, $tp->id_tp, $smt->id_smt);
-                goto IR0dY;
-                oYZ6o:
                 $i++;
-                goto E9yv2;
-                LwS4C:
             }
             if ($filter == '1') {
-                goto rr0Xm;
             }
             $guru_mapel = '';
             foreach ($jabatan_guru as $jab) {
-                goto dTur9;
-                dTur9:
                 foreach ($jab->ekstra_kelas as $mk) {
-                    goto tyQJs;
-                    LXhGK:
-                    foreach ($mk['kelas_ekstra'] as $km) {
-                        goto zZ4Ge;
-                        JK81w:
-                        Iityl:
-                        goto GGtqf;
-                        oBSiP:
-                        nqO5t:
-                        goto JK81w;
-                        hqCro:
-                        $guru_mapel = $jab->nama_guru;
-                        goto oBSiP;
-                        zZ4Ge:
-                        if (!($km['kelas'] == $guru->wali_kelas)) {
-                            goto nqO5t;
-                        }
-                        goto hqCro;
-                        GGtqf:
-                    }
-                    goto WsjyO;
-                    WsjyO:
-                    LOv3X:
-                    goto nQqFQ;
-                    u7BJR:
-                    Eu55N:
-                    goto A96B0;
-                    tyQJs:
                     if (!($mk['id_ekstra'] == $id_mapel)) {
-                        goto yNUjm;
                     }
-                    goto LXhGK;
-                    nQqFQ:
-                    yNUjm:
-                    goto u7BJR;
-                    A96B0:
+                    foreach ($mk['kelas_ekstra'] as $km) {
+                        if (!($km['kelas'] == $guru->wali_kelas)) {
+                        }
+                        $guru_mapel = $jab->nama_guru;
+                    }
                 }
-                goto w4Vl8;
-                ehxsK:
-                aEu05:
-                goto V3Rfe;
-                w4Vl8:
-                lfOi2:
-                goto ehxsK;
-                V3Rfe:
             }
             $dummyEkstra = ['deskripsi' => '', 'nilai' => '', 'predikat' => ''];
             $i = 0;
             if (!($i < count($siswas))) {
-                goto RoHkV;
             }
             $siswa = $siswas[$i];
             $ne = $this->rapor->getEkstraKelas($id_mapel, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
@@ -1625,46 +1345,24 @@ class Rapor extends CI_Controller
             $catatans = $this->rapor->getCatatanWaliByKelas($id_kelas, $tp->id_tp, $smt->id_smt);
             foreach ($catatans as $catatan) {
                 $catatan->nilai = unserialize($catatan->nilai);
-                wx9Vu:
             }
             $i = 0;
             if (!($i < count($siswas))) {
-                goto fmMUu;
             }
             $siswa = $siswas[$i];
             $id_siswa = $siswa->id_siswa;
             $dummySikap = ['predikat' => ''];
             if (count($nilai_sikap) > 0) {
-                goto mP0Vj;
             }
             $sikap[$id_siswa][1] = ['deskripsi' => '', 'predikat' => $dummySikap];
             $sikap[$id_siswa][2] = ['deskripsi' => '', 'predikat' => $dummySikap];
             foreach ($mapels as $mapel) {
-                goto CyUpZ;
-                ik9tU:
-                $nilai[$id_siswa][$mapel->id_mapel] = $nr;
-                goto QwmGY;
-                CyUpZ:
                 $dummyNilai = ['p_deskripsi' => '', 'k_rata_rata' => '', 'k_deskripsi' => '', 'k_predikat' => '', 'nilai' => '', 'predikat' => ''];
-                goto RPN8R;
-                X3E1X:
-                lHMRD:
-                goto isWyv;
-                RPN8R:
                 $key_mapel = array_search($mapel->id_mapel . $id_kelas . $id_siswa . $tp->id_tp . $smt->id_smt, array_column($nilai_rapor, 'id_nilai_harian'));
-                goto l1gVd;
-                l1gVd:
                 if (!($key_mapel !== false)) {
-                    goto Eh3YV;
                 }
-                goto dBMMx;
-                QwmGY:
-                Eh3YV:
-                goto X3E1X;
-                dBMMx:
                 $nr = $nilai_rapor[$key_mapel];
-                goto ik9tU;
-                isWyv:
+                $nilai[$id_siswa][$mapel->id_mapel] = $nr;
             }
             $dummyDesks = ['ranking' => '', 'rank_deskripsi' => '', 'p1' => '', 'p1_desk' => '', 'p2' => '', 'p2_desk' => '', 'p3' => '', 'p3_desk' => ''];
             $dummyAbsen = ['s' => ' - ', 'i' => ' - ', 'a' => ' - ', 'saran' => ''];
@@ -1675,49 +1373,16 @@ class Rapor extends CI_Controller
             $nf2 = $this->rapor->getFisikKelas($id_kelas, $siswa->id_siswa, $tp->id_tp, $other);
             $fisik[$siswa->id_siswa] = $nf != null ? ['kondisi' => unserialize($nf->kondisi), 'smt' . $nf->id_smt => ['tinggi' => $nf->tinggi, 'berat' => $nf->berat], 'smt' . $other => ['tinggi' => $nf2 != null ? $nf2->tinggi : '', 'berat' => $nf2 != null ? $nf2->berat : '']] : $dummyFisik;
             foreach ($ekstras as $ext) {
-                goto lmkW9;
-                SCXxe:
-                foreach ($arrEkstra as $ar) {
-                    goto NsDYe;
-                    EO0Ip:
-                    E16J4:
-                    goto HX8Rw;
-                    CTfhi:
-                    LQ264:
-                    goto EO0Ip;
-                    NsDYe:
-                    $id_ekstra = $ar->ekstra;
-                    goto BT75K;
-                    y1ucI:
-                    $nilaiEkstra[$id_siswa][$id_ekstra] = $ne == null ? $dummyEkstra : $ne;
-                    goto CTfhi;
-                    BT75K:
-                    $mapelEkstra[$id_ekstra] = $this->kelas->getEkskulById($id_ekstra);
-                    goto aMoVK;
-                    yHOo7:
-                    $ne = $this->rapor->getEkstraKelas($id_ekstra, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
-                    goto y1ucI;
-                    aMoVK:
-                    if (!($id_ekstra != null)) {
-                        goto LQ264;
-                    }
-                    goto yHOo7;
-                    HX8Rw:
-                }
-                goto Nz2kv;
-                Nz2kv:
-                Dmrpx:
-                goto pUjCt;
-                pUjCt:
-                ifsjN:
-                goto qKN8y;
-                lmkW9:
                 $dummyEkstra = ['deskripsi' => '', 'nilai' => '', 'predikat' => ''];
-                goto dc8CL;
-                dc8CL:
                 $arrEkstra = json_decode(json_encode(unserialize($ext->ekstra)));
-                goto SCXxe;
-                qKN8y:
+                foreach ($arrEkstra as $ar) {
+                    $id_ekstra = $ar->ekstra;
+                    $mapelEkstra[$id_ekstra] = $this->kelas->getEkskulById($id_ekstra);
+                    if (!($id_ekstra != null)) {
+                    }
+                    $ne = $this->rapor->getEkstraKelas($id_ekstra, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
+                    $nilaiEkstra[$id_siswa][$id_ekstra] = $ne == null ? $dummyEkstra : $ne;
+                }
             }
             $i++;
         } else {
@@ -1728,46 +1393,24 @@ class Rapor extends CI_Controller
             $catatans = $this->rapor->getCatatanWaliByKelas($id_kelas, $tp->id_tp, $smt->id_smt);
             foreach ($catatans as $catatan) {
                 $catatan->nilai = unserialize($catatan->nilai);
-                wx9Vu:
             }
             $i = 0;
             if (!($i < count($siswas))) {
-                goto fmMUu;
             }
             $siswa = $siswas[$i];
             $id_siswa = $siswa->id_siswa;
             $dummySikap = ['predikat' => ''];
             if (count($nilai_sikap) > 0) {
-                goto mP0Vj;
             }
             $sikap[$id_siswa][1] = ['deskripsi' => '', 'predikat' => $dummySikap];
             $sikap[$id_siswa][2] = ['deskripsi' => '', 'predikat' => $dummySikap];
             foreach ($mapels as $mapel) {
-                goto CyUpZ;
-                ik9tU:
-                $nilai[$id_siswa][$mapel->id_mapel] = $nr;
-                goto QwmGY;
-                CyUpZ:
                 $dummyNilai = ['p_deskripsi' => '', 'k_rata_rata' => '', 'k_deskripsi' => '', 'k_predikat' => '', 'nilai' => '', 'predikat' => ''];
-                goto RPN8R;
-                X3E1X:
-                lHMRD:
-                goto isWyv;
-                RPN8R:
                 $key_mapel = array_search($mapel->id_mapel . $id_kelas . $id_siswa . $tp->id_tp . $smt->id_smt, array_column($nilai_rapor, 'id_nilai_harian'));
-                goto l1gVd;
-                l1gVd:
                 if (!($key_mapel !== false)) {
-                    goto Eh3YV;
                 }
-                goto dBMMx;
-                QwmGY:
-                Eh3YV:
-                goto X3E1X;
-                dBMMx:
                 $nr = $nilai_rapor[$key_mapel];
-                goto ik9tU;
-                isWyv:
+                $nilai[$id_siswa][$mapel->id_mapel] = $nr;
             }
             $dummyDesks = ['ranking' => '', 'rank_deskripsi' => '', 'p1' => '', 'p1_desk' => '', 'p2' => '', 'p2_desk' => '', 'p3' => '', 'p3_desk' => ''];
             $dummyAbsen = ['s' => ' - ', 'i' => ' - ', 'a' => ' - ', 'saran' => ''];
@@ -1778,49 +1421,16 @@ class Rapor extends CI_Controller
             $nf2 = $this->rapor->getFisikKelas($id_kelas, $siswa->id_siswa, $tp->id_tp, $other);
             $fisik[$siswa->id_siswa] = $nf != null ? ['kondisi' => unserialize($nf->kondisi), 'smt' . $nf->id_smt => ['tinggi' => $nf->tinggi, 'berat' => $nf->berat], 'smt' . $other => ['tinggi' => $nf2 != null ? $nf2->tinggi : '', 'berat' => $nf2 != null ? $nf2->berat : '']] : $dummyFisik;
             foreach ($ekstras as $ext) {
-                goto lmkW9;
-                SCXxe:
-                foreach ($arrEkstra as $ar) {
-                    goto NsDYe;
-                    EO0Ip:
-                    E16J4:
-                    goto HX8Rw;
-                    CTfhi:
-                    LQ264:
-                    goto EO0Ip;
-                    NsDYe:
-                    $id_ekstra = $ar->ekstra;
-                    goto BT75K;
-                    y1ucI:
-                    $nilaiEkstra[$id_siswa][$id_ekstra] = $ne == null ? $dummyEkstra : $ne;
-                    goto CTfhi;
-                    BT75K:
-                    $mapelEkstra[$id_ekstra] = $this->kelas->getEkskulById($id_ekstra);
-                    goto aMoVK;
-                    yHOo7:
-                    $ne = $this->rapor->getEkstraKelas($id_ekstra, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
-                    goto y1ucI;
-                    aMoVK:
-                    if (!($id_ekstra != null)) {
-                        goto LQ264;
-                    }
-                    goto yHOo7;
-                    HX8Rw:
-                }
-                goto Nz2kv;
-                Nz2kv:
-                Dmrpx:
-                goto pUjCt;
-                pUjCt:
-                ifsjN:
-                goto qKN8y;
-                lmkW9:
                 $dummyEkstra = ['deskripsi' => '', 'nilai' => '', 'predikat' => ''];
-                goto dc8CL;
-                dc8CL:
                 $arrEkstra = json_decode(json_encode(unserialize($ext->ekstra)));
-                goto SCXxe;
-                qKN8y:
+                foreach ($arrEkstra as $ar) {
+                    $id_ekstra = $ar->ekstra;
+                    $mapelEkstra[$id_ekstra] = $this->kelas->getEkskulById($id_ekstra);
+                    if (!($id_ekstra != null)) {
+                    }
+                    $ne = $this->rapor->getEkstraKelas($id_ekstra, $siswa->id_siswa, $tp->id_tp, $smt->id_smt);
+                    $nilaiEkstra[$id_siswa][$id_ekstra] = $ne == null ? $dummyEkstra : $ne;
+                }
             }
             $i++;
         }

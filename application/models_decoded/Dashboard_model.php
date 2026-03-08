@@ -173,24 +173,19 @@ class Dashboard_model extends CI_Model
         $this->db->where($pk, $id);
         if (!($join !== null)) {
             if (!($order !== null)) {
-                goto HboyQ;
             }
             foreach ($order as $field => $sort) {
                 $this->db->order_by($field, $sort);
-                aAss5:
             }
             return $this->db->get();
         } else {
             foreach ($join as $table => $field) {
                 $this->db->join($table, $field);
-                dx6xg:
             }
             if (!($order !== null)) {
-                goto HboyQ;
             }
             foreach ($order as $field => $sort) {
                 $this->db->order_by($field, $sort);
-                aAss5:
             }
             return $this->db->get();
         }
@@ -237,14 +232,12 @@ class Dashboard_model extends CI_Model
         $this->db->where('a.id_smt', $id_smt);
         if (!($id_kelas != null)) {
             if (!($id_hari != null)) {
-                goto jNTMc;
             }
             $this->db->where('a.id_hari', $id_hari);
             return $this->db->get()->result();
         } else {
             $this->db->where('a.id_kelas', $id_kelas);
             if (!($id_hari != null)) {
-                goto jNTMc;
             }
             $this->db->where('a.id_hari', $id_hari);
             return $this->db->get()->result();

@@ -130,7 +130,6 @@ class Kelasstatus extends CI_Controller
             $detail = [];
             $jam_materi = [];
             if (!$materi) {
-                goto s08n1;
             }
             $kelas_materi = $this->kelas->getNamaKelasById([$id_kelas]);
             $numday = date('N', strtotime($materi->jadwal_materi));
@@ -141,41 +140,22 @@ class Kelasstatus extends CI_Controller
             $arrDur = [];
             $arrIst = [];
             foreach ($ist as $istirahat) {
-                goto B469Q;
-                YZNHh:
-                GEIro:
-                goto zl99R;
-                B469Q:
                 $arrIst[] = $istirahat->ist;
-                goto he7k8;
-                he7k8:
                 $arrDur[$istirahat->ist] = $istirahat->dur;
-                goto YZNHh;
-                zl99R:
             }
             $jamMulai = new DateTime($info->kbm_jam_mulai);
             $jamSampai = new DateTime($info->kbm_jam_mulai);
             $jam_mapel = [];
             $i = 0;
             if (!($i < $info->kbm_jml_mapel_hari)) {
-                goto qrztU;
             }
             $jamke = $i + 1;
             if (in_array($jamke, $arrIst)) {
-                goto oD6Cn;
             }
             try {
-                goto Q9lZA;
-                vS6au:
-                $jamMulai->add(new DateInterval('PT' . $info->kbm_jam_pel . 'M'));
-                goto TODoJ;
-                bLeMl:
-                $jam_mapel[$jamke] = ['dari' => $jamMulai->format('H:i'), 'sampai' => $jamSampai->format('H:i'), 'tgl' => $materi->jadwal_materi];
-                goto vS6au;
-                Q9lZA:
                 $jamSampai->add(new DateInterval('PT' . $info->kbm_jam_pel . 'M'));
-                goto bLeMl;
-                TODoJ:
+                $jam_mapel[$jamke] = ['dari' => $jamMulai->format('H:i'), 'sampai' => $jamSampai->format('H:i'), 'tgl' => $materi->jadwal_materi];
+                $jamMulai->add(new DateInterval('PT' . $info->kbm_jam_pel . 'M'));
             } catch (Exception $e) {
             }
             $i++;
@@ -185,7 +165,6 @@ class Kelasstatus extends CI_Controller
             $detail = [];
             $jam_materi = [];
             if (!$materi) {
-                goto s08n1;
             }
             $kelas_materi = $this->kelas->getNamaKelasById([$id_kelas]);
             $numday = date('N', strtotime($materi->jadwal_materi));
@@ -196,41 +175,22 @@ class Kelasstatus extends CI_Controller
             $arrDur = [];
             $arrIst = [];
             foreach ($ist as $istirahat) {
-                goto B469Q;
-                YZNHh:
-                GEIro:
-                goto zl99R;
-                B469Q:
                 $arrIst[] = $istirahat->ist;
-                goto he7k8;
-                he7k8:
                 $arrDur[$istirahat->ist] = $istirahat->dur;
-                goto YZNHh;
-                zl99R:
             }
             $jamMulai = new DateTime($info->kbm_jam_mulai);
             $jamSampai = new DateTime($info->kbm_jam_mulai);
             $jam_mapel = [];
             $i = 0;
             if (!($i < $info->kbm_jml_mapel_hari)) {
-                goto qrztU;
             }
             $jamke = $i + 1;
             if (in_array($jamke, $arrIst)) {
-                goto oD6Cn;
             }
             try {
-                goto Q9lZA;
-                vS6au:
-                $jamMulai->add(new DateInterval('PT' . $info->kbm_jam_pel . 'M'));
-                goto TODoJ;
-                bLeMl:
-                $jam_mapel[$jamke] = ['dari' => $jamMulai->format('H:i'), 'sampai' => $jamSampai->format('H:i'), 'tgl' => $materi->jadwal_materi];
-                goto vS6au;
-                Q9lZA:
                 $jamSampai->add(new DateInterval('PT' . $info->kbm_jam_pel . 'M'));
-                goto bLeMl;
-                TODoJ:
+                $jam_mapel[$jamke] = ['dari' => $jamMulai->format('H:i'), 'sampai' => $jamSampai->format('H:i'), 'tgl' => $materi->jadwal_materi];
+                $jamMulai->add(new DateInterval('PT' . $info->kbm_jam_pel . 'M'));
             } catch (Exception $e) {
             }
             $i++;

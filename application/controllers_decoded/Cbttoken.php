@@ -103,7 +103,6 @@ class Cbttoken extends CI_Controller
             $new_token .= $random_character;
             $i++;
             if (!($i < 6)) {
-                goto ZsAuv;
             }
         }
     }

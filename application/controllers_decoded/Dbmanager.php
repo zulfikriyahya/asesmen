@@ -104,16 +104,12 @@ class Dbmanager extends CI_Controller
             return $bytes;
         } else {
             if ($bytes >= 1048576) {
-                goto aspD2;
             }
             if ($bytes >= 1024) {
-                goto gm3Cw;
             }
             if ($bytes > 1) {
-                goto ITXwQ;
             }
             if ($bytes == 1) {
-                goto Mh7OE;
             }
             $bytes = '0 bytes';
             return $bytes;

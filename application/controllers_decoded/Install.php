@@ -67,14 +67,12 @@ class Install extends CI_Controller
         if ($this->db->table_exists('users')) {
             $admin = $this->db->get('users')->row();
             if (!($admin != null)) {
-                goto nSQ8K;
             }
             $data['nama_admin'] = $admin->first_name . ' ' . $admin->last_name;
             $data['user_admin'] = $admin->username;
             $data['pass_admin'] = $admin->password;
             $setting = $this->dashboard->getSetting();
             if (!($setting != null)) {
-                goto Aed65;
             }
             $data['aplikasi'] = $setting->nama_aplikasi;
             $data['sekolah'] = $setting->sekolah;

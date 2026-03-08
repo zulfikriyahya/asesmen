@@ -37,18 +37,15 @@ class Bukurapor extends CI_Controller
             $kelases = $this->kelas->getAllKelas();
             $all_kls = [];
             if (!$kelases) {
-                goto VK8Vt;
             }
             foreach ($kelases as $key => $row) {
                 $all_kls[$row->id_tp][$row->id_smt][$row->id_kelas] = $row;
-                aXtwC:
             }
             $siswas = [];
             $mapels = [];
             $kelompoks = [];
             $kelas = isset($all_kls[$id_tp]) && isset($all_kls[$id_tp][$id_smt]) && isset($all_kls[$id_tp][$id_smt][$id_kelas]) ? $all_kls[$id_tp][$id_smt][$id_kelas] : null;
             if (!($kelas != null)) {
-                goto IdPEE;
             }
             $jurusan = $this->kelas->getJurusanById($kelas->id_jurusan);
             $kelompoks = $this->master->getKodeKelompokMapel();
@@ -56,22 +53,9 @@ class Bukurapor extends CI_Controller
             $kategori_mapel = $this->master->getKategoriKelompokMapel();
             $arrk = [];
             foreach ($kategori_mapel as $kk => $km) {
-                goto zHr3f;
-                O8EHP:
-                TGPzV:
-                goto p4fHd;
-                zHr3f:
                 if (in_array($km, $arrk)) {
-                    goto TGPzV;
                 }
-                goto wfjX9;
-                wfjX9:
                 array_push($arrk, $km->kode_kel_mapel);
-                goto O8EHP;
-                p4fHd:
-                viw09:
-                goto hjkXd;
-                hjkXd:
             }
             $mapels = $this->master->getAllStatusMapel(empty($arrk) ? null : $arrk, isset($jurusan->mapel_peminatan) ? $jurusan->mapel_peminatan : null);
             $ekstras = $this->kelas->getKelasEkskul($id_kelas, $id_tp, $id_smt);
@@ -84,7 +68,6 @@ class Bukurapor extends CI_Controller
             $mapelEkstra = [];
             $nilaiEkstra = [];
             if ($id_smt === '1') {
-                goto gOtXO;
             }
             $other = '1';
             $nilai_sikap = $this->rapor->getNilaiSikapByKelas($id_kelas, $id_tp, $id_smt);
@@ -93,46 +76,24 @@ class Bukurapor extends CI_Controller
             $catatans = $this->rapor->getCatatanWaliByKelas($id_kelas, $id_tp, $id_smt);
             foreach ($catatans as $catatan) {
                 $catatan->nilai = unserialize($catatan->nilai ?? '');
-                zVSOL:
             }
             $i = 0;
             if (!($i < count($siswas))) {
-                goto XLrtb;
             }
             $siswa = $siswas[$i];
             $id_siswa = $siswa->id_siswa;
             $dummySikap = ['predikat' => ''];
             if (count($nilai_sikap) > 0) {
-                goto G3Nbp;
             }
             $sikap[$id_siswa][1] = ['deskripsi' => '', 'predikat' => $dummySikap];
             $sikap[$id_siswa][2] = ['deskripsi' => '', 'predikat' => $dummySikap];
             foreach ($mapels as $mapel) {
-                goto m2ejN;
-                NChGm:
-                $nr = $nilai_rapor[$key_mapel];
-                goto LfaEu;
-                m2ejN:
                 $dummyNilai = ['p_deskripsi' => '', 'k_rata_rata' => '', 'k_deskripsi' => '', 'k_predikat' => '', 'nilai' => '', 'predikat' => ''];
-                goto B2b8p;
-                B2b8p:
                 $key_mapel = array_search($mapel->id_mapel . $id_kelas . $id_siswa . $id_tp . $id_smt, array_column($nilai_rapor, 'id_nilai_harian'));
-                goto fWhxm;
-                HsKSw:
-                qFKyS:
-                goto prd2d;
-                fWhxm:
                 if (!($key_mapel !== false)) {
-                    goto qFKyS;
                 }
-                goto NChGm;
-                prd2d:
-                mYmpk:
-                goto Njsqc;
-                LfaEu:
+                $nr = $nilai_rapor[$key_mapel];
                 $nilai[$id_siswa][$mapel->id_mapel] = $nr;
-                goto HsKSw;
-                Njsqc:
             }
             $dummyDesks = ['ranking' => '', 'rank_deskripsi' => '', 'p1' => '', 'p1_desk' => '', 'p2' => '', 'p2_desk' => '', 'p3' => '', 'p3_desk' => ''];
             $dummyAbsen = ['s' => ' - ', 'i' => ' - ', 'a' => ' - ', 'saran' => ''];
@@ -143,55 +104,21 @@ class Bukurapor extends CI_Controller
             $nf2 = $this->rapor->getFisikKelas($id_kelas, $siswa->id_siswa, $id_tp, $other);
             $fisik[$siswa->id_siswa] = $nf != null ? ['kondisi' => unserialize($nf->kondisi ?? ''), 'smt' . $nf->id_smt => ['tinggi' => $nf->tinggi, 'berat' => $nf->berat], 'smt' . $other => ['tinggi' => $nf2 != null ? $nf2->tinggi : '', 'berat' => $nf2 != null ? $nf2->berat : '']] : $dummyFisik;
             foreach ($ekstras as $ext) {
-                goto djAUu;
-                rcxPT:
-                Yp8Uk:
-                goto AknNM;
-                lvNdP:
-                $arrEkstra = json_decode(json_encode(unserialize($ext->ekstra ?? '')));
-                goto mxx7i;
-                djAUu:
                 $dummyEkstra = ['deskripsi' => '', 'nilai' => '', 'predikat' => ''];
-                goto lvNdP;
-                AknNM:
-                OiPig:
-                goto uxRBT;
-                mxx7i:
+                $arrEkstra = json_decode(json_encode(unserialize($ext->ekstra ?? '')));
                 foreach ($arrEkstra as $ar) {
-                    goto BVzBa;
-                    AmLXv:
-                    YG6Ea:
-                    goto Q9Ko3;
-                    KA43A:
-                    $mapelEkstra[$id_ekstra] = $this->kelas->getEkskulById($id_ekstra);
-                    goto uZGzW;
-                    HfcUD:
-                    $nilaiEkstra[$id_siswa][$id_ekstra] = $ne == null ? $dummyEkstra : $ne;
-                    goto Heqb6;
-                    Heqb6:
-                    OpwER:
-                    goto AmLXv;
-                    BVzBa:
                     $id_ekstra = $ar->ekstra;
-                    goto KA43A;
-                    o3EtW:
-                    $ne = $this->rapor->getEkstraKelas($id_ekstra, $siswa->id_siswa, $id_tp, $id_smt);
-                    goto HfcUD;
-                    uZGzW:
+                    $mapelEkstra[$id_ekstra] = $this->kelas->getEkskulById($id_ekstra);
                     if (!($id_ekstra != null)) {
-                        goto OpwER;
                     }
-                    goto o3EtW;
-                    Q9Ko3:
+                    $ne = $this->rapor->getEkstraKelas($id_ekstra, $siswa->id_siswa, $id_tp, $id_smt);
+                    $nilaiEkstra[$id_siswa][$id_ekstra] = $ne == null ? $dummyEkstra : $ne;
                 }
-                goto rcxPT;
-                uxRBT:
             }
             $i++;
         } else {
             $total = $this->dashboard->total('buku_nilai');
             if (!($total > 0)) {
-                goto HgwoV;
             }
             $this->restoreNilai();
             $id_tp = $this->input->get('tp', true);
@@ -203,18 +130,15 @@ class Bukurapor extends CI_Controller
             $kelases = $this->kelas->getAllKelas();
             $all_kls = [];
             if (!$kelases) {
-                goto VK8Vt;
             }
             foreach ($kelases as $key => $row) {
                 $all_kls[$row->id_tp][$row->id_smt][$row->id_kelas] = $row;
-                aXtwC:
             }
             $siswas = [];
             $mapels = [];
             $kelompoks = [];
             $kelas = isset($all_kls[$id_tp]) && isset($all_kls[$id_tp][$id_smt]) && isset($all_kls[$id_tp][$id_smt][$id_kelas]) ? $all_kls[$id_tp][$id_smt][$id_kelas] : null;
             if (!($kelas != null)) {
-                goto IdPEE;
             }
             $jurusan = $this->kelas->getJurusanById($kelas->id_jurusan);
             $kelompoks = $this->master->getKodeKelompokMapel();
@@ -222,22 +146,9 @@ class Bukurapor extends CI_Controller
             $kategori_mapel = $this->master->getKategoriKelompokMapel();
             $arrk = [];
             foreach ($kategori_mapel as $kk => $km) {
-                goto zHr3f;
-                O8EHP:
-                TGPzV:
-                goto p4fHd;
-                zHr3f:
                 if (in_array($km, $arrk)) {
-                    goto TGPzV;
                 }
-                goto wfjX9;
-                wfjX9:
                 array_push($arrk, $km->kode_kel_mapel);
-                goto O8EHP;
-                p4fHd:
-                viw09:
-                goto hjkXd;
-                hjkXd:
             }
             $mapels = $this->master->getAllStatusMapel(empty($arrk) ? null : $arrk, isset($jurusan->mapel_peminatan) ? $jurusan->mapel_peminatan : null);
             $ekstras = $this->kelas->getKelasEkskul($id_kelas, $id_tp, $id_smt);
@@ -250,7 +161,6 @@ class Bukurapor extends CI_Controller
             $mapelEkstra = [];
             $nilaiEkstra = [];
             if ($id_smt === '1') {
-                goto gOtXO;
             }
             $other = '1';
             $nilai_sikap = $this->rapor->getNilaiSikapByKelas($id_kelas, $id_tp, $id_smt);
@@ -259,46 +169,24 @@ class Bukurapor extends CI_Controller
             $catatans = $this->rapor->getCatatanWaliByKelas($id_kelas, $id_tp, $id_smt);
             foreach ($catatans as $catatan) {
                 $catatan->nilai = unserialize($catatan->nilai ?? '');
-                zVSOL:
             }
             $i = 0;
             if (!($i < count($siswas))) {
-                goto XLrtb;
             }
             $siswa = $siswas[$i];
             $id_siswa = $siswa->id_siswa;
             $dummySikap = ['predikat' => ''];
             if (count($nilai_sikap) > 0) {
-                goto G3Nbp;
             }
             $sikap[$id_siswa][1] = ['deskripsi' => '', 'predikat' => $dummySikap];
             $sikap[$id_siswa][2] = ['deskripsi' => '', 'predikat' => $dummySikap];
             foreach ($mapels as $mapel) {
-                goto m2ejN;
-                NChGm:
-                $nr = $nilai_rapor[$key_mapel];
-                goto LfaEu;
-                m2ejN:
                 $dummyNilai = ['p_deskripsi' => '', 'k_rata_rata' => '', 'k_deskripsi' => '', 'k_predikat' => '', 'nilai' => '', 'predikat' => ''];
-                goto B2b8p;
-                B2b8p:
                 $key_mapel = array_search($mapel->id_mapel . $id_kelas . $id_siswa . $id_tp . $id_smt, array_column($nilai_rapor, 'id_nilai_harian'));
-                goto fWhxm;
-                HsKSw:
-                qFKyS:
-                goto prd2d;
-                fWhxm:
                 if (!($key_mapel !== false)) {
-                    goto qFKyS;
                 }
-                goto NChGm;
-                prd2d:
-                mYmpk:
-                goto Njsqc;
-                LfaEu:
+                $nr = $nilai_rapor[$key_mapel];
                 $nilai[$id_siswa][$mapel->id_mapel] = $nr;
-                goto HsKSw;
-                Njsqc:
             }
             $dummyDesks = ['ranking' => '', 'rank_deskripsi' => '', 'p1' => '', 'p1_desk' => '', 'p2' => '', 'p2_desk' => '', 'p3' => '', 'p3_desk' => ''];
             $dummyAbsen = ['s' => ' - ', 'i' => ' - ', 'a' => ' - ', 'saran' => ''];
@@ -309,49 +197,16 @@ class Bukurapor extends CI_Controller
             $nf2 = $this->rapor->getFisikKelas($id_kelas, $siswa->id_siswa, $id_tp, $other);
             $fisik[$siswa->id_siswa] = $nf != null ? ['kondisi' => unserialize($nf->kondisi ?? ''), 'smt' . $nf->id_smt => ['tinggi' => $nf->tinggi, 'berat' => $nf->berat], 'smt' . $other => ['tinggi' => $nf2 != null ? $nf2->tinggi : '', 'berat' => $nf2 != null ? $nf2->berat : '']] : $dummyFisik;
             foreach ($ekstras as $ext) {
-                goto djAUu;
-                rcxPT:
-                Yp8Uk:
-                goto AknNM;
-                lvNdP:
-                $arrEkstra = json_decode(json_encode(unserialize($ext->ekstra ?? '')));
-                goto mxx7i;
-                djAUu:
                 $dummyEkstra = ['deskripsi' => '', 'nilai' => '', 'predikat' => ''];
-                goto lvNdP;
-                AknNM:
-                OiPig:
-                goto uxRBT;
-                mxx7i:
+                $arrEkstra = json_decode(json_encode(unserialize($ext->ekstra ?? '')));
                 foreach ($arrEkstra as $ar) {
-                    goto BVzBa;
-                    AmLXv:
-                    YG6Ea:
-                    goto Q9Ko3;
-                    KA43A:
-                    $mapelEkstra[$id_ekstra] = $this->kelas->getEkskulById($id_ekstra);
-                    goto uZGzW;
-                    HfcUD:
-                    $nilaiEkstra[$id_siswa][$id_ekstra] = $ne == null ? $dummyEkstra : $ne;
-                    goto Heqb6;
-                    Heqb6:
-                    OpwER:
-                    goto AmLXv;
-                    BVzBa:
                     $id_ekstra = $ar->ekstra;
-                    goto KA43A;
-                    o3EtW:
-                    $ne = $this->rapor->getEkstraKelas($id_ekstra, $siswa->id_siswa, $id_tp, $id_smt);
-                    goto HfcUD;
-                    uZGzW:
+                    $mapelEkstra[$id_ekstra] = $this->kelas->getEkskulById($id_ekstra);
                     if (!($id_ekstra != null)) {
-                        goto OpwER;
                     }
-                    goto o3EtW;
-                    Q9Ko3:
+                    $ne = $this->rapor->getEkstraKelas($id_ekstra, $siswa->id_siswa, $id_tp, $id_smt);
+                    $nilaiEkstra[$id_siswa][$id_ekstra] = $ne == null ? $dummyEkstra : $ne;
                 }
-                goto rcxPT;
-                uxRBT:
             }
             $i++;
         }
@@ -647,35 +502,27 @@ class Bukurapor extends CI_Controller
         $res = 0;
         if (!(count($rank_insert) > 0)) {
             if (!(count($absen_insert) > 0)) {
-                goto c4qan;
             }
             $res += $this->db->insert_batch('rapor_catatan_wali', $absen_insert);
             if (!(count($ekstra_insert) > 0)) {
-                goto SUcwN;
             }
             $res += $this->db->insert_batch('rapor_nilai_ekstra', $ekstra_insert);
             if (!(count($hpas_insert) > 0)) {
-                goto J082A;
             }
             $res += $this->db->insert_batch('rapor_nilai_akhir', $hpas_insert);
             if (!(count($hpts_insert) > 0)) {
-                goto jfdjT;
             }
             $res += $this->db->insert_batch('rapor_nilai_pts', $hpts_insert);
             if (!(count($hph_insert) > 0)) {
-                goto SCe96;
             }
             $res += $this->db->insert_batch('rapor_nilai_harian', $hph_insert);
             if (!(count($spritual_insert) > 0)) {
-                goto u2ujL;
             }
             $res += $this->db->insert_batch('rapor_nilai_sikap', $spritual_insert);
             if (!(count($sosial_insert) > 0)) {
-                goto s_7pk;
             }
             $res += $this->db->insert_batch('rapor_nilai_sikap', $sosial_insert);
             if (!$res) {
-                goto CNVJ1;
             }
             $this->db->empty_table('buku_nilai');
             $this->db->trans_complete();
@@ -683,35 +530,27 @@ class Bukurapor extends CI_Controller
         } else {
             $res += $this->db->insert_batch('rapor_prestasi', $rank_insert);
             if (!(count($absen_insert) > 0)) {
-                goto c4qan;
             }
             $res += $this->db->insert_batch('rapor_catatan_wali', $absen_insert);
             if (!(count($ekstra_insert) > 0)) {
-                goto SUcwN;
             }
             $res += $this->db->insert_batch('rapor_nilai_ekstra', $ekstra_insert);
             if (!(count($hpas_insert) > 0)) {
-                goto J082A;
             }
             $res += $this->db->insert_batch('rapor_nilai_akhir', $hpas_insert);
             if (!(count($hpts_insert) > 0)) {
-                goto jfdjT;
             }
             $res += $this->db->insert_batch('rapor_nilai_pts', $hpts_insert);
             if (!(count($hph_insert) > 0)) {
-                goto SCe96;
             }
             $res += $this->db->insert_batch('rapor_nilai_harian', $hph_insert);
             if (!(count($spritual_insert) > 0)) {
-                goto u2ujL;
             }
             $res += $this->db->insert_batch('rapor_nilai_sikap', $spritual_insert);
             if (!(count($sosial_insert) > 0)) {
-                goto s_7pk;
             }
             $res += $this->db->insert_batch('rapor_nilai_sikap', $sosial_insert);
             if (!$res) {
-                goto CNVJ1;
             }
             $this->db->empty_table('buku_nilai');
             $this->db->trans_complete();

@@ -29,10 +29,8 @@ class Bukuinduk extends CI_Controller
             return $thn;
         } else {
             if ($level == 8) {
-                goto gC72e;
             }
             if ($level == 7) {
-                goto L1vUy;
             }
             return $thn;
         }
