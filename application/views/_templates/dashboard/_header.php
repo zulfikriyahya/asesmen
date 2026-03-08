@@ -125,7 +125,7 @@
     let globalToken;
     let adaJadwalUjian;
 </script>
-<script src="<?= base_url() ?>/assets/app/js/generate.js"></script>
+<link rel="stylesheet" href="<?= base_url() ?>/assets/app/css/users.css">
 <script>
     let tp_active = '<?= $tp_active->tahun ?>';
     let smt_active = '<?= $smt_active->smt ?>';
