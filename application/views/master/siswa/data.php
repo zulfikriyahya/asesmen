@@ -10,9 +10,9 @@
     <section class="content">
         <div class="container-fluid">
             <div class="glass-card mb-0" style="position:relative">
-                <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem">
+                <div class="card-header">
                     <h6 class="card-title mb-0"><?= $subjudul ?></h6>
-                    <div style="display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap">
+                    <div class="card-tools">
                         <button type="button" data-toggle="modal" data-target="#createSiswaModal" class="btn btn-cyan btn-sm">
                             <i class="fas fa-plus mr-1"></i>Tambah Siswa
                         </button>

@@ -21,12 +21,14 @@
             <div class="row">
                 <div class="col-xl-4 col-lg-5 mb-4">
                     <div class="glass-card h-100">
-                        <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem">
+                        <div class="card-header">
                             <h6 class="card-title mb-0">File Excel</h6>
                             <?php $url = 'uploads/import/format/format_siswa.xlsx'; ?>
-                            <a href="<?= base_url() . $url ?>" class="btn btn-success-glass btn-sm" style="white-space:nowrap;flex-shrink:0">
-                                <i class="fas fa-download mr-1"></i>Download Template
-                            </a>
+                            <div class="card-tools">
+                                <a href="<?= base_url() . $url ?>" class="btn btn-success-glass btn-sm">
+                                    <i class="fas fa-download mr-1"></i>Download Template
+                                </a>
+                            </div>
                         </div>
                         <div class="card-body" style="padding:1.5rem">
                             <?= form_open_multipart('', array('id' => 'formPreviewExcel')); ?>
@@ -40,11 +42,13 @@
                 <div class="col-xl-8 col-lg-7 mb-4">
                     <div class="glass-card h-100" style="display:flex;flex-direction:column">
                         <?= form_open('', array('id' => 'formUpload')); ?>
-                        <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem">
+                        <div class="card-header">
                             <h6 class="card-title mb-0">Preview</h6>
-                            <button id="submit-excel" name="preview" type="submit" class="btn btn-cyan btn-sm" disabled="disabled" style="flex-shrink:0">
-                                <i class="fas fa-cloud-upload-alt mr-1"></i>Upload
-                            </button>
+                            <div class="card-tools">
+                                <button id="submit-excel" name="preview" type="submit" class="btn btn-cyan btn-sm" disabled="disabled">
+                                    <i class="fas fa-cloud-upload-alt mr-1"></i>Upload
+                                </button>
+                            </div>
                         </div>
                         <?= form_close(); ?>
                         <div class="card-body table-responsive flex-grow-1" id="file-preview" style="padding:1.5rem;min-height:200px">
