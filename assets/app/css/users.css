@@ -21,10 +21,22 @@ body *:not(i):not([class*="fa"]):not([class*="ion"]):not([class*="bi"]):not([cla
     font-family: 'Lexend', sans-serif !important;
 }
 
-/* ── Layout: biarkan AdminLTE atur margin sidebar, hanya override background ── */
+/* ── Layout ── */
 .content-wrapper {
     background: linear-gradient(140deg, var(--bg-base) 0%, var(--bg-mid) 55%, var(--bg-top) 100%) !important;
     min-height: 100vh !important;
+    margin-left: 250px !important;
+    transition: margin-left .3s ease !important;
+}
+
+.sidebar-collapse .content-wrapper {
+    margin-left: 0 !important;
+}
+
+@media (max-width: 991.98px) {
+    .content-wrapper {
+        margin-left: 0 !important;
+    }
 }
 
 .content-header {
