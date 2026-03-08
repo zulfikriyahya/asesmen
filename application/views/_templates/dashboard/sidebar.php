@@ -4,8 +4,8 @@ $logo_app = $setting->logo_kiri == null
     : base_url() . $setting->logo_kiri;
 ?>
 
-<aside class="main-sidebar my-shadow" style="
-    background: rgba(12, 14, 20, 0.92);
+<aside class="main-sidebar sidebar-dark-primary my-shadow" style="
+    background: rgba(12, 14, 20, 0.92) !important;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-right: 1px solid rgba(255,255,255,0.05);
