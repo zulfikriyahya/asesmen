@@ -1,3 +1,4 @@
+{{FILE: users/admin/data.php}}
 <div class="content-wrapper bg-dark pt-4">
     <section class="content-header">
         <div class="container-fluid">
@@ -12,24 +13,25 @@
     <section class="content text-dark">
         <div class="container-fluid">
             <div class="card card-default my-shadow">
+
                 <div class="card-header bg-orange with-border">
                     <h6 class="card-title text-bold"><?= $subjudul ?></h6>
                     <div class="card-tools">
                         <button type="button" onclick="reload_ajax()" class="btn btn-sm btn-default">
-                            <i class="fa fa-sync"></i> <span class="d-none d-sm-inline-block ml-1">Reload</span>
+                            <i class="fa fa-sync"></i>
+                            <span class="d-none d-sm-inline-block ml-1">Reload</span>
                         </button>
                         <button type="button" data-toggle="modal" data-target="#createAdminModal"
-                            class="btn btn-sm btn-primary"><i
-                                class="fas fa-plus"></i><span
-                                class="d-none d-sm-inline-block ml-1">Tambah Admin</span>
+                            class="btn btn-sm btn-primary">
+                            <i class="fas fa-plus"></i>
+                            <span class="d-none d-sm-inline-block ml-1">Tambah Admin</span>
                         </button>
                     </div>
                 </div>
-                <div class="card-body text-dark">
-                    <div class="mt-2 mb-3">
-                    </div>
-                </div>
-                <div class="table-responsive px-4 pb-3" style="border: 0">
+
+                <div class="card-body text-dark"></div>
+
+                <div class="table-responsive px-4 pb-3" style="border:0">
                     <table id="users" class="w-100 table table-striped table-bordered table-hover">
                         <thead class="bg-maroon">
                             <tr>
@@ -46,14 +48,14 @@
                         </thead>
                     </table>
                 </div>
+
             </div>
         </div>
     </section>
 </div>
 
-<?= form_open('create', array('id' => 'create')) ?>
-<div class="modal fade" id="createAdminModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
-    aria-hidden="true">
+<?= form_open('create', ['id' => 'create']) ?>
+<div class="modal fade" id="createAdminModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -64,57 +66,30 @@
             </div>
             <div class="modal-body">
                 <?php
-                echo '<div class="form-group row">';
-                echo form_label('First name:', 'first_name', array('class' => 'col-md-4 col-form-label'));
-                echo form_error('first_name');
-                echo form_input(
-                    array('name' => 'first_name', 'class' => 'col-md-7 form-control'),
-                    set_value('first_name'),
-                    'required'
-                );
-                echo '</div>';
-                echo '<div class="form-group row">';
-                echo form_label('Last name:', 'last_name', array('class' => 'col-md-4 col-form-label'));
-                echo form_error('last_name');
-                echo form_input(
-                    array('name' => 'last_name', 'class' => 'col-md-7 form-control'),
-                    set_value('last_name'),
-                    'required'
-                );
-                echo '</div>';
-                echo '<div class="form-group row">';
-                echo form_label('Email:', 'email', array('class' => 'col-md-4 col-form-label'));
-                echo form_error('email');
-                echo form_input(
-                    array('name' => 'email', 'class' => 'col-md-7 form-control'),
-                    set_value('email'),
-                    'required'
-                );
-                echo '</div>';
-                echo '<div class="form-group row">';
-                echo form_label('Username:', 'username', array('class' => 'col-md-4 col-form-label'));
-                echo form_error('username');
-                echo form_input(
-                    array('name' => 'username', 'class' => 'col-md-7 form-control'),
-                    set_value('username'),
-                    'required'
-                );
-                echo '</div>';
-                echo '<div class="form-group row">';
-                echo form_label('Password:', 'password', array('class' => 'col-md-4 col-form-label'));
-                echo form_error('password');
-                echo form_password(array('name' => 'password', 'class' => 'col-md-7 form-control'), '', 'required');
-                echo '</div>';
-                echo '<div class="form-group row">';
-                echo form_label('Confirm password:', 'confirm_password', array('class' => 'col-md-4 col-form-label'));
-                echo form_error('confirm_password');
-                echo form_password(array('name' => 'confirm_password', 'class' => 'col-md-7 form-control'), '', 'required');
-                echo '</div>';
+                $fields = [
+                    ['label' => 'First name',        'name' => 'first_name',       'type' => 'input'],
+                    ['label' => 'Last name',         'name' => 'last_name',        'type' => 'input'],
+                    ['label' => 'Email',             'name' => 'email',            'type' => 'input'],
+                    ['label' => 'Username',          'name' => 'username',         'type' => 'input'],
+                    ['label' => 'Password',          'name' => 'password',         'type' => 'password'],
+                    ['label' => 'Confirm password',  'name' => 'confirm_password', 'type' => 'password'],
+                ];
+                foreach ($fields as $f):
+                    echo '<div class="form-group row">';
+                    echo form_label($f['label'] . ':', $f['name'], ['class' => 'col-md-4 col-form-label']);
+                    echo form_error($f['name']);
+                    if ($f['type'] === 'password') {
+                        echo form_password(['name' => $f['name'], 'class' => 'col-md-7 form-control'], '', 'required');
+                    } else {
+                        echo form_input(['name' => $f['name'], 'class' => 'col-md-7 form-control'], set_value($f['name']), 'required');
+                    }
+                    echo '</div>';
+                endforeach;
                 ?>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                <button type="submit" class="btn btn-primary">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Batal</button>
+                <button type="submit" class="btn btn-primary btn-sm">
                     <i class="fa fa-plus"></i> Simpan
                 </button>
             </div>
@@ -123,8 +98,7 @@
 </div>
 <?= form_close() ?>
 
-<script type="text/javascript">
+<script>
     var user_id = '<?= $user->id ?>';
 </script>
-
 <script src="<?= base_url() ?>/assets/app/js/users/admin/data.js"></script>
