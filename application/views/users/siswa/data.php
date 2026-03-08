@@ -27,7 +27,7 @@
 
                 <div class="g-card-body">
                     <div class="toolbar">
-                        <div class="toolbar-left">
+                        <!-- <div class="toolbar-left">
                             Show
                             <select id="users_length" class="f-select-sm">
                                 <option value="10">10</option>
@@ -36,7 +36,7 @@
                                 <option value="100">100</option>
                             </select>
                             entries
-                        </div>
+                        </div> -->
                         <div class="toolbar-right">
                             <button id="btn-clear" type="button" class="btn-g" disabled
                                 data-toggle="tooltip" title="Hapus pencarian">
