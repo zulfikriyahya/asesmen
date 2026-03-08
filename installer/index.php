@@ -11,7 +11,7 @@ $base_url  = str_replace('installer/', '', $base_url);
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>ASESMEN MADRASAH CBT Installer</title>
+    <title>ASESMEN MADRASAH INSTALLER</title>
 
     <link rel="shortcut icon" href="<?= $base_url ?>assets/img/favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="<?= $base_url ?>assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">

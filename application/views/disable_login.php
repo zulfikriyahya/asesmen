@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>ASESMEN MADRASAH CBT</title>
+    <title>ASESMEN MADRASAH</title>
 
     <?php $logo_app = $setting->logo_kiri == null ? base_url() . 'assets/img/favicon.png' : base_url() . $setting->logo_kiri; ?>
     <link rel="shortcut icon" href="<?= $logo_app ?>" type="image/x-icon">
@@ -30,7 +30,7 @@
             <div class="row">
                 <div class="col-6">
                     <img class="mt-3 mb-3" width="30" height="30" src="<?= base_url('assets/img/garuda_circle.png') ?>">
-                    <span class="text-lg"><b>arudaCBT</b></span>
+                    <span class="text-lg"><b>ASESMEN MADRASAH</b></span>
                 </div>
                 <div class="col-6 pt-3">
                     <button class="btn btn-danger float-right" onclick="logout()">Keluar</button>

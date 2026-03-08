@@ -4,7 +4,7 @@
     <div class="update-topbar">
         <div class="update-brand">
             <img src="<?= base_url('assets/img/favicon.png') ?>" alt="Logo">
-            ASESMEN MADRASAH CBT
+            ASESMEN MADRASAH
         </div>
         <a href="<?= base_url() ?>" class="btn-install btn-install-back">
             <i class="fas fa-arrow-left"></i> Kembali
