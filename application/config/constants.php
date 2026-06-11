@@ -1,4 +1,5 @@
 <?php
+define('CI_VERSION', '3.1.13');
 defined('BASEPATH') OR exit('No direct script access allowed');
 defined('SHOW_DEBUG_BACKTRACE') OR define('SHOW_DEBUG_BACKTRACE', TRUE);
 defined('FILE_READ_MODE')  OR define('FILE_READ_MODE', 0644);
