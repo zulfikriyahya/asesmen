@@ -10,7 +10,10 @@
     "slack": "https://codeigniterchat.slack.com",
     "source": "https://github.com/bcit-ci/CodeIgniter"
   },
-  "require": {
+  "suggest": {
+    "paragonie/random_compat": "Provides better randomness in PHP 5.x"
+  },
+"require": {
     "php": ">=7.3",
     "ext-dom": "*",
     "ext-mysqli": "*",
@@ -20,17 +23,14 @@
     "phpoffice/phpword": "^0.18.1",
     "alhimik1986/php-excel-templator": "^1.0",
     "ext-json": "*",
-    "dompdf/dompdf": "^1.0",
+    "dompdf/dompdf": "^2.0",
     "ext-gd": "*",
     "ext-iconv": "*",
     "ext-calendar": "*",
     "ext-libxml": "*"
-  },
-  "suggest": {
-    "paragonie/random_compat": "Provides better randomness in PHP 5.x"
-  },
-  "require-dev": {
+},
+"require-dev": {
     "mikey179/vfsstream": "1.1.*",
-    "phpunit/phpunit": "4.* || 5.*"
-  }
+    "phpunit/phpunit": "^9.0"
+}
 }
